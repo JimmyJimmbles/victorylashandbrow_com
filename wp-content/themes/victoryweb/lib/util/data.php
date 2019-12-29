@@ -9,17 +9,18 @@ function victory_frontpage_endpoint()
 {
     $frontpage_id = get_option('page_on_front');
 
-    // query front-page
     $args  = [
         'post_type' => 'page',
         'post__in'  => [$frontpage_id]
     ];
-    $page = get_post($args);
+    $pages = get_posts($args);
 
-    // set page custom fields
-    $page->acf = get_fields($page->ID);
+    // Set all the page data and custom fields
+    foreach ($pages as $key => $value) {
+        $pages[$key]->acf = get_fields($value->ID);
+    }
 
-    return $page;
+    return $pages;
 }
 
 /**
