@@ -1,0 +1,49 @@
+// --------------------------------------------------
+// variables
+// --------------------------------------------------
+
+$section-sizes: (
+  'default': $padding-md,
+  'xs': $padding-xs,
+  'sm': $padding-sm,
+  'md': $padding-md,
+  'lg': $padding-lg,
+  'xl': $padding-xl,
+);
+
+// --------------------------------------------------
+// mixins
+// --------------------------------------------------
+
+@mixin section-sizes($sizes: $section-sizes) {
+  @each $key, $value in $sizes {
+    $selector: '.section';
+
+    @if ($key != 'default') {
+      $selector: '#{$selector}--#{$key}';
+    }
+
+    #{$selector} {
+      @media #{$mq-min-md} {
+        padding-top: $value;
+        padding-bottom: $value;
+      }
+    }
+  }
+}
+
+// --------------------------------------------------
+// base styles
+// --------------------------------------------------
+
+.section {
+  display: block;
+  padding-top: map-get($section-sizes, 'sm');
+  padding-bottom: map-get($section-sizes, 'sm');
+}
+
+// --------------------------------------------------
+// sizes
+// --------------------------------------------------
+
+@include section-sizes();

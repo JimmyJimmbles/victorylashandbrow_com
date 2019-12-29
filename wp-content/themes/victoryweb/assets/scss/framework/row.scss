@@ -1,0 +1,135 @@
+// --------------------------------------------------
+// mixins
+// --------------------------------------------------
+
+@mixin column() {
+  $breakpoints: (
+    'xs': $breakpoint-xs,
+    'sm': $breakpoint-sm,
+    'md': $breakpoint-md,
+    'lg': $breakpoint-lg,
+    'xl': $breakpoint-xl,
+  );
+
+  @each $key, $value in $breakpoints {
+    @media (min-width: #{$value}) {
+      .column-#{$key} {
+        flex-basis: auto;
+        flex-grow: 1;
+        flex-shrink: 0;
+      }
+
+      @for $i from 1 through $row-column-count {
+        .column-#{$key}-#{$i} {
+          flex-basis: percentage(($i / $row-column-count));
+          max-width: percentage(($i / $row-column-count));
+        }
+
+        .column-#{$key}-offset-#{12 - $i} {
+          margin-left: 100 - percentage(($i / $row-column-count));
+        }
+      }
+    }
+  }
+}
+
+// --------------------------------------------------
+// row
+// --------------------------------------------------
+
+.row {
+  box-sizing: border-box;
+  display: flex;
+  align-items: stretch;
+  flex-basis: auto;
+  flex-direction: row;
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin-left: -$row-gutter-width / 2;
+  margin-right: -$row-gutter-width / 2;
+}
+
+// --------------------------------------------------
+// row alignments
+// --------------------------------------------------
+
+.row--left {
+  justify-content: flex-start;
+}
+
+.row--center {
+  justify-content: center;
+}
+
+.row--right {
+  justify-content: flex-end;
+}
+
+.row--between {
+  justify-content: space-between;
+}
+
+.row--around {
+  justify-content: space-around;
+}
+
+.row--top {
+  align-items: flex-start;
+}
+
+.row--middle {
+  align-items: center;
+}
+
+.row--bottom {
+  align-items: flex-end;
+}
+
+.row--align-content-top {
+  align-content: flex-start;
+}
+
+.row--align-content-middle {
+  align-content: center;
+}
+
+.row--align-content-bottom {
+  align-content: flex-end;
+}
+
+.row--align-content-stretch {
+  align-content: stretch;
+}
+
+.row--align-content-between {
+  align-content: space-between;
+}
+
+.row--align-content-around {
+  align-content: space-around;
+}
+
+.row--reverse {
+  flex-direction: row-reverse;
+}
+
+// --------------------------------------------------
+// row columns
+// --------------------------------------------------
+
+.column,
+[class*='column-xs-'],
+[class*='column-sm-'],
+[class*='column-md-'],
+[class*='column-lg-'],
+[class*='column-xl-'] {
+  box-sizing: border-box;
+  flex-basis: auto;
+  flex-grow: 1;
+  flex-shrink: 0;
+  max-width: 100%;
+}
+
+@include column();

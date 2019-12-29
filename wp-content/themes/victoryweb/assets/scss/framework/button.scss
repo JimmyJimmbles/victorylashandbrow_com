@@ -1,0 +1,99 @@
+// --------------------------------------------------
+// variables
+// --------------------------------------------------
+
+$button-colors: (
+  'primary': (
+    'base': color('white'),
+    'border': color('primary'),
+    'color': color('primary'),
+    'hover': color('primary'),
+  ),
+  'secondary': (
+    'base': color('pink'),
+    'border': color('primary'),
+    'color': color('white'),
+    'hover': color('white'),
+  ),
+) !default;
+
+$button-default-color: 'primary';
+
+$button-padding-x: rem(30) !default;
+$button-padding-y: rem(10) !default;
+
+// --------------------------------------------------
+// mixins
+// --------------------------------------------------
+
+@mixin create-button($bg-base, $color-border, $color-hover, $color-font) {
+  background-color: $bg-base;
+  border-color: $color-border;
+  color: $color-font;
+
+  &:hover {
+    background-color: $color-hover;
+    border-color: $bg-base;
+    border-style: $global-border-style-primary;
+    color: $bg-base;
+  }
+}
+
+@mixin btn($colors: $button-colors) {
+  $selector: '.btn';
+  $bg-base: map-deep-get($colors, $button-default-color, 'base');
+  $color-border: map-deep-get($colors, $button-default-color, 'border');
+  $color-hover: map-deep-get($colors, $button-default-color, 'hover');
+  $color-font: map-deep-get($colors, $button-default-color, 'color');
+
+  #{$selector} {
+    @include create-button($bg-base, $color-border, $color-hover, $color-font);
+  }
+
+  @each $key, $color in $colors {
+    $selector: '.btn--#{$key}';
+    $bg-base: map-get($color, 'base');
+    $color-border: map-get($color, 'border');
+    $color-hover: map-get($color, 'hover');
+    $color-font: map-get($color, 'color');
+
+    #{$selector} {
+      @include create-button(
+        $bg-base,
+        $color-border,
+        $color-hover,
+        $color-font
+      );
+    }
+  }
+}
+
+// --------------------------------------------------
+// base styles
+// --------------------------------------------------
+
+.btn {
+  border-style: $global-border-style-secondary;
+  border-width: $global-border-width;
+  border-radius: rem(100);
+  cursor: pointer;
+  display: inline-block;
+  font-size: $font-size-md;
+  font-weight: $font-weight-bold;
+  letter-spacing: 0.025em;
+  line-height: $font-size-md;
+  padding: $button-padding-y $button-padding-x;
+  text-align: center;
+  text-decoration: none;
+  text-transform: none;
+  transition: $global-transition-fast;
+  user-select: none;
+  vertical-align: top;
+  white-space: wrap;
+}
+
+// --------------------------------------------------
+// color variants
+// --------------------------------------------------
+
+@include btn();
