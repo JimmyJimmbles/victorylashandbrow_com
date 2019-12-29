@@ -1,2 +1,2 @@
 // CSS
-import '../scss/index.scss';
+import styles from '../scss/index.scss';

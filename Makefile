@@ -5,6 +5,11 @@
 
 dev: env-dev permissions-uploads import-dev install-vendors build-assets done
 
+env-dev:
+	@echo -n Creating wp-config file...
+	@cp stubs/wp-config-dev-valet.php wp-config.php
+	@printf " \033[1;32mDone\n\033[0m"
+
 import-dev:
 	@echo -n Importing database...
 	@gunzip < db_dump.sql.gz | mysql -u root victorylashandbrow_com
@@ -20,7 +25,6 @@ permissions-uploads:
 install-vendors:
 	@echo -n Installing node packages...
 	@cd $(THEME_DIR); \
-	source $(HOME)/.bashrc; \
 	nvm install; \
 	nvm use; \
 	npm install;
@@ -29,7 +33,6 @@ install-vendors:
 build-assets:
 	@echo -n Building assets...
 	@cd $(THEME_DIR); \
-	source $(HOME)/.bashrc; \
 	nvm install; \
 	nvm use; \
 	npm run build;

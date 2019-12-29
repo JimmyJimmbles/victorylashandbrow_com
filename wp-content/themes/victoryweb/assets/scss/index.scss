@@ -12,3 +12,15 @@
 @import '@fortawesome/fontawesome-free/scss/solid.scss';
 @import '@fortawesome/fontawesome-free/scss/brands.scss';
 @import '@fortawesome/fontawesome-free/scss/regular.scss';
+
+// --------------------------------------------------
+// framework
+// --------------------------------------------------
+
+@import './framework/index.scss';
+
+// --------------------------------------------------
+// site
+// --------------------------------------------------
+
+@import './site/index.scss';

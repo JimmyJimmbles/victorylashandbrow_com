@@ -1,0 +1,75 @@
+// --------------------------------------------------
+// base
+// --------------------------------------------------
+
+$colors: (
+  'white': (
+    'name': 'White',
+    'base': #ffffff,
+    'hover': darken(#ffffff, 10%),
+  ),
+  'black': (
+    'name': 'black',
+    'base': #ffffff,
+    'hover': darken(#ffffff, 10%),
+  ),
+  'primary': (
+    'name': 'Primary',
+    'base': #c9727a,
+    'hover': darken(#c9727a, 10%),
+  ),
+  'secondary': (
+    'name': 'Secondary',
+    'base': #efcec8,
+    'hover': darken(#efcec8, 10%),
+  ),
+  'pink': (
+    'name': 'Pink',
+    'base': #faeeed,
+    'hover': darken(#faeeed, 10%),
+  ),
+  'gray': (
+    'name': 'Gray',
+    'base': #f5f6f4,
+    'hover': darken(#f5f6f4, 10%),
+  ),
+  'gray-dark': (
+    'name': 'Gray Dark',
+    'base': #e7e7e7,
+    'hover': darken(#e7e7e7, 10%),
+  ),
+  'gray-darker': (
+    'name': 'Gray Darker',
+    'base': #a7a7a7,
+    'hover': lighten(#a7a7a7, 10%),
+  ),
+  'gray-darkest': (
+    'name': 'Gray Darkest',
+    'base': #717171,
+    'hover': lighten(#717171, 10%),
+  ),
+);
+
+// --------------------------------------------------
+// Get the color from the name or key
+//
+// @param string $name
+// @param string $key
+// @return string $value
+// --------------------------------------------------
+
+@function color($name: null, $key: null) {
+  $color: null;
+  $value: '';
+
+  @if ($name) {
+    $color: map-get($colors, $name);
+    $value: map-get($color, 'base');
+
+    @if ($key) {
+      $value: map-get($color, $key);
+    }
+  }
+
+  @return $value;
+}
