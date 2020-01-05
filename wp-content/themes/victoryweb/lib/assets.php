@@ -23,5 +23,9 @@ function enqueue_theme_assets()
     victory_enqueue_asset('commons.js');
     victory_enqueue_asset('global.js');
     victory_enqueue_asset('global.css');
+
+    if (is_front_page()) {
+        victory_enqueue_asset('app.js');
+    }
 }
 add_action('wp_enqueue_scripts', 'enqueue_theme_assets', 10);

@@ -1,0 +1,35 @@
+// --------------------------------------------------
+// base
+// --------------------------------------------------
+
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: $row-gutter-width;
+  padding-right: $row-gutter-width;
+
+  &.container--xs {
+    max-width: rem(576) + $row-gutter-width;
+  }
+
+  &.container--sm {
+    max-width: rem(992) + $row-gutter-width;
+  }
+
+  &,
+  &.container--md {
+    max-width: rem(1200) + $row-gutter-width;
+  }
+
+  &.container--lg {
+    max-width: rem(1440) + $row-gutter-width;
+  }
+
+  &.container--xl {
+    max-width: rem(1600) + $row-gutter-width;
+  }
+
+  &.container--full {
+    max-width: 100%;
+  }
+}

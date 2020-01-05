@@ -10,7 +10,7 @@ $button-colors: (
     'hover': color('primary'),
   ),
   'secondary': (
-    'base': color('pink'),
+    'base': color('secondary'),
     'border': color('primary'),
     'color': color('white'),
     'hover': color('white'),
@@ -28,14 +28,46 @@ $button-padding-y: rem(10) !default;
 
 @mixin create-button($bg-base, $color-border, $color-hover, $color-font) {
   background-color: $bg-base;
-  border-color: $color-border;
+  border-color: transparent;
   color: $color-font;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    bottom: -2px;
+    right: -2px;
+    border-width: $global-border-width;
+    border-radius: rem(100);
+    transition: $global-transition-slow;
+  }
+
+  &::before {
+    border-style: $global-border-style-secondary;
+    border-color: $color-border;
+    opacity: 1;
+  }
+
+  &::after {
+    border-color: $bg-base;
+    border-style: $global-border-style-primary;
+    opacity: 0;
+  }
 
   &:hover {
     background-color: $color-hover;
-    border-color: $bg-base;
-    border-style: $global-border-style-primary;
     color: $bg-base;
+
+    &::before {
+      border-color: $color-border;
+      opacity: 0;
+    }
+    &::after {
+      border-color: $bg-base;
+      opacity: 1;
+    }
   }
 }
 
@@ -73,6 +105,7 @@ $button-padding-y: rem(10) !default;
 // --------------------------------------------------
 
 .btn {
+  position: relative;
   border-style: $global-border-style-secondary;
   border-width: $global-border-width;
   border-radius: rem(100);
@@ -86,7 +119,7 @@ $button-padding-y: rem(10) !default;
   text-align: center;
   text-decoration: none;
   text-transform: none;
-  transition: $global-transition-fast;
+  transition: $global-transition-slow;
   user-select: none;
   vertical-align: top;
   white-space: wrap;

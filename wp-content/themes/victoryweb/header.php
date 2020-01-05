@@ -26,7 +26,7 @@
 
 <body <?php body_class(); ?>>
 	<div id="page" class="site">
-		<a class="screen-reader-text" href="#content">Skip to content</a>
+		<a class="u--screen-reader-only" href="#content">Skip to content</a>
 		<a id="top"></a>
 		<header id="masthead" class="site-header">
 			<div class="site-branding">

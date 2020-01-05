@@ -1,0 +1,402 @@
+// --------------------------------------------------
+// variables
+// --------------------------------------------------
+
+$utilities-border-sizes: (0, 1, 2, 3, 4, 5);
+$utilities-padding-margin-sizes: (0, 5, 10, 15, 20, 25, 30);
+$utilities-width-height-sizes: (10, 25, 33, 50, 66, 75, 100);
+$utilities-display: (none, inline-block, block, flex);
+$utilities-overflow: (visible, hidden, scroll, auto);
+$utilities-text-align: (left, right, center, justify);
+$utilities-font-sizes: (
+  'xs': $font-size-xs,
+  'sm': $font-size-sm,
+  'md': $font-size-md,
+  'lg': $font-size-lg,
+  'xl': $font-size-xl,
+);
+$utilities-font-weights: (
+  'normal': $font-weight-normal,
+  'semi-bold': $font-weight-semi-bold,
+  'bold': $font-weight-bold,
+);
+$utilities-text-transform: (uppercase, lowercase, capitalize);
+$utilities-sides: (top, right, bottom, left);
+$utilities-flex-wrap: (nowrap, wrap, wrap-reverse);
+$utilities-flex-direction: (row, row-reverse, column, column-reverse);
+$utilities-justify-content: (
+  center,
+  flex-start,
+  flex-end,
+  space-between,
+  space-around,
+  space-evenly
+);
+$utilities-align-items: (flex-start, flex-end, center, stretch, baseline);
+
+// --------------------------------------------------
+// mixins
+// --------------------------------------------------
+
+// color
+@mixin u--color($colors: $colors) {
+  $selector: '.u--color';
+
+  @each $key, $color in $colors {
+    $color-base: map-get($color, 'base');
+    $color-hover: map-get($color, 'hover');
+
+    #{$selector}-#{$key} {
+      color: $color-base !important;
+    }
+
+    a#{$selector}-#{$key}:hover {
+      color: $color-hover !important;
+    }
+  }
+}
+
+// background color
+@mixin u--bg-color($colors: $colors) {
+  $selector: '.u--bg-color';
+
+  @each $key, $color in $colors {
+    $color-base: map-get($color, 'base');
+
+    #{$selector}-#{$key} {
+      background-color: $color-base !important;
+    }
+  }
+}
+
+// border color
+@mixin u--border-color($colors: $colors, $sides: $utilities-sides) {
+  $selector: '.u--border-color';
+
+  @each $key, $color in $colors {
+    $color-base: map-get($color, 'base');
+
+    #{$selector}-#{$key} {
+      border-color: $color-base !important;
+    }
+
+    @each $side in $sides {
+      #{$selector}-#{$side}-#{$key} {
+        border-#{$side}-color: $color-base !important;
+      }
+    }
+  }
+}
+
+// border width
+@mixin u--border-width(
+  $sizes: $utilities-border-sizes,
+  $sides: $utilities-sides
+) {
+  $selector: '.u--border-width';
+
+  @each $size in $sizes {
+    #{$selector}-#{$size} {
+      border-width: #{$size}px !important;
+    }
+
+    @each $side in $sides {
+      #{$selector}-#{$side}-#{$size} {
+        border-#{$side}-width: #{$size}px !important;
+      }
+    }
+  }
+}
+
+// margin
+@mixin u--margin(
+  $sizes: $utilities-padding-margin-sizes,
+  $sides: $utilities-sides
+) {
+  $selector: '.u--margin';
+
+  @each $size in $sizes {
+    $margin: $size;
+
+    @if ($size != auto) {
+      $margin: rem($size);
+    }
+
+    #{$selector}-#{$size} {
+      margin: $margin !important;
+    }
+
+    @each $side in $sides {
+      #{$selector}-#{$side}-#{$size} {
+        margin-#{$side}: $margin !important;
+      }
+    }
+  }
+}
+
+// padding
+@mixin u--padding(
+  $sizes: $utilities-padding-margin-sizes,
+  $sides: $utilities-sides
+) {
+  $selector: '.u--padding';
+
+  @each $size in $sizes {
+    $padding: $size;
+
+    @if ($size != auto) {
+      $padding: rem($size);
+    }
+
+    #{$selector}-#{$size} {
+      padding: $padding !important;
+    }
+
+    @each $side in $sides {
+      #{$selector}-#{$side}-#{$size} {
+        padding-#{$side}: $padding !important;
+      }
+    }
+  }
+}
+
+// width
+@mixin u--width($sizes: $utilities-width-height-sizes) {
+  $selector: '.u--width';
+
+  @each $size in $sizes {
+    $width: $size;
+
+    @if ($size != auto) {
+      $width: percentage($size) / 100;
+    }
+
+    #{$selector}-#{$size} {
+      width: $width !important;
+    }
+  }
+}
+
+//height
+@mixin u--height($sizes: $utilities-width-height-sizes) {
+  $selector: '.u--height';
+
+  @each $size in $sizes {
+    $height: $size;
+
+    @if ($size != auto) {
+      $height: percentage($size) / 100;
+    }
+
+    #{$selector}-#{$size} {
+      height: $height !important;
+    }
+  }
+}
+
+// font weight
+@mixin u--font-size($options: $utilities-font-sizes) {
+  $selector: '.u--font-size';
+
+  @each $key, $value in $options {
+    #{$selector}-#{$key} {
+      font-size: $value !important;
+    }
+  }
+}
+
+// font weight
+@mixin u--font-weight($options: $utilities-font-weights) {
+  $selector: '.u--font-weight';
+
+  @each $key, $value in $options {
+    #{$selector}-#{$key} {
+      font-weight: $value !important;
+    }
+  }
+}
+
+// text alignment
+@mixin u--text-align($options: $utilities-text-align) {
+  $selector: '.u--text-align';
+
+  @each $option in $options {
+    #{$selector}-#{$option} {
+      text-align: $option !important;
+    }
+  }
+}
+
+// text transform
+@mixin u--text-transform($options: $utilities-text-transform) {
+  $selector: '.u--text-transform';
+
+  @each $option in $options {
+    #{$selector}-#{$option} {
+      text-transform: $option !important;
+    }
+  }
+}
+
+// display
+@mixin u--display($options: $utilities-display) {
+  $selector: '.u--display';
+
+  @each $option in $options {
+    #{$selector}-#{$option} {
+      display: $option !important;
+    }
+  }
+}
+
+// overflow
+@mixin u--overflow($options: $utilities-overflow) {
+  $selector: '.u--overflow';
+
+  @each $option in $options {
+    #{$selector}-#{$option} {
+      overflow: $option !important;
+    }
+    #{$selector}-x-#{$option} {
+      overflow-x: $option !important;
+    }
+    #{$selector}-y-#{$option} {
+      overflow-y: $option !important;
+    }
+  }
+}
+
+// flex wrap
+@mixin u--flex-wrap($options: $utilities-flex-wrap) {
+  $selector: '.u--flex-wrap';
+
+  @each $option in $options {
+    #{$selector}-#{$option} {
+      flex-wrap: $option !important;
+    }
+  }
+}
+
+// flex direction
+@mixin u--flex-direction($options: $utilities-flex-direction) {
+  $selector: '.u--flex-direction';
+
+  @each $option in $options {
+    #{$selector}-#{$option} {
+      flex-direction: $option !important;
+    }
+  }
+}
+
+// justify content
+@mixin u--justify-content($options: $utilities-justify-content) {
+  $selector: '.u--justify-content';
+
+  @each $option in $options {
+    #{$selector}-#{$option} {
+      justify-content: $option !important;
+    }
+  }
+}
+
+// align items
+@mixin u--align-items($options: $utilities-align-items) {
+  $selector: '.u--align-items';
+
+  @each $option in $options {
+    #{$selector}-#{$option} {
+      align-items: $option !important;
+    }
+  }
+}
+
+// --------------------------------------------------
+// clear fix
+// --------------------------------------------------
+
+.u--clearfix {
+  @extend %clearfix;
+}
+
+// --------------------------------------------------
+// squashing
+// --------------------------------------------------
+
+.u--squash {
+  @extend %squash-start;
+  @extend %squash-end;
+}
+
+.u--squash-start {
+  @extend %squash-start;
+}
+
+.u--squash-end {
+  @extend %squash-end;
+}
+
+// --------------------------------------------------
+// screen reader only
+// --------------------------------------------------
+
+.u--screen-reader-only {
+  @extend %screen-reader-only;
+}
+
+// --------------------------------------------------
+// colors
+// --------------------------------------------------
+
+@include u--color();
+@include u--bg-color();
+
+// --------------------------------------------------
+// borders
+// --------------------------------------------------
+
+@include u--border-color();
+@include u--border-width();
+
+// --------------------------------------------------
+// padding and margins
+// --------------------------------------------------
+
+@include u--margin();
+@include u--padding();
+
+// --------------------------------------------------
+// width and height
+// --------------------------------------------------
+
+@include u--width();
+@include u--height();
+
+// --------------------------------------------------
+// font and text
+// --------------------------------------------------
+
+@include u--font-size();
+@include u--font-weight();
+@include u--text-align();
+@include u--text-transform();
+
+// --------------------------------------------------
+// display
+// --------------------------------------------------
+
+@include u--display();
+
+// --------------------------------------------------
+// overflow
+// --------------------------------------------------
+
+@include u--overflow();
+
+// --------------------------------------------------
+// flex
+// --------------------------------------------------
+
+@include u--flex-wrap();
+@include u--flex-direction();
+@include u--justify-content();
+@include u--align-items();

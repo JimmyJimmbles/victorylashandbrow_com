@@ -8,7 +8,9 @@
 function victory_frontpage_endpoint()
 {
     $frontpage_id = get_option('page_on_front');
-
+    $data         = [];
+     
+    // get page data
     $args  = [
         'post_type' => 'page',
         'post__in'  => [$frontpage_id]
@@ -20,7 +22,32 @@ function victory_frontpage_endpoint()
         $pages[$key]->acf = get_fields($value->ID);
     }
 
-    return $pages;
+    $data['section_data'] = $pages[0]->acf;
+
+    // get theme settings data
+    $theme_settings = get_fields('options');
+
+    // unset private ids
+    if (isset($theme_settings['google_analytics_id']) or isset($theme_settings['google_analytics_id'])) {
+        unset($theme_settings['google_analytics_id']);
+        unset($theme_settings['google_maps_api_key']);
+    }
+
+    $data['theme_settings'] = $theme_settings;
+     
+    // get the menus
+    $menu_location = get_nav_menu_locations()['nav-primary'];
+    $primary_menu  = wp_get_nav_menu_items($menu_location);
+    $primary_menu  = array_map(function($menu) {
+        return [
+            'nav_url'   => $menu->url,
+            'nav_title' => $menu->title
+        ];
+    }, $primary_menu);
+
+    $data['primary_menu'] = $primary_menu;
+
+    return $data;
 }
 
 /**
