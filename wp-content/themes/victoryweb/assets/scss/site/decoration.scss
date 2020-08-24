@@ -31,4 +31,11 @@ $decoration-sizes: (
   border-style: $global-border-style-primary;
   border-width: $global-border-width;
   display: block;
+  animation: spin 30s linear infinite reverse;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(1turn);
+  }
 }

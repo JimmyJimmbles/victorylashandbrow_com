@@ -37,6 +37,49 @@ $section-sizes: (
 // --------------------------------------------------
 
 .section {
+  position: relative;
+  display: block;
+  padding-top: map-get($section-sizes, 'sm');
+  padding-bottom: map-get($section-sizes, 'sm');
+
+  @media #{$mq-min-lg} {
+    border-radius: $global-border-radius;
+    margin: rem(30);
+  }
+}
+
+.section--border {
+  &::before {
+    content: none;
+
+    @media #{$mq-min-md} {
+      content: '';
+      border: $global-border-primary;
+      border-color: color('secondary');
+      border-radius: rem(4);
+      position: absolute;
+      top: 13.3%;
+      left: 50%;
+      width: 92%;
+      height: 86.7%;
+      max-width: 100%;
+      transform: translateX(-50%);
+    }
+  }
+
+  .section__heading {
+    @media #{$mq-min-md} {
+      margin: 0 auto;
+      z-index: 2;
+    }
+  }
+}
+
+// --------------------------------------------------
+// spacer
+// --------------------------------------------------
+
+.section--spacer {
   display: block;
   padding-top: map-get($section-sizes, 'sm');
   padding-bottom: map-get($section-sizes, 'sm');
@@ -47,3 +90,70 @@ $section-sizes: (
 // --------------------------------------------------
 
 @include section-sizes();
+
+// --------------------------------------------------
+// heading
+// --------------------------------------------------
+
+.section__heading {
+  position: relative;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: rem(32);
+  margin-bottom: rem(32);
+
+  &__title {
+    color: color('white');
+    font-family: $font-family-pinyon;
+    font-size: rem(64);
+    line-height: rem(64);
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    width: 100%;
+
+    @media #{$mq-min-md} {
+      font-size: rem(80);
+      line-height: rem(80);
+      letter-spacing: 6px;
+    }
+
+    @media #{$mq-min-lg} {
+      font-size: rem(96);
+      line-height: rem(96);
+    }
+  }
+
+  &__tagline {
+    position: absolute;
+    color: color('primary');
+    font-size: rem(16);
+    font-weight: $font-weight-extra-bold;
+    left: 50%;
+    line-height: rem(16);
+    margin: 0;
+    width: 75%;
+    text-transform: uppercase;
+    transform: translate(-50%, 0%);
+
+    @media #{$mq-min-md} {
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  &--lg {
+    @media #{$mq-min-md} {
+      padding-bottom: $padding-lg;
+      margin-bottom: $padding-lg;
+    }
+  }
+
+  &--md {
+    @media #{$mq-min-md} {
+      padding-bottom: $padding-md;
+      margin-bottom: $padding-md;
+    }
+  }
+}

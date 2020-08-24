@@ -28,6 +28,7 @@
     "popper.js": "^1.16.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
+    "react-transition-group": "^4.4.1",
     "regenerator-runtime": "^0.13.3",
     "slick-carousel": "^1.8.1",
     "vanilla-lazyload": "^12.3.0",

@@ -1,0 +1,23 @@
+// --------------------------------------------------
+// base
+// --------------------------------------------------
+
+.wysiwyg {
+  @extend %squash-start;
+  @extend %squash-end;
+  @extend %clearfix;
+
+  p {
+    line-height: 28px;
+
+    @media #{$mq-min-md} {
+      column-count: 2;
+      column-gap: 40px;
+    }
+  }
+
+  .aligncenter {
+    margin-right: auto;
+    margin-left: auto;
+  }
+}

@@ -3,7 +3,7 @@
 // --------------------------------------------------
 
 $utilities-border-sizes: (0, 1, 2, 3, 4, 5);
-$utilities-padding-margin-sizes: (0, 5, 10, 15, 20, 25, 30);
+$utilities-padding-margin-sizes: (0, 5, 10, 15, 20, 25, 30, 40, 50, 75, 100);
 $utilities-width-height-sizes: (10, 25, 33, 50, 66, 75, 100);
 $utilities-display: (none, inline-block, block, flex);
 $utilities-overflow: (visible, hidden, scroll, auto);
@@ -19,7 +19,14 @@ $utilities-font-weights: (
   'normal': $font-weight-normal,
   'semi-bold': $font-weight-semi-bold,
   'bold': $font-weight-bold,
+  'black': $font-weight-black,
 );
+$utilities-font-families: (
+  'baskerville': $font-family-baskerville,
+  'lato': $font-family-lato,
+  'pinyon': $font-family-pinyon,
+);
+$utilities-font-styles: (italic, normal);
 $utilities-text-transform: (uppercase, lowercase, capitalize);
 $utilities-sides: (top, right, bottom, left);
 $utilities-flex-wrap: (nowrap, wrap, wrap-reverse);
@@ -33,6 +40,8 @@ $utilities-justify-content: (
   space-evenly
 );
 $utilities-align-items: (flex-start, flex-end, center, stretch, baseline);
+$utilities-border-radius: (2, 4, 6, 8, 10, 100);
+$utilities-border-sizes: (1, 2, 3, 4);
 
 // --------------------------------------------------
 // mixins
@@ -103,6 +112,32 @@ $utilities-align-items: (flex-start, flex-end, center, stretch, baseline);
     @each $side in $sides {
       #{$selector}-#{$side}-#{$size} {
         border-#{$side}-width: #{$size}px !important;
+      }
+    }
+  }
+}
+
+// border radius
+@mixin u--border-radius(
+  $sizes: $utilities-border-radius,
+  $sides: $utilities-sides
+) {
+  $selector: '.u--border-radius';
+
+  @each $size in $sizes {
+    $radius: $size;
+
+    @if ($size != auto) {
+      $radius: rem($size);
+    }
+
+    #{$selector}-#{$size} {
+      border-radius: $radius !important;
+    }
+
+    @each $side in $sides {
+      #{$selector}-#{$side}-#{$size} {
+        border-#{$side}-radius: $radius !important;
       }
     }
   }
@@ -212,6 +247,28 @@ $utilities-align-items: (flex-start, flex-end, center, stretch, baseline);
   @each $key, $value in $options {
     #{$selector}-#{$key} {
       font-weight: $value !important;
+    }
+  }
+}
+
+// font family
+@mixin u--font-family($options: $utilities-font-families) {
+  $selector: '.u--font-family';
+
+  @each $key, $value in $options {
+    #{$selector}-#{$key} {
+      font-family: $value !important;
+    }
+  }
+}
+
+// font style
+@mixin u--font-style($options: $utilities-font-styles) {
+  $selector: '.u--font-style';
+
+  @each $value in $options {
+    #{$selector}-#{$value} {
+      font-style: $value !important;
     }
   }
 }
@@ -354,8 +411,13 @@ $utilities-align-items: (flex-start, flex-end, center, stretch, baseline);
 // borders
 // --------------------------------------------------
 
+.u--border {
+  border: $global-border-primary;
+  border-radius: $global-border-radius;
+}
 @include u--border-color();
 @include u--border-width();
+@include u--border-radius();
 
 // --------------------------------------------------
 // padding and margins
@@ -377,6 +439,8 @@ $utilities-align-items: (flex-start, flex-end, center, stretch, baseline);
 
 @include u--font-size();
 @include u--font-weight();
+@include u--font-family();
+@include u--font-style();
 @include u--text-align();
 @include u--text-transform();
 

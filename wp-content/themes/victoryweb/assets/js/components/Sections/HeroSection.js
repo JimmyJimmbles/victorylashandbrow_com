@@ -8,18 +8,16 @@ import {
   faLinkedin,
   faYoutube,
 } from '@fortawesome/free-brands-svg-icons';
+import Decoration from '../Decoration/Decoration';
 
 const HeroSection = ({
-  section_data: {
-    hero: {
-      id,
-      image: { url: imgUrl },
-    },
+  hero: {
+    id,
+    image: { url: imgUrl },
   },
-  theme_settings: { primary_heading, secondary_heading, social_media },
-  primary_menu,
+  headings: { primaryHeading, secondaryHeading, socialMedia },
+  menu,
 }) => {
-  console.log(social_media);
   const socialIcons = {
     facebook_f: faFacebookF,
     instagram: faInstagram,
@@ -32,10 +30,21 @@ const HeroSection = ({
     <Section id={id} classNames="hero">
       <div className="hero__content">
         <div className="hero__content__first">
-          <h1 className="hero__content__heading">{primary_heading}</h1>
-          <h2 className="hero__content__sub-heading">{secondary_heading}</h2>
+          <h1 className="hero__content__heading">
+            <Decoration
+              w={100}
+              h={100}
+              color="primary"
+              top={-10}
+              left={-50}
+              zIndex={-1}
+              animationDuration={46}
+            />
+            {primaryHeading}
+          </h1>
+          <h2 className="hero__content__sub-heading">{secondaryHeading}</h2>
           <ul className="hero__content__actions">
-            {primary_menu.map((menu_item, index) => (
+            {menu.map((menu_item, index) => (
               <li key={index}>
                 <a
                   className="btn"
@@ -48,7 +57,7 @@ const HeroSection = ({
             ))}
           </ul>
           <ul className="hero__content__actions--social">
-            {social_media.map((social, index) => (
+            {socialMedia.map((social, index) => (
               <li key={index}>
                 <a
                   className="btn"
@@ -63,8 +72,16 @@ const HeroSection = ({
         </div>
         <div className="hero__content__second">
           <div className="hero__image">
-            <img src={imgUrl} alt={`${primary_heading} ${secondary_heading}`} />
+            <img src={imgUrl} alt={`${primaryHeading} ${secondaryHeading}`} />
           </div>
+          <Decoration
+            w={100}
+            h={100}
+            color="black"
+            top={-25}
+            right={-25}
+            animationDuration={33}
+          />
         </div>
       </div>
     </Section>

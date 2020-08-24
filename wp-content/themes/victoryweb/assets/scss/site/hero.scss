@@ -1,3 +1,5 @@
+$hero-spacing: rem(45);
+
 // --------------------------------------------------
 // base
 // --------------------------------------------------
@@ -6,12 +8,22 @@
   position: relative;
   background-color: color('secondary');
   height: 100%;
-  width: 100%;
-  padding: $padding-md;
+  width: auto;
+  max-width: 100%;
+  padding: $padding-xxs;
   color: color('white');
 
   @media #{$mq-min-md} {
-    min-height: rem(550);
+    // min-height: rem(550);
+    padding: $padding-md;
+  }
+
+  @media #{$mq-min-xl} {
+    margin-bottom: $padding-md;
+  }
+
+  @media #{$mq-min-xxl} {
+    margin-bottom: $padding-lg;
   }
 }
 
@@ -20,30 +32,58 @@
 // --------------------------------------------------
 
 .hero__content {
+  @extend %flex-row-wrap;
   position: relative;
   border: $global-border-primary;
   border-color: color('white');
   border-radius: $global-border-radius;
-  display: flex;
-  flex-direction: row;
+  color: color('white');
   align-items: center;
   justify-content: space-between;
-  padding: $padding-xs $padding-md;
+  padding: $padding-xxs $padding-xs;
+
+  @media #{$mq-min-md} {
+    padding: $padding-xs $padding-sm;
+  }
 
   & > .hero__content__first {
-    padding-right: 3%;
-    margin-right: rem(45);
+    position: relative;
+    padding-right: 0;
     width: 100%;
-    max-width: 70%;
+    max-width: 100%;
     text-align: center;
 
     > * + * + * {
       margin-top: rem(35);
+
+      @media #{$mq-min-xxl} {
+        margin-top: rem(35);
+      }
+    }
+
+    @media #{$mq-min-lg} {
+      padding-right: $hero-spacing;
+      width: 60%;
+    }
+
+    @media #{$mq-min-xxl} {
+      padding-right: calc(#{$hero-spacing} + #{rem(30)});
+      width: 65%;
     }
   }
 
   & > .hero__content__second {
-    max-width: 30%;
+    position: relative;
+    display: none;
+
+    @media #{$mq-min-lg} {
+      display: block;
+      width: 40%;
+    }
+
+    @media #{$mq-min-xxl} {
+      width: 35%;
+    }
   }
 }
 
@@ -52,27 +92,56 @@
 // --------------------------------------------------
 
 .hero__content__heading {
+  position: relative;
+  display: inline-block;
+  color: color('white');
   font-family: $font-family-baskerville;
+  font-weight: $font-weight-normal;
+  font-size: rem(48);
+  line-height: rem(48);
   letter-spacing: 2px;
   margin: 0;
-  font-weight: $font-weight-normal;
   text-transform: uppercase;
+  z-index: 1;
+
+  @media #{$mq-min-sm} {
+    font-size: rem(56);
+    line-height: rem(56);
+  }
 
   @media #{$mq-min-md} {
+    font-size: rem(88);
+    line-height: rem(88);
+  }
+
+  @media #{$mq-min-xxl} {
     font-size: rem(120);
     line-height: rem(120);
   }
 }
 
 .hero__content__sub-heading {
+  color: color('white');
   font-family: $font-family-pinyon;
+  font-weight: $font-weight-normal;
+  font-size: rem(32);
+  line-height: rem(32);
   letter-spacing: 2px;
   margin: rem(15) 0 0;
-  font-weight: $font-weight-normal;
+
+  @media #{$mq-min-sm} {
+    font-size: rem(40);
+    line-height: rem(40);
+  }
 
   @media #{$mq-min-md} {
-    font-size: rem(70);
-    line-height: rem(70);
+    font-size: rem(54);
+    line-height: rem(54);
+  }
+
+  @media #{$mq-min-xxl} {
+    font-size: rem(72);
+    line-height: rem(72);
   }
 }
 
@@ -83,19 +152,24 @@
 .hero__content__actions {
   @extend %clear-list-styles;
   @extend %flex-row-wrap;
-  justify-content: space-evenly;
+  justify-content: space-between;
+  margin: -10px;
 
   & > li {
-    flex: 1 0 150px;
+    width: 100%;
     max-width: 100%;
+    padding: 10px;
+    margin: auto;
+    flex: 1 0 100%;
+
+    @media #{$mq-min-md} {
+      max-width: 50%;
+      flex: 1 0 50%;
+    }
 
     & > a.btn {
       width: 100%;
     }
-  }
-
-  > * + * {
-    margin-left: rem(20);
   }
 
   &--social {
@@ -128,14 +202,27 @@
   border-radius: $global-border-radius;
   width: 100%;
   height: 100%;
-  margin-bottom: rem(-145);
+
+  @media #{$mq-min-xl} {
+    margin-bottom: rem(-145);
+  }
 
   & > img {
     position: relative;
     display: block;
     border-radius: $global-border-radius;
-    top: rem(45);
-    right: rem(45);
+    top: 0;
+    right: 0;
     z-index: 1;
+
+    @media #{$mq-min-md} {
+      top: $hero-spacing / 2;
+      right: $hero-spacing / 2;
+    }
+
+    @media #{$mq-min-xxl} {
+      top: $hero-spacing;
+      right: $hero-spacing;
+    }
   }
 }

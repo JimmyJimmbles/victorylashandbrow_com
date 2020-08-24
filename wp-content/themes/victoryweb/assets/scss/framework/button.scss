@@ -130,3 +130,21 @@ $button-padding-y: rem(10) !default;
 // --------------------------------------------------
 
 @include btn();
+
+.btn--secondary {
+  border-radius: $global-border-radius;
+
+  &::before,
+  &::after {
+    border-radius: $global-border-radius;
+  }
+
+  &:hover {
+    color: $global-border-color-primary;
+
+    &::before,
+    &::after {
+      border-color: $global-border-color-primary;
+    }
+  }
+}

@@ -1,0 +1,45 @@
+// --------------------------------------------------
+// Vagaro styles
+// --------------------------------------------------
+
+#frameTitle {
+  font-size: 23px;
+  color: #333;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 24px;
+  padding: 18px 10px 8px;
+  text-align: center;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.vagaro {
+  width: rem(250);
+  padding: 0;
+  border: 0;
+  margin: 0 auto;
+  text-align: center;
+
+  a {
+    font-size: rem(14);
+    color: #aaa;
+    text-decoration: none;
+  }
+}
+
+// --------------------------------------------------
+// Vagaro overrides
+// --------------------------------------------------
+.vagaro-container.vagaro-embedded-widget .vagaro-iframe {
+  max-width: 100% !important;
+  width: 100% !important;
+
+  iframe {
+    height: rem(550) !important;
+  }
+}
+
+.vagaro-footer {
+  display: none !important;
+}

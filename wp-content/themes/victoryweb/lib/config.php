@@ -23,3 +23,7 @@ $victory_nav_menus = [
 ];
 
 define('VICTORY_NAV_MENUS', $victory_nav_menus);
+
+
+// Add support for post thumbnails
+add_theme_support('post-thumbnails');
