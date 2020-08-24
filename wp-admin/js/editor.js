@@ -473,7 +473,7 @@ window.wp = window.wp || {};
 		 * The method directly manipulates the `textarea` content, to allow TinyMCE plugins
 		 * to run after the markers are added.
 		 *
-		 * @param {object} $textarea TinyMCE's textarea wrapped as a DomQuery object
+		 * @param {Object} $textarea TinyMCE's textarea wrapped as a DomQuery object
 		 */
 		function addHTMLBookmarkInTextAreaContent( $textarea ) {
 			if ( ! $textarea || ! $textarea.length ) {
@@ -561,7 +561,7 @@ window.wp = window.wp || {};
 		 * By default TinyMCE wraps loose inline tags in a `<p>`.
 		 * When removing selection markers an empty `<p>` may be left behind, remove it.
 		 *
-		 * @param {object} $marker The marker to be removed from the editor DOM, wrapped in an instnce of `editor.$`
+		 * @param {Object} $marker The marker to be removed from the editor DOM, wrapped in an instnce of `editor.$`
 		 */
 		function removeSelectionMarker( $marker ) {
 			var $markerParent = $marker.parent();
@@ -1225,7 +1225,7 @@ window.wp = window.wp || {};
 	 *
 	 * @param {string} id The HTML id of the textarea that is used for the editor.
 	 *                    Has to be jQuery compliant. No brackets, special chars, etc.
-	 * @param {object} settings Example:
+	 * @param {Object} settings Example:
 	 * settings = {
 	 *    // See https://www.tinymce.com/docs/configure/integration-and-setup/.
 	 *    // Alternatively set to `true` to use the defaults.

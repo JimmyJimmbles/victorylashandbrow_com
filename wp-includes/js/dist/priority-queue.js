@@ -91,6 +91,7 @@ this["wp"] = this["wp"] || {}; this["wp"]["priorityQueue"] =
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+// ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/priority-queue/build-module/request-idle-callback.js
@@ -261,10 +262,23 @@ var build_module_createQueue = function createQueue() {
     callback();
     return true;
   };
+  /**
+   * Reset the queue without running the pending callbacks.
+   *
+   * @type {WPPriorityQueueReset}
+   */
+
+
+  var reset = function reset() {
+    waitingList = [];
+    elementsMap = new WeakMap();
+    isRunning = false;
+  };
 
   return {
     add: add,
-    flush: flush
+    flush: flush,
+    reset: reset
   };
 };
 

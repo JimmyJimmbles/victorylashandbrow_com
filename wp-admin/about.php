@@ -172,6 +172,30 @@ require_once ABSPATH . 'wp-admin/admin-header.php';
 				</div>
 			</div>
 		</div>
+		<div class="about__section has-2-columns has-subtle-background-color">
+			<div class="column about__image is-vertically-aligned-center">
+				<figure aria-labelledby="about-block-pattern" class="about__image">
+					<video controls poster="https://s.w.org/images/core/5.5/block-patterns-poster.png">
+						<source src="https://s.w.org/images/core/5.5/block-patterns.mp4" type="video/mp4" />
+						<source src="https://s.w.org/images/core/5.5/block-patterns.webm" type="video/webm" />
+					</video>
+					<figcaption id="about-block-pattern" class="screen-reader-text"><?php _e( 'Video: In the editor, the block inserter shows two tabs, Blocks and Patterns. The Patterns tab is selected. There are different block layouts in this tab. After scrolling through options including buttons and columns, a pattern called "Large header with a heading" is chosen. This adds a cover block, which is customized with a photo and the name of the WordPress 5.5 jazz musician.' ); ?></figcaption>
+				</figure>
+				<hr />
+				<figure aria-labelledby="about-image-editor" class="about__image">
+					<video controls poster="https://s.w.org/images/core/5.5/inline-image-editing-poster.png">
+						<source src="https://s.w.org/images/core/5.5/inline-image-editing.mp4" type="video/mp4" />
+						<source src="https://s.w.org/images/core/5.5/inline-image-editing-1.webm" type="video/webm" />
+					</video>
+					<figcaption id="about-image-editor" class="screen-reader-text"><?php _e( 'Video: An image is added with an image block. In the block toolbar, an icon called "Crop" is selected, which changes the toolbar to show image resizing tools. First, zoom is used to zoom into the center of the image. Next, aspect ratio is clicked. This shows a dropdown of common aspect ratios. Square is chosen, and the image is moved within the new square outline. The crop is completed by clicking "Apply."' ); ?></figcaption>
+				</figure>
+			</div>
+			<div class="column">
+				<h3><?php _e( 'Block patterns' ); ?></h3>
+				<p><?php _e( 'New block patterns make it simple and fun to create complex, beautiful layouts, using combinations of text and media that you can mix and match to fit your story.' ); ?></p>
+				<p><?php _e( 'You will also find block patterns in a wide variety of plugins and themes, with more added all the time. Pick any of them from a single place — just click and go!' ); ?></p>
+				<h3><?php _e( 'Inline image editing' ); ?></h3>
+				<p><?php _e( 'Crop, rotate, and zoom your photos right from the image block. If you spend a lot of time on images, this could save you hours!' ); ?></p>
 
 		<div class="about__section has-2-columns">
 			<div class="column is-edge-to-edge">
@@ -237,6 +261,58 @@ require_once ABSPATH . 'wp-admin/admin-header.php';
 					<?php _e( 'Check your code and see where these new actions can replace your custom code, and if you&#8217;re concerned about duplication, add a check for the WordPress version.' ); ?>
 				</p>
 			</div>
+		</div>
+
+		<div class="about__section has-subtle-background-color">
+			<div class="column">
+				<h3><?php _e( 'More changes for developers' ); ?></h3>
+				<ul>
+					<li><?php _e( 'The PHPMailer library just got a major update, going from version 5.2.27 to 6.1.6.' ); ?></li>
+					<li>
+						<?php
+						printf(
+							/* translators: %s: 'redirect_guess_404_permalink' function name. */
+							__( 'Now get more fine-grained control of %s.' ),
+							'<code>redirect_guess_404_permalink()</code>'
+						);
+						?>
+					</li>
+					<li>
+						<?php
+						printf(
+							/* translators: %s: 'wp_opcache_invalidate' function name. */
+							__( 'Sites that use PHP’s OPcache will see more reliable cache invalidation, thanks to the new %s function during updates (including to plugins and themes).' ),
+							'<code>wp_opcache_invalidate()</code>'
+						);
+						?>
+					</li>
+					<li><?php _e( 'Custom post types associated with the category taxonomy can now opt-in to supporting the default term.' ); ?></li>
+					<li>
+						<?php
+						printf(
+							/* translators: %s: 'register_taxonomy' function name. */
+							__( 'Default terms can now be specified for custom taxonomies in %s.' ),
+							'<code>register_taxonomy()</code>'
+						);
+						?>
+					</li>
+					<li>
+						<?php
+						printf(
+							/* translators: %s: 'register_meta' function name. */
+							__( 'The REST API now officially supports specifying default metadata values through %s.' ),
+							'<code>register_meta()</code>'
+						);
+						?>
+					</li>
+					<li><?php _e( 'You will find updated versions of these bundled libraries: SimplePie, Twemoji, Masonry, imagesLoaded, getID3, Moment.js, and clipboard.js.' ); ?></li>
+				</ul>
+			</div>
+		</div>
+
+		<hr class="is-small" />
+
+		<div class="about__section">
 			<div class="column">
 				<h3><?php _e( 'Blocks! Simpler styling, new APIs and embeds' ); ?></h3>
 				<ul>

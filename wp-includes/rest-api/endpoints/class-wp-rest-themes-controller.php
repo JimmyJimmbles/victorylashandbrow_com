@@ -176,6 +176,31 @@ class WP_REST_Themes_Controller extends WP_REST_Controller {
 	}
 
 	/**
+	 * Prepares the theme support value for inclusion in the REST API response.
+	 *
+	 * @since 5.5.0
+	 *
+	 * @param mixed           $support The raw value from get_theme_support().
+	 * @param array           $args    The feature's registration args.
+	 * @param string          $feature The feature name.
+	 * @param WP_REST_Request $request The request object.
+	 * @return mixed The prepared support value.
+	 */
+	protected function prepare_theme_support( $support, $args, $feature, $request ) {
+		$schema = $args['show_in_rest']['schema'];
+
+		if ( 'boolean' === $schema['type'] ) {
+			return true;
+		}
+
+		if ( is_array( $support ) && ! $args['variadic'] ) {
+			$support = $support[0];
+		}
+
+		return rest_sanitize_value_from_schema( $support, $schema );
+	}
+
+	/**
 	 * Retrieves the theme's schema, conforming to JSON Schema.
 	 *
 	 * @since 5.0.0
@@ -458,8 +483,23 @@ class WP_REST_Themes_Controller extends WP_REST_Controller {
 						),
 					),
 				),
+				'version'        => array(
+					'description' => __( 'The theme\'s current version.' ),
+					'type'        => 'string',
+					'readonly'    => true,
+				),
 			),
 		);
+
+		foreach ( get_registered_theme_features() as $feature => $config ) {
+			if ( ! is_array( $config['show_in_rest'] ) ) {
+				continue;
+			}
+
+			$name = $config['show_in_rest']['name'];
+
+			$schema['properties']['theme_supports']['properties'][ $name ] = $config['show_in_rest']['schema'];
+		}
 
 		$this->schema = $schema;
 

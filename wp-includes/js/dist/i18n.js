@@ -330,6 +330,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/* global window, exports, define */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+// ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/defineProperty.js
@@ -847,14 +848,9 @@ var memize_default = /*#__PURE__*/__webpack_require__.n(memize);
 var sprintf = __webpack_require__(188);
 var sprintf_default = /*#__PURE__*/__webpack_require__.n(sprintf);
 
-// CONCATENATED MODULE: ./node_modules/@wordpress/i18n/build-module/index.js
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setLocaleData", function() { return setLocaleData; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__", function() { return __; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_x", function() { return _x; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_n", function() { return _n; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_nx", function() { return _nx; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sprintf", function() { return build_module_sprintf; });
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { Object(defineProperty["a" /* default */])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -864,7 +860,9 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
  * External dependencies
  */
 
-
+/**
+ * @typedef {Record<string,any>} LocaleData
+ */
 
 /**
  * @typedef {{[key: string]: any}} LocaleData
@@ -879,28 +877,204 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 var DEFAULT_LOCALE_DATA = {
   '': {
+    /** @param {number} n */
     plural_forms: function plural_forms(n) {
       return n === 1 ? 0 : 1;
     }
   }
 };
 /**
- * Log to console, once per message; or more precisely, per referentially equal
- * argument set. Because Jed throws errors, we log these to the console instead
- * to avoid crashing the application.
+ * An i18n instance
  *
- * @param {...*} args Arguments to pass to `console.error`
+ * @typedef {Object} I18n
+ * @property {Function} setLocaleData Merges locale data into the Tannin instance by domain. Accepts data in a
+ *                                    Jed-formatted JSON object shape.
+ * @property {Function} __            Retrieve the translation of text.
+ * @property {Function} _x            Retrieve translated string with gettext context.
+ * @property {Function} _n            Translates and retrieves the singular or plural form based on the supplied
+ *                                    number.
+ * @property {Function} _nx           Translates and retrieves the singular or plural form based on the supplied
+ *                                    number, with gettext context.
+ * @property {Function} isRTL         Check if current locale is RTL.
  */
-
-var logErrorOnce = memize_default()(console.error); // eslint-disable-line no-console
 
 /**
- * The underlying instance of Tannin to which exported functions interface.
+ * Create an i18n instance
  *
- * @type {Tannin}
+ * @param {LocaleData} [initialData]    Locale data configuration.
+ * @param {string}     [initialDomain]  Domain for which configuration applies.
+ * @return {I18n}                       I18n instance
  */
 
-var i18n = new Tannin({});
+var create_i18n_createI18n = function createI18n(initialData, initialDomain) {
+  /**
+   * The underlying instance of Tannin to which exported functions interface.
+   *
+   * @type {Tannin}
+   */
+  var tannin = new Tannin({});
+  /**
+   * Merges locale data into the Tannin instance by domain. Accepts data in a
+   * Jed-formatted JSON object shape.
+   *
+   * @see http://messageformat.github.io/Jed/
+   *
+   * @param {LocaleData} [data]   Locale data configuration.
+   * @param {string}     [domain] Domain for which configuration applies.
+   */
+
+  var setLocaleData = function setLocaleData(data) {
+    var domain = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'default';
+    tannin.data[domain] = _objectSpread({}, DEFAULT_LOCALE_DATA, {}, tannin.data[domain], {}, data); // Populate default domain configuration (supported locale date which omits
+    // a plural forms expression).
+
+    tannin.data[domain][''] = _objectSpread({}, DEFAULT_LOCALE_DATA[''], {}, tannin.data[domain]['']);
+  };
+  /**
+   * Wrapper for Tannin's `dcnpgettext`. Populates default locale data if not
+   * otherwise previously assigned.
+   *
+   * @param {string|undefined} domain   Domain to retrieve the translated text.
+   * @param {string|undefined} context  Context information for the translators.
+   * @param {string}           single   Text to translate if non-plural. Used as
+   *                                    fallback return value on a caught error.
+   * @param {string}           [plural] The text to be used if the number is
+   *                                    plural.
+   * @param {number}           [number] The number to compare against to use
+   *                                    either the singular or plural form.
+   *
+   * @return {string} The translated string.
+   */
+
+
+  var dcnpgettext = function dcnpgettext() {
+    var domain = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'default';
+    var context = arguments.length > 1 ? arguments[1] : undefined;
+    var single = arguments.length > 2 ? arguments[2] : undefined;
+    var plural = arguments.length > 3 ? arguments[3] : undefined;
+    var number = arguments.length > 4 ? arguments[4] : undefined;
+
+    if (!tannin.data[domain]) {
+      setLocaleData(undefined, domain);
+    }
+
+    return tannin.dcnpgettext(domain, context, single, plural, number);
+  };
+  /**
+   * Retrieve the translation of text.
+   *
+   * @see https://developer.wordpress.org/reference/functions/__/
+   *
+   * @param {string} text     Text to translate.
+   * @param {string} [domain] Domain to retrieve the translated text.
+   *
+   * @return {string} Translated text.
+   */
+
+
+  var __ = function __(text, domain) {
+    return dcnpgettext(domain, undefined, text);
+  };
+  /**
+   * Retrieve translated string with gettext context.
+   *
+   * @see https://developer.wordpress.org/reference/functions/_x/
+   *
+   * @param {string} text     Text to translate.
+   * @param {string} context  Context information for the translators.
+   * @param {string} [domain] Domain to retrieve the translated text.
+   *
+   * @return {string} Translated context string without pipe.
+   */
+
+
+  var _x = function _x(text, context, domain) {
+    return dcnpgettext(domain, context, text);
+  };
+  /**
+   * Translates and retrieves the singular or plural form based on the supplied
+   * number.
+   *
+   * @see https://developer.wordpress.org/reference/functions/_n/
+   *
+   * @param {string} single   The text to be used if the number is singular.
+   * @param {string} plural   The text to be used if the number is plural.
+   * @param {number} number   The number to compare against to use either the
+   *                          singular or plural form.
+   * @param {string} [domain] Domain to retrieve the translated text.
+   *
+   * @return {string} The translated singular or plural form.
+   */
+
+
+  var _n = function _n(single, plural, number, domain) {
+    return dcnpgettext(domain, undefined, single, plural, number);
+  };
+  /**
+   * Translates and retrieves the singular or plural form based on the supplied
+   * number, with gettext context.
+   *
+   * @see https://developer.wordpress.org/reference/functions/_nx/
+   *
+   * @param {string} single   The text to be used if the number is singular.
+   * @param {string} plural   The text to be used if the number is plural.
+   * @param {number} number   The number to compare against to use either the
+   *                          singular or plural form.
+   * @param {string} context  Context information for the translators.
+   * @param {string} [domain] Domain to retrieve the translated text.
+   *
+   * @return {string} The translated singular or plural form.
+   */
+
+
+  var _nx = function _nx(single, plural, number, context, domain) {
+    return dcnpgettext(domain, context, single, plural, number);
+  };
+  /**
+   * Check if current locale is RTL.
+   *
+   * **RTL (Right To Left)** is a locale property indicating that text is written from right to left.
+   * For example, the `he` locale (for Hebrew) specifies right-to-left. Arabic (ar) is another common
+   * language written RTL. The opposite of RTL, LTR (Left To Right) is used in other languages,
+   * including English (`en`, `en-US`, `en-GB`, etc.), Spanish (`es`), and French (`fr`).
+   *
+   * @return {boolean} Whether locale is RTL.
+   */
+
+
+  var isRTL = function isRTL() {
+    return 'rtl' === _x('ltr', 'text direction');
+  };
+
+  if (initialData) {
+    setLocaleData(initialData, initialDomain);
+  }
+
+  return {
+    setLocaleData: setLocaleData,
+    __: __,
+    _x: _x,
+    _n: _n,
+    _nx: _nx,
+    isRTL: isRTL
+  };
+};
+
+// CONCATENATED MODULE: ./node_modules/@wordpress/i18n/build-module/default-i18n.js
+/**
+ * Internal dependencies
+ */
+
+var i18n = create_i18n_createI18n();
+/*
+ * Comments in this file are duplicated from ./i18n due to
+ * https://github.com/WordPress/gutenberg/pull/20318#issuecomment-590837722
+ */
+
+/**
+ * @typedef {import('./create-i18n').LocaleData} LocaleData
+ */
+
 /**
  * Merges locale data into the Tannin instance by domain. Accepts data in a
  * Jed-formatted JSON object shape.
@@ -958,10 +1132,7 @@ function dcnpgettext() {
  * @return {string} Translated text.
  */
 
-
-function __(text, domain) {
-  return dcnpgettext(domain, undefined, text);
-}
+var default_i18n_ = i18n.__.bind(i18n);
 /**
  * Retrieve translated string with gettext context.
  *
@@ -974,9 +1145,7 @@ function __(text, domain) {
  * @return {string} Translated context string without pipe.
  */
 
-function _x(text, context, domain) {
-  return dcnpgettext(domain, context, text);
-}
+var default_i18n_x = i18n._x.bind(i18n);
 /**
  * Translates and retrieves the singular or plural form based on the supplied
  * number.
@@ -992,9 +1161,7 @@ function _x(text, context, domain) {
  * @return {string} The translated singular or plural form.
  */
 
-function _n(single, plural, number, domain) {
-  return dcnpgettext(domain, undefined, single, plural, number);
-}
+var default_i18n_n = i18n._n.bind(i18n);
 /**
  * Translates and retrieves the singular or plural form based on the supplied
  * number, with gettext context.
@@ -1011,34 +1178,45 @@ function _n(single, plural, number, domain) {
  * @return {string} The translated singular or plural form.
  */
 
-function _nx(single, plural, number, context, domain) {
-  return dcnpgettext(domain, context, single, plural, number);
-}
+var default_i18n_nx = i18n._nx.bind(i18n);
 /**
- * Returns a formatted string. If an error occurs in applying the format, the
- * original format string is returned.
+ * Check if current locale is RTL.
  *
  * @param {string}    format The format of the string to generate.
  * @param {...string} args   Arguments to apply to the format.
  *
- * @see http://www.diveintojavascript.com/projects/javascript-sprintf
- *
- * @return {string} The formatted string.
+ * @return {boolean} Whether locale is RTL.
  */
 
-function build_module_sprintf(format) {
-  try {
-    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-      args[_key - 1] = arguments[_key];
-    }
+var default_i18n_isRTL = i18n.isRTL.bind(i18n);
 
-    return sprintf_default.a.sprintf.apply(sprintf_default.a, [format].concat(args));
-  } catch (error) {
-    logErrorOnce('sprintf error: \n\n' + error.toString());
-    return format;
+// CONCATENATED MODULE: ./node_modules/@wordpress/i18n/build-module/index.js
+
+
+
+
+
+/***/ }),
+
+/***/ 5:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _defineProperty; });
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
   }
-}
 
+  return obj;
+}
 
 /***/ }),
 

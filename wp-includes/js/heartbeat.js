@@ -68,7 +68,7 @@
 				// Used when the interval is reset.
 				originalInterval: 0,
 
-				// Used to limit the number of AJAX requests.
+				// Used to limit the number of Ajax requests.
 				minimalInterval: 0,
 
 				// Used together with tempInterval.

@@ -91,7 +91,17 @@ this["wp"] = this["wp"] || {}; this["wp"]["escapeHtml"] =
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+// ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
+
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, "escapeAmpersand", function() { return /* binding */ escapeAmpersand; });
+__webpack_require__.d(__webpack_exports__, "escapeQuotationMark", function() { return /* binding */ escapeQuotationMark; });
+__webpack_require__.d(__webpack_exports__, "escapeLessThan", function() { return /* binding */ escapeLessThan; });
+__webpack_require__.d(__webpack_exports__, "escapeAttribute", function() { return /* binding */ escapeAttribute; });
+__webpack_require__.d(__webpack_exports__, "escapeHTML", function() { return /* binding */ escapeHTML; });
+__webpack_require__.d(__webpack_exports__, "escapeEditableHTML", function() { return /* binding */ escapeEditableHTML; });
+__webpack_require__.d(__webpack_exports__, "isValidAttributeName", function() { return /* binding */ isValidAttributeName; });
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/escape-html/build-module/escape-greater.js
 /**

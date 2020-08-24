@@ -25,7 +25,7 @@
 		 * @since 4.9.0
 		 *
 		 * @param {string} code - Code.
-		 * @param {object} params - Params.
+		 * @param {Object} params - Params.
 		 */
 		initialize: function( code, params ) {
 			var notification = this;
@@ -94,7 +94,7 @@
 		 * @constructs wp.customize.Notifications
 		 * @augments   wp.customize.Values
 		 *
-		 * @param {object}  options - Options.
+		 * @param {Object}  options - Options.
 		 * @param {jQuery}  [options.container] - Container element for notifications. This can be injected later.
 		 * @param {boolean} [options.alt] - Whether alternative style should be used when rendering notifications.
 		 *
@@ -174,7 +174,7 @@
 		 * Notifications may be sorted by type followed by added time.
 		 *
 		 * @since 4.9.0
-		 * @param {object}  args - Args.
+		 * @param {Object}  args - Args.
 		 * @param {boolean} [args.sort=false] - Whether to return the notifications sorted.
 		 * @return {Array.<wp.customize.Notification>} Notifications.
 		 */
@@ -362,10 +362,10 @@
 		 *
 		 * @param {string}  id                          - The setting ID.
 		 * @param {*}       value                       - The initial value of the setting.
-		 * @param {object}  [options={}]                - Options.
+		 * @param {Object}  [options={}]                - Options.
 		 * @param {string}  [options.transport=refresh] - The transport to use for previewing. Supports 'refresh' and 'postMessage'.
 		 * @param {boolean} [options.dirty=false]       - Whether the setting should be considered initially dirty.
-		 * @param {object}  [options.previewer]         - The Previewer instance to sync with. Defaults to wp.customize.previewer.
+		 * @param {Object}  [options.previewer]         - The Previewer instance to sync with. Defaults to wp.customize.previewer.
 		 */
 		initialize: function( id, value, options ) {
 			var setting = this, params;
@@ -495,7 +495,7 @@
 	 * @since 4.7.0
 	 * @access public
 	 *
-	 * @param {object} [options] Options.
+	 * @param {Object} [options] Options.
 	 * @param {boolean} [options.unsaved=false] Whether only values not saved yet into a changeset will be returned (differential changes).
 	 * @return {object} Dirty setting values.
 	 */
@@ -528,9 +528,9 @@
 	 * @since 4.7.0
 	 * @access public
 	 *
-	 * @param {object}  [changes] - Mapping of setting IDs to setting params each normally including a value property, or mapping to null.
+	 * @param {Object}  [changes] - Mapping of setting IDs to setting params each normally including a value property, or mapping to null.
 	 *                             If not provided, then the changes will still be obtained from unsaved dirty settings.
-	 * @param {object}  [args] - Additional options for the save request.
+	 * @param {Object}  [args] - Additional options for the save request.
 	 * @param {boolean} [args.autosave=false] - Whether changes will be stored in autosave revision if the changeset has been promoted from an auto-draft.
 	 * @param {boolean} [args.force=false] - Send request to update even when there are no changes to submit. This can be used to request the latest status of the changeset on the server.
 	 * @param {string}  [args.title] - Title to update in the changeset. Optional.
@@ -796,7 +796,7 @@
 	 * @since 4.9.0
 	 *
 	 * @param {jQuery} button - The element to highlight.
-	 * @param {object} [options] - Options.
+	 * @param {Object} [options] - Options.
 	 * @param {number} [options.delay=0] - Delay in milliseconds.
 	 * @param {jQuery} [options.focusTarget] - A target for user focus that defaults to the highlighted element.
 	 *                                         If the user focuses the target before the delay passes, the reminder
@@ -869,8 +869,8 @@
 	 *
 	 * @since 4.9.0
 	 *
-	 * @param {string|int|Date} datetime - Date time or timestamp of the future date.
-	 * @return {int} remainingTime - Remaining time in milliseconds.
+	 * @param {string|number|Date} datetime - Date time or timestamp of the future date.
+	 * @return {number} remainingTime - Remaining time in milliseconds.
 	 */
 	api.utils.getRemainingTime = function getRemainingTime( datetime ) {
 		var millisecondsDivider = 1000, remainingTime, timestamp;
@@ -940,7 +940,7 @@
 		 * @borrows wp.customize~focus as focus
 		 *
 		 * @param {string}  id - The ID for the container.
-		 * @param {object}  options - Object containing one property: params.
+		 * @param {Object}  options - Object containing one property: params.
 		 * @param {string}  options.title - Title shown when panel is collapsed and expanded.
 		 * @param {string}  [options.description] - Description shown at the top of the panel.
 		 * @param {number}  [options.priority=100] - The sort priority for the panel.
@@ -948,7 +948,7 @@
 		 * @param {string}  [options.type=default] - The type of the panel. See wp.customize.panelConstructor.
 		 * @param {string}  [options.content] - The markup to be used for the panel container. If empty, a JS template is used.
 		 * @param {boolean} [options.active=true] - Whether the panel is active or not.
-		 * @param {object}  [options.params] - Deprecated wrapper for the above properties.
+		 * @param {Object}  [options.params] - Deprecated wrapper for the above properties.
 		 */
 		initialize: function ( id, options ) {
 			var container = this;
@@ -1200,7 +1200,7 @@
 		/**
 		 * Handle the toggle logic for expand/collapse.
 		 *
-		 * @param {Boolean}  expanded - The new state to apply.
+		 * @param {boolean}  expanded - The new state to apply.
 		 * @param {Object}   [params] - Object containing options for expand/collapse.
 		 * @param {Function} [params.completeCallback] - Function to call when expansion/collapse is complete.
 		 * @return {Boolean} False if state already applied or active state is false.
@@ -1409,7 +1409,7 @@
 		 * @since 4.1.0
 		 *
 		 * @param {string}  id - The ID for the section.
-		 * @param {object}  options - Options.
+		 * @param {Object}  options - Options.
 		 * @param {string}  options.title - Title shown when section is collapsed and expanded.
 		 * @param {string}  [options.description] - Description shown at the top of the section.
 		 * @param {number}  [options.priority=100] - The sort priority for the section.
@@ -1418,7 +1418,7 @@
 		 * @param {boolean} [options.active=true] - Whether the section is active or not.
 		 * @param {string}  options.panel - The ID for the panel this section is associated with.
 		 * @param {string}  [options.customizeAction] - Additional context information shown before the section title when expanded.
-		 * @param {object}  [options.params] - Deprecated wrapper for the above properties.
+		 * @param {Object}  [options.params] - Deprecated wrapper for the above properties.
 		 */
 		initialize: function ( id, options ) {
 			var section = this, params;
@@ -1575,7 +1575,7 @@
 		 *
 		 * @since 4.1.0
 		 *
-		 * @param {Boolean} expanded
+		 * @param {boolean} expanded
 		 * @param {Object}  args
 		 */
 		onChangeExpanded: function ( expanded, args ) {
@@ -1951,9 +1951,9 @@
 		 *
 		 * @since 4.2.0
 		 *
-		 * @param {Boolean}  expanded
+		 * @param {boolean}  expanded
 		 * @param {Object}   args
-		 * @param {Boolean}  args.unchanged
+		 * @param {boolean}  args.unchanged
 		 * @param {Function} args.completeCallback
 		 * @return {void}
 		 */
@@ -2559,7 +2559,7 @@
 		 *
 		 * @since 4.2.0
 		 *
-		 * @param {object} theme - Theme.
+		 * @param {Object} theme - Theme.
 		 * @param {Function} [callback] - Callback once the details have been shown.
 		 * @return {void}
 		 */
@@ -2667,7 +2667,7 @@
 		 *
 		 * @since 4.9.0
 		 *
-		 * @param {Boolean}  expanded - The expanded state to transition to.
+		 * @param {boolean}  expanded - The expanded state to transition to.
 		 * @param {Object}   [args] - Args.
 		 * @param {boolean}  [args.unchanged] - Whether the state is already known to not be changed, and so short-circuit with calling completeCallback early.
 		 * @param {Function} [args.completeCallback] - Function to call when the slideUp/slideDown has completed.
@@ -2762,14 +2762,14 @@
 		 * @since 4.1.0
 		 *
 		 * @param {string}  id - The ID for the panel.
-		 * @param {object}  options - Object containing one property: params.
+		 * @param {Object}  options - Object containing one property: params.
 		 * @param {string}  options.title - Title shown when panel is collapsed and expanded.
 		 * @param {string}  [options.description] - Description shown at the top of the panel.
 		 * @param {number}  [options.priority=100] - The sort priority for the panel.
 		 * @param {string}  [options.type=default] - The type of the panel. See wp.customize.panelConstructor.
 		 * @param {string}  [options.content] - The markup to be used for the panel container. If empty, a JS template is used.
 		 * @param {boolean} [options.active=true] - Whether the panel is active or not.
-		 * @param {object}  [options.params] - Deprecated wrapper for the above properties.
+		 * @param {Object}  [options.params] - Deprecated wrapper for the above properties.
 		 */
 		initialize: function ( id, options ) {
 			var panel = this, params;
@@ -2905,9 +2905,9 @@
 		 *
 		 * @since 4.1.0
 		 *
-		 * @param {Boolean}  expanded
+		 * @param {boolean}  expanded
 		 * @param {Object}   args
-		 * @param {Boolean}  args.unchanged
+		 * @param {boolean}  args.unchanged
 		 * @param {Function} args.completeCallback
 		 * @return {void}
 		 */
@@ -3133,9 +3133,9 @@
 		 *
 		 * @since 4.9.0
 		 *
-		 * @param {Boolean}  expanded - Expanded state.
+		 * @param {boolean}  expanded - Expanded state.
 		 * @param {Object}   args - Args.
-		 * @param {Boolean}  args.unchanged - Whether or not the state changed.
+		 * @param {boolean}  args.unchanged - Whether or not the state changed.
 		 * @param {Function} args.completeCallback - Callback to execute when the animation completes.
 		 * @return {void}
 		 */
@@ -3482,8 +3482,8 @@
 		 * @borrows wp.customize~Container#_toggleActive as this#_toggleActive
 		 *
 		 * @param {string} id                       - Unique identifier for the control instance.
-		 * @param {object} options                  - Options hash for the control instance.
-		 * @param {object} options.type             - Type of control (e.g. text, radio, dropdown-pages, etc.)
+		 * @param {Object} options                  - Options hash for the control instance.
+		 * @param {Object} options.type             - Type of control (e.g. text, radio, dropdown-pages, etc.)
 		 * @param {string} [options.content]        - The HTML content for the control or at least its container. This should normally be left blank and instead supplying a templateId.
 		 * @param {string} [options.templateId]     - Template ID for control's content.
 		 * @param {string} [options.priority=10]    - Order of priority to show the control within the section.
@@ -3900,9 +3900,9 @@
 		 *
 		 * @since 4.1.0
 		 *
-		 * @param {Boolean}  active
+		 * @param {boolean}  active
 		 * @param {Object}   args
-		 * @param {Number}   args.duration
+		 * @param {number}   args.duration
 		 * @param {Function} args.completeCallback
 		 */
 		onChangeActive: function ( active, args ) {
@@ -4355,7 +4355,7 @@
 		/**
 		 * Called when the "Remove" link is clicked. Empties the setting.
 		 *
-		 * @param {object} event jQuery Event object
+		 * @param {Object} event jQuery Event object
 		 */
 		removeFile: function( event ) {
 			if ( api.utils.isKeydownButNotEnterEvent( event ) ) {
@@ -4440,7 +4440,7 @@
 
 		/**
 		 * Callback handler for when an attachment is selected in the media modal.
-		 * Does an additional AJAX request for setting the background context.
+		 * Does an additional Ajax request for setting the background context.
 		 */
 		select: function() {
 			api.UploadControl.prototype.select.apply( this, arguments );
@@ -4565,7 +4565,7 @@
 		/**
 		 * After the image has been cropped, apply the cropped image data to the setting.
 		 *
-		 * @param {object} croppedImage Cropped attachment data.
+		 * @param {Object} croppedImage Cropped attachment data.
 		 */
 		onCropped: function( croppedImage ) {
 			this.setImageFromAttachment( croppedImage );
@@ -4641,13 +4641,13 @@
 		/**
 		 * Return whether the image must be cropped, based on required dimensions.
 		 *
-		 * @param {bool} flexW
-		 * @param {bool} flexH
-		 * @param {int}  dstW
-		 * @param {int}  dstH
-		 * @param {int}  imgW
-		 * @param {int}  imgH
-		 * @return {bool}
+		 * @param {boolean} flexW
+		 * @param {boolean} flexH
+		 * @param {number}  dstW
+		 * @param {number}  dstH
+		 * @param {number}  imgW
+		 * @param {number}  imgH
+		 * @return {boolean}
 		 */
 		mustBeCropped: function( flexW, flexH, dstW, dstH, imgW, imgH ) {
 			if ( true === flexW && true === flexH ) {
@@ -4684,7 +4684,7 @@
 		/**
 		 * Updates the setting and re-renders the control UI.
 		 *
-		 * @param {object} attachment
+		 * @param {Object} attachment
 		 */
 		setImageFromAttachment: function( attachment ) {
 			this.params.attachment = attachment;
@@ -4770,7 +4770,7 @@
 		/**
 		 * Updates the setting and re-renders the control UI.
 		 *
-		 * @param {object} attachment
+		 * @param {Object} attachment
 		 */
 		setImageFromAttachment: function( attachment ) {
 			var sizes = [ 'site_icon-32', 'thumbnail', 'full' ], link,
@@ -4799,7 +4799,7 @@
 		/**
 		 * Called when the "Remove" link is clicked. Empties the setting.
 		 *
-		 * @param {object} event jQuery Event object
+		 * @param {Object} event jQuery Event object
 		 */
 		removeFile: function( event ) {
 			if ( api.utils.isKeydownButNotEnterEvent( event ) ) {
@@ -5009,7 +5009,7 @@
 		/**
 		 * After the image has been cropped, apply the cropped image data to the setting.
 		 *
-		 * @param {object} croppedImage Cropped attachment data.
+		 * @param {Object} croppedImage Cropped attachment data.
 		 */
 		onCropped: function(croppedImage) {
 			var url = croppedImage.url,
@@ -5022,7 +5022,7 @@
 		/**
 		 * If cropping was skipped, apply the image data directly to the setting.
 		 *
-		 * @param {object} selection
+		 * @param {Object} selection
 		 */
 		onSkippedCrop: function(selection) {
 			var url = selection.get('url'),
@@ -5036,10 +5036,10 @@
 		 * header image data and inserts it into the user-uploaded headers
 		 * collection.
 		 *
-		 * @param {String} url
-		 * @param {Number} attachmentId
-		 * @param {Number} width
-		 * @param {Number} height
+		 * @param {string} url
+		 * @param {number} attachmentId
+		 * @param {number} width
+		 * @param {number} height
 		 */
 		setImageFromURL: function(url, attachmentId, width, height) {
 			var choice, data = {};
@@ -6218,10 +6218,10 @@
 		 * @constructs wp.customize.PreviewFrame
 		 * @augments   wp.customize.Messenger
 		 *
-		 * @param {object} params.container
-		 * @param {object} params.previewUrl
-		 * @param {object} params.query
-		 * @param {object} options
+		 * @param {Object} params.container
+		 * @param {Object} params.previewUrl
+		 * @param {Object} params.query
+		 * @param {Object} options
 		 */
 		initialize: function( params, options ) {
 			var deferred = $.Deferred();
@@ -6248,7 +6248,7 @@
 		/**
 		 * Run the preview request.
 		 *
-		 * @param {object} deferred jQuery Deferred object to be resolved with
+		 * @param {Object} deferred jQuery Deferred object to be resolved with
 		 *                          the request.
 		 */
 		run: function( deferred ) {
@@ -6456,12 +6456,12 @@
 		 * @constructs wp.customize.Previewer
 		 * @augments   wp.customize.Messenger
 		 *
-		 * @param {array}  params.allowedUrls
+		 * @param {Array}  params.allowedUrls
 		 * @param {string} params.container   A selector or jQuery element for the preview
 		 *                                    frame to be placed.
 		 * @param {string} params.form
 		 * @param {string} params.previewUrl  The URL to preview.
-		 * @param {object} options
+		 * @param {Object} options
 		 */
 		initialize: function( params, options ) {
 			var previewer = this,
@@ -6609,7 +6609,7 @@
 		 * @since 4.7.0
 		 * @access public
 		 *
-		 * @param {object} data - Data from preview.
+		 * @param {Object} data - Data from preview.
 		 * @param {string} data.currentUrl - Current URL.
 		 * @param {object} data.activePanels - Active panels.
 		 * @param {object} data.activeSections Active sections.
@@ -6917,8 +6917,8 @@
 	 * @since 4.6.0
 	 * @private
 	 *
-	 * @param {object}  args
-	 * @param {object}  args.settingValidities
+	 * @param {Object}  args
+	 * @param {Object}  args.settingValidities
 	 * @param {boolean} [args.focusInvalidControl=false]
 	 * @return {void}
 	 */
@@ -7401,9 +7401,9 @@
 			 * @since 4.7.0 Added options param.
 			 * @access public
 			 *
-			 * @param {object}  [options] Options.
+			 * @param {Object}  [options] Options.
 			 * @param {boolean} [options.excludeCustomizedSaved=false] Exclude saved settings in customized response (values pending writing to changeset).
-			 * @return {object} Query vars.
+			 * @return {Object} Query vars.
 			 */
 			query: function( options ) {
 				var queryVars = {
@@ -7439,7 +7439,7 @@
 			 * @since 3.4.0
 			 * @since 4.7.0 Added args param and return value.
 			 *
-			 * @param {object} [args] Args.
+			 * @param {Object} [args] Args.
 			 * @param {string} [args.status=publish] Status.
 			 * @param {string} [args.date] Date, in local time in MySQL format.
 			 * @param {string} [args.title] Title
@@ -8121,13 +8121,14 @@
 				 * @since 4.9.0
 				 *
 				 * @param {string} [code] - Code.
-				 * @param {object} [params] - Params.
+				 * @param {Object} [params] - Params.
 				 */
 				initialize: function( code, params ) {
 					var notification = this, _code, _params;
 					_code = code || 'changeset_locked';
 					_params = _.extend(
 						{
+							message: '',
 							type: 'warning',
 							containerClasses: '',
 							lockUser: {}
@@ -8209,8 +8210,8 @@
 			 *
 			 * @since 4.9.0
 			 *
-			 * @param {object} [args] - Args.
-			 * @param {object} [args.lockUser] - Lock user data.
+			 * @param {Object} [args] - Args.
+			 * @param {Object} [args.lockUser] - Lock user data.
 			 * @param {boolean} [args.allowOverride=false] - Whether override is allowed.
 			 * @return {void}
 			 */
@@ -8636,7 +8637,7 @@
 			 * @since 4.7.0
 			 * @access private
 			 *
-			 * @param {object} header - Header.
+			 * @param {Object} header - Header.
 			 * @param {number} scrollTop - Scroll top.
 			 * @param {number} scrollDirection - Scroll direction, negative number being up and positive being down.
 			 * @return {void}

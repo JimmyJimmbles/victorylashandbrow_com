@@ -211,7 +211,7 @@ function wp_install_language_form( $languages ) {
  */
 function wp_download_language_pack( $download ) {
 	// Check if the translation is already installed.
-	if ( in_array( $download, get_available_languages() ) ) {
+	if ( in_array( $download, get_available_languages(), true ) ) {
 		return $download;
 	}
 

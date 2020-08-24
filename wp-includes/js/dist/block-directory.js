@@ -1314,7 +1314,6 @@ var update = Object(external_this_wp_element_["createElement"])(external_this_wp
 
 
 
-
 function DownloadableBlockInfo(_ref) {
   var description = _ref.description,
       activeInstalls = _ref.activeInstalls,

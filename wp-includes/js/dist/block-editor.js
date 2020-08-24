@@ -85,21 +85,35 @@ this["wp"] = this["wp"] || {}; this["wp"]["blockEditor"] =
 /******/ 	return __webpack_require__(__webpack_require__.s = 421);
 /******/ })
 /************************************************************************/
-/******/ ({
-
-/***/ 0:
+/******/ ([
+/* 0 */
 /***/ (function(module, exports) {
 
 (function() { module.exports = this["wp"]["element"]; }());
 
 /***/ }),
-
-/***/ 1:
+/* 1 */
 /***/ (function(module, exports) {
 
 (function() { module.exports = this["wp"]["i18n"]; }());
 
 /***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+(function() { module.exports = this["lodash"]; }());
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+(function() { module.exports = this["wp"]["components"]; }());
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+(function() { module.exports = this["wp"]["data"]; }());
 
 /***/ 10:
 /***/ (function(module, exports) {
@@ -107,6 +121,10 @@ this["wp"] = this["wp"] || {}; this["wp"]["blockEditor"] =
 (function() { module.exports = this["wp"]["blocks"]; }());
 
 /***/ }),
+/* 6 */
+/***/ (function(module, exports) {
+
+(function() { module.exports = this["wp"]["primitives"]; }());
 
 /***/ 11:
 /***/ (function(module, exports, __webpack_require__) {
@@ -163,11 +181,18 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 	} else {}
 }());
 
+// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/slicedToArray.js
+
+
+
+
+function _slicedToArray(arr, i) {
+  return Object(arrayWithHoles["a" /* default */])(arr) || _iterableToArrayLimit(arr, i) || Object(unsupportedIterableToArray["a" /* default */])(arr, i) || Object(nonIterableRest["a" /* default */])();
+}
 
 /***/ }),
-
-/***/ 113:
-/***/ (function(module, exports, __webpack_require__) {
+/* 15 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 // Copyright Joyent, Inc. and other Node contributors.
@@ -191,6 +216,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+function _objectWithoutProperties(source, excluded) {
+  if (source == null) return {};
+  var target = Object(_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])(source, excluded);
+  var key, i;
 
 
 var punycode = __webpack_require__(160);
@@ -917,6 +946,7 @@ Url.prototype.parseHost = function() {
  * LICENSE file in the root directory of this source tree.
  */
 
+(function() { module.exports = this["wp"]["deprecated"]; }());
 
 
 var ReactPropTypesSecret = __webpack_require__(119);
@@ -1089,7 +1119,11 @@ function _createClass(Constructor, protoProps, staticProps) {
   return Constructor;
 }
 
+
 /***/ }),
+/* 43 */,
+/* 44 */
+/***/ (function(module, exports) {
 
 /***/ 14:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -1156,6 +1190,8 @@ function _possibleConstructorReturn(self, call) {
 }
 
 /***/ }),
+/* 48 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 /***/ 150:
 /***/ (function(module, exports, __webpack_require__) {
@@ -1291,7 +1327,6 @@ function scrollIntoView(elem, container, config) {
 
 module.exports = scrollIntoView;
 
-/***/ }),
 
 /***/ 151:
 /***/ (function(module, exports, __webpack_require__) {
@@ -2156,6 +2191,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 });
 
 /***/ }),
+/* 50 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 /***/ 154:
 /***/ (function(module, exports, __webpack_require__) {
@@ -2259,7 +2296,9 @@ function lineHeight(node) {
 module.exports = lineHeight;
 
 
-/***/ }),
+/**
+ * Turns [[row1, row1], [row2]] into [[row1, row1], [row2, row2]]
+ */
 
 /***/ 155:
 /***/ (function(module, exports) {
@@ -2303,22 +2342,23 @@ function _extends() {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
 
-      for (var key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-          target[key] = source[key];
-        }
+        var index = findDOMIndex(groups, _group);
+        return Object(_rollupPluginBabelHelpers_1f0bf8c2_js__WEBPACK_IMPORTED_MODULE_0__[/* a */ "b"])(Object(_rollupPluginBabelHelpers_1f0bf8c2_js__WEBPACK_IMPORTED_MODULE_0__[/* a */ "b"])({}, state), {}, {
+          groups: addItemAtIndex(groups, _group, index)
+        });
       }
-    }
 
-    return target;
-  };
-
-  return _extends.apply(this, arguments);
-}
+    case "unregisterGroup":
+      {
+        var _id = action.id;
+        var nextGroups = groups.filter(function (group) {
+          return group.id !== _id;
+        }); // The group isn't registered, so do nothing
 
 module.exports = _extends;
 
-/***/ }),
+        var _group2 = groups.find(function (r) {
+          var _r$ref$current;
 
 /***/ 157:
 /***/ (function(module, exports) {
@@ -2329,11 +2369,6 @@ function _objectWithoutPropertiesLoose(source, excluded) {
   var sourceKeys = Object.keys(source);
   var key, i;
 
-  for (i = 0; i < sourceKeys.length; i++) {
-    key = sourceKeys[i];
-    if (excluded.indexOf(key) >= 0) continue;
-    target[key] = source[key];
-  }
 
   return target;
 }
@@ -2366,6 +2401,10 @@ module.exports = _assertThisInitialized;
 /* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(9);
 /* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_1__);
 
+        var filteredPastIds = pastIds.filter(function (pastId) {
+          return pastId !== currentId && pastId !== _id3;
+        }); // If there's a currentId, add it to the pastIds list so it can be focused
+        // if the new item gets removed or disabled
 
 /**
  * WordPress dependencies
@@ -2394,7 +2433,11 @@ function _getPrototypeOf(o) {
   return _getPrototypeOf(o);
 }
 
-/***/ }),
+        return Object(_rollupPluginBabelHelpers_1f0bf8c2_js__WEBPACK_IMPORTED_MODULE_0__[/* a */ "b"])(Object(_rollupPluginBabelHelpers_1f0bf8c2_js__WEBPACK_IMPORTED_MODULE_0__[/* a */ "b"])({}, _nextState2), {}, {
+          unstable_moves: _item2 ? moves + 1 : moves,
+          currentId: getCurrentId(_nextState2, _item2 === null || _item2 === void 0 ? void 0 : _item2.id)
+        });
+      }
 
 /***/ 160:
 /***/ (function(module, exports, __webpack_require__) {
@@ -2949,6 +2992,7 @@ module.exports = function(module) {
 	return module;
 };
 
+(function() { module.exports = this["wp"]["keyboardShortcuts"]; }());
 
 /***/ }),
 
@@ -3901,6 +3945,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3NyYy9kaWZmL2Jhc2UuanMiXSwibmFtZXMiOlsiRGlmZiIsInByb3RvdHlwZSIsImRpZmYiLCJvbGRTdHJpbmciLCJuZXdTdHJpbmciLCJvcHRpb25zIiwiY2FsbGJhY2siLCJzZWxmIiwiZG9uZSIsInZhbHVlIiwic2V0VGltZW91dCIsInVuZGVmaW5lZCIsImNhc3RJbnB1dCIsInJlbW92ZUVtcHR5IiwidG9rZW5pemUiLCJuZXdMZW4iLCJsZW5ndGgiLCJvbGRMZW4iLCJlZGl0TGVuZ3RoIiwibWF4RWRpdExlbmd0aCIsImJlc3RQYXRoIiwibmV3UG9zIiwiY29tcG9uZW50cyIsIm9sZFBvcyIsImV4dHJhY3RDb21tb24iLCJqb2luIiwiY291bnQiLCJleGVjRWRpdExlbmd0aCIsImRpYWdvbmFsUGF0aCIsImJhc2VQYXRoIiwiYWRkUGF0aCIsInJlbW92ZVBhdGgiLCJjYW5BZGQiLCJjYW5SZW1vdmUiLCJjbG9uZVBhdGgiLCJwdXNoQ29tcG9uZW50IiwiYnVpbGRWYWx1ZXMiLCJ1c2VMb25nZXN0VG9rZW4iLCJleGVjIiwicmV0IiwiYWRkZWQiLCJyZW1vdmVkIiwibGFzdCIsInB1c2giLCJjb21tb25Db3VudCIsImVxdWFscyIsImxlZnQiLCJyaWdodCIsImNvbXBhcmF0b3IiLCJpZ25vcmVDYXNlIiwidG9Mb3dlckNhc2UiLCJhcnJheSIsImkiLCJzcGxpdCIsImNoYXJzIiwiY29tcG9uZW50UG9zIiwiY29tcG9uZW50TGVuIiwiY29tcG9uZW50Iiwic2xpY2UiLCJtYXAiLCJvbGRWYWx1ZSIsInRtcCIsImxhc3RDb21wb25lbnQiLCJwb3AiLCJwYXRoIl0sIm1hcHBpbmdzIjoiOzs7NENBQXdCQSxJO0FBQVQsU0FBU0EsSUFBVCxHQUFnQixDQUFFOztBQUVqQ0EsS0FBS0MsU0FBTCxHQUFpQjtBQUFBLG1EQUNmQyxJQURlLGdCQUNWQyxTQURVLEVBQ0NDLFNBREQsRUFDMEI7QUFBQSx3REFBZEMsT0FBYyx1RUFBSixFQUFJOztBQUN2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RUFBd0JBLFNBQVNrQyxVQUFVL0IsS0FBM0MsQ0FBVixDQUFsQjtBQUNBSCxnQkFBVWtDLFVBQVUvQixLQUFwQjs7QUFFQTtBQUNBO0FBQ0E7QUFDQSxVQUFJNkIsZ0JBQWdCakMsV0FBV2lDLGVBQWUsQ0FBMUIsRUFBNkJmLEtBQWpELEVBQXdEO0FBQ3RELFlBQUlxQixNQUFNdkMsV0FBV2lDLGVBQWUsQ0FBMUIsQ0FBVjtBQUNBakMsbUJBQVdpQyxlQUFlLENBQTFCLElBQStCakMsV0FBV2lDLFlBQVgsQ0FBL0I7QUFDQWpDLG1CQUFXaUMsWUFBWCxJQUEyQk0sR0FBM0I7QUFDRDtBQUNGO0FBQ0Y7O0FBRUQ7QUFDQTtBQUNBO0FBQ0EsTUFBSUMsZ0JBQWdCeEMsV0FBV2tDLGVBQWUsQ0FBMUIsQ0FBcEI7QUFDQSxNQUFJQSxlQUFlLENBQWYsSUFDRyxPQUFPTSxjQUFjckQsS0FBckIsS0FBK0IsUUFEbEMsS0FFSXFELGNBQWN0QixLQUFkLElBQXVCc0IsY0FBY3JCLE9BRnpDLEtBR0d2QyxLQUFLMkMsTUFBTCxDQUFZLEVBQVosRUFBZ0JpQixjQUFjckQsS0FBOUIsQ0FIUCxFQUc2QztBQUMzQ2EsZUFBV2tDLGVBQWUsQ0FBMUIsRUFBNkIvQyxLQUE3QixJQUFzQ3FELGNBQWNyRCxLQUFwRDtBQUNBYSxlQUFXeUMsR0FBWDtBQUNEOztBQUVELFNBQU96QyxVQUFQO0FBQ0Q7O0FBRUQsU0FBU1ksU0FBVCxDQUFtQjhCLElBQW5CLEVBQXlCO0FBQ3ZCLFNBQU8sRUFBRTNDLFFBQVEyQyxLQUFLM0MsTUFBZixFQUF1QkMsWUFBWTBDLEtBQUsxQyxVQUFMLENBQWdCb0MsS0FBaEIsQ0FBc0IsQ0FBdEIsQ0FBbkMsRUFBUDtBQUNEIiwiZmlsZSI6ImJhc2UuanMiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBEaWZmKCkge31cblxuRGlmZi5wcm90b3R5cGUgPSB7XG4gIGRpZmYob2xkU3RyaW5nLCBuZXdTdHJpbmcsIG9wdGlvbnMgPSB7fSkge1xuICAgIGxldCBjYWxsYmFjayA9IG9wdGlvbnMuY2FsbGJhY2s7XG4gICAgaWYgKHR5cGVvZiBvcHRpb25zID09PSAnZnVuY3Rpb24nKSB7XG4gICAgICBjYWxsYmFjayA9IG9wdGlvbnM7XG4gICAgICBvcHRpb25zID0ge307XG4gICAgfVxuICAgIHRoaXMub3B0aW9ucyA9IG9wdGlvbnM7XG5cbiAgICBsZXQgc2VsZiA9IHRoaXM7XG5cbiAgICBmdW5jdGlvbiBkb25lKHZhbHVlKSB7XG4gICAgICBpZiAoY2FsbGJhY2spIHtcbiAgICAgICAgc2V0VGltZW91dChmdW5jdGlvbigpIHsgY2FsbGJhY2sodW5kZWZpbmVkLCB2YWx1ZSk7IH0sIDApO1xuICAgICAgICByZXR1cm4gdHJ1ZTtcbiAgICAgIH0gZWxzZSB7XG4gICAgICAgIHJldHVybiB2YWx1ZTtcbiAgICAgIH1cbiAgICB9XG5cbiAgICAvLyBBbGxvdyBzdWJjbGFzc2VzIHRvIG1hc3NhZ2UgdGhlIGlucHV0IHByaW9yIHRvIHJ1bm5pbmdcbiAgICBvbGRTdHJpbmcgPSB0aGlzLmNhc3RJbnB1dChvbGRTdHJpbmcpO1xuICAgIG5ld1N0cmluZyA9IHRoaXMuY2FzdElucHV0KG5ld1N0cmluZyk7XG5cbiAgICBvbGRTdHJpbmcgPSB0aGlzLnJlbW92ZUVtcHR5KHRoaXMudG9rZW5pemUob2xkU3RyaW5nKSk7XG4gICAgbmV3U3RyaW5nID0gdGhpcy5yZW1vdmVFbXB0eSh0aGlzLnRva2VuaXplKG5ld1N0cmluZykpO1xuXG4gICAgbGV0IG5ld0xlbiA9IG5ld1N0cmluZy5sZW5ndGgsIG9sZExlbiA9IG9sZFN0cmluZy5sZW5ndGg7XG4gICAgbGV0IGVkaXRMZW5ndGggPSAxO1xuICAgIGxldCBtYXhFZGl0TGVuZ3RoID0gbmV3TGVuICsgb2xkTGVuO1xuICAgIGxldCBiZXN0UGF0aCA9IFt7IG5ld1BvczogLTEsIGNvbXBvbmVudHM6IFtdIH1dO1xuXG4gICAgLy8gU2VlZCBlZGl0TGVuZ3RoID0gMCwgaS5lLiB0aGUgY29udGVudCBzdGFydHMgd2l0aCB0aGUgc2FtZSB2YWx1ZXNcbiAgICBsZXQgb2xkUG9zID0gdGhpcy5leHRyYWN0Q29tbW9uKGJlc3RQYXRoWzBdLCBuZXdTdHJpbmcsIG9sZFN0cmluZywgMCk7XG4gICAgaWYgKGJlc3RQYXRoWzBdLm5ld1BvcyArIDEgPj0gbmV3TGVuICYmIG9sZFBvcyArIDEgPj0gb2xkTGVuKSB7XG4gICAgICAvLyBJZGVudGl0eSBwZXIgdGhlIGVxdWFsaXR5IGFuZCB0b2tlbml6ZXJcbiAgICAgIHJldHVybiBkb25lKFt7dmFsdWU6IHRoaXMuam9pbihuZXdTdHJpbmcpLCBjb3VudDogbmV3U3RyaW5nLmxlbmd0aH1dKTtcbiAgICB9XG5cbiAgICAvLyBNYWluIHdvcmtlciBtZXRob2QuIGNoZWNrcyBhbGwgcGVybXV0YXRpb25zIG9mIGEgZ2l2ZW4gZWRpdCBsZW5ndGggZm9yIGFjY2VwdGFuY2UuXG4gICAgZnVuY3Rpb24gZXhlY0VkaXRMZW5ndGgoKSB7XG4gICAgICBmb3IgKGxldCBkaWFnb25hbFBhdGggPSAtMSAqIGVkaXRMZW5ndGg7IGRpYWdvbmFsUGF0aCA8PSBlZGl0TGVuZ3RoOyBkaWFnb25hbFBhdGggKz0gMikge1xuICAgICAgICBsZXQgYmFzZVBhdGg7XG4gICAgICAgIGxldCBhZGRQYXRoID0gYmVzdFBhdGhbZGlhZ29uYWxQYXRoIC0gMV0sXG4gICAgICAgICAgICByZW1vdmVQYXRoID0gYmVzdFBhdGhbZGlhZ29uYWxQYXRoICsgMV0sXG4gICAgICAgICAgICBvbGRQb3MgPSAocmVtb3ZlUGF0aCA/IHJlbW92ZVBhdGgubmV3UG9zIDogMCkgLSBkaWFnb25hbFBhdGg7XG4gICAgICAgIGlmIChhZGRQYXRoKSB7XG4gICAgICAgICAgLy8gTm8gb25lIGVsc2UgaXMgZ29pbmcgdG8gYXR0ZW1wdCB0byB1c2UgdGhpcyB2YWx1ZSwgY2xlYXIgaXRcbiAgICAgICAgICBiZXN0UGF0aFtkaWFnb25hbFBhdGggLSAxXSA9IHVuZGVmaW5lZDtcbiAgICAgICAgfVxuXG4gICAgICAgIGxldCBjYW5BZGQgPSBhZGRQYXRoICYmIGFkZFBhdGgubmV3UG9zICsgMSA8IG5ld0xlbixcbiAgICAgICAgICAgIGNhblJlbW92ZSA9IHJlbW92ZVBhdGggJiYgMCA8PSBvbGRQb3MgJiYgb2xkUG9zIDwgb2xkTGVuO1xuICAgICAgICBpZiAoIWNhbkFkZCAmJiAhY2FuUmVtb3ZlKSB7XG4gICAgICAgICAgLy8gSWYgdGhpcyBwYXRoIGlzIGEgdGVybWluYWwgdGhlbiBwcnVuZVxuICAgICAgICAgIGJlc3RQYXRoW2RpYWdvbmFsUGF0aF0gPSB1bmRlZmluZWQ7XG4gICAgICAgICAgY29udGludWU7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTZWxlY3QgdGhlIGRpYWdvbmFsIHRoYXQgd2Ugd2FudCB0byBicmFuY2ggZnJvbS4gV2Ugc2VsZWN0IHRoZSBwcmlvclxuICAgICAgICAvLyBwYXRoIHdob3NlIHBvc2l0aW9uIGluIHRoZSBuZXcgc3RyaW5nIGlzIHRoZSBmYXJ0aGVzdCBmcm9tIHRoZSBvcmlnaW5cbiAgICAgICAgLy8gYW5kIGRvZXMgbm90IHBhc3MgdGhlIGJvdW5kcyBvZiB0aGUgZGlmZiBncmFwaFxuICAgICAgICBpZiAoIWNhbkFkZCB8fCAoY2FuUmVtb3ZlICYmIGFkZFBhdGgubmV3UG9zIDwgcmVtb3ZlUGF0aC5uZXdQb3MpKSB7XG4gICAgICAgICAgYmFzZVBhdGggPSBjbG9uZVBhdGgocmVtb3ZlUGF0aCk7XG4gICAgICAgICAgc2VsZi5wdXNoQ29tcG9uZW50KGJhc2VQYXRoLmNvbXBvbmVudHMsIHVuZGVmaW5lZCwgdHJ1ZSk7XG4gICAgICAgIH0gZWxzZSB7XG4gICAgICAgICAgYmFzZVBhdGggPSBhZGRQYXRoOyAgIC8vIE5vIG5lZWQgdG8gY2xvbmUsIHdlJ3ZlIHB1bGxlZCBpdCBmcm9tIHRoZSBsaXN0XG4gICAgICAgICAgYmFzZVBhdGgubmV3UG9zKys7XG4gICAgICAgICAgc2VsZi5wdXNoQ29tcG9uZW50KGJhc2VQYXRoLmNvbXBvbmVudHMsIHRydWUsIHVuZGVmaW5lZCk7XG4gICAgICAgIH1cblxuICAgICAgICBvbGRQb3MgPSBzZWxmLmV4dHJhY3RDb21tb24oYmFzZVBhdGgsIG5ld1N0cmluZywgb2xkU3RyaW5nLCBkaWFnb25hbFBhdGgpO1xuXG4gICAgICAgIC8vIElmIHdlIGhhdmUgaGl0IHRoZSBlbmQgb2YgYm90aCBzdHJpbmdzLCB0aGVuIHdlIGFyZSBkb25lXG4gICAgICAgIGlmIChiYXNlUGF0aC5uZXdQb3MgKyAxID49IG5ld0xlbiAmJiBvbGRQb3MgKyAxID49IG9sZExlbikge1xuICAgICAgICAgIHJldHVybiBkb25lKGJ1aWxkVmFsdWVzKHNlbGYsIGJhc2VQYXRoLmNvbXBvbmVudHMsIG5ld1N0cmluZywgb2xkU3RyaW5nLCBzZWxmLnVzZUxvbmdlc3RUb2tlbikpO1xuICAgICAgICB9IGVsc2Uge1xuICAgICAgICAgIC8vIE90aGVyd2lzZSB0cmFjayB0aGlzIHBhdGggYXMgYSBwb3RlbnRpYWwgY2FuZGlkYXRlIGFuZCBjb250aW51ZS5cbiAgICAgICAgICBiZXN0UGF0aFtkaWFnb25hbFBhdGhdID0gYmFzZVBhdGg7XG4gICAgICAgIH1cbiAgICAgIH1cblxuICAgICAgZWRpdExlbmd0aCsrO1xuICAgIH1cblxuICAgIC8vIFBlcmZvcm1zIHRoZSBsZW5ndGggb2YgZWRpdCBpdGVyYXRpb24uIElzIGEgYml0IGZ1Z2x5IGFzIHRoaXMgaGFzIHRvIHN1cHBvcnQgdGhlXG4gICAgLy8gc3luYyBhbmQgYXN5bmMgbW9kZSB3aGljaCBpcyBuZXZlciBmdW4uIExvb3BzIG92ZXIgZXhlY0VkaXRMZW5ndGggdW50aWwgYSB2YWx1ZVxuICAgIC8vIGlzIHByb2R1Y2VkLlxuICAgIGlmIChjYWxsYmFjaykge1xuICAgICAgKGZ1bmN0aW9uIGV4ZWMoKSB7XG4gICAgICAgIHNldFRpbWVvdXQoZnVuY3Rpb24oKSB7XG4gICAgICAgICAgLy8gVGhpcyBzaG91bGQgbm90IGhhcHBlbiwgYnV0IHdlIHdhbnQgdG8gYmUgc2FmZS5cbiAgICAgICAgICAvKiBpc3RhbmJ1bCBpZ25vcmUgbmV4dCAqL1xuICAgICAgICAgIGlmIChlZGl0TGVuZ3RoID4gbWF4RWRpdExlbmd0aCkge1xuICAgICAgICAgICAgcmV0dXJuIGNhbGxiYWNrKCk7XG4gICAgICAgICAgfVxuXG4gICAgICAgICAgaWYgKCFleGVjRWRpdExlbmd0aCgpKSB7XG4gICAgICAgICAgICBleGVjKCk7XG4gICAgICAgICAgfVxuICAgICAgICB9LCAwKTtcbiAgICAgIH0oKSk7XG4gICAgfSBlbHNlIHtcbiAgICAgIHdoaWxlIChlZGl0TGVuZ3RoIDw9IG1heEVkaXRMZW5ndGgpIHtcbiAgICAgICAgbGV0IHJldCA9IGV4ZWNFZGl0TGVuZ3RoKCk7XG4gICAgICAgIGlmIChyZXQpIHtcbiAgICAgICAgICByZXR1cm4gcmV0O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9LFxuXG4gIHB1c2hDb21wb25lbnQoY29tcG9uZW50cywgYWRkZWQsIHJlbW92ZWQpIHtcbiAgICBsZXQgbGFzdCA9IGNvbXBvbmVudHNbY29tcG9uZW50cy5sZW5ndGggLSAxXTtcbiAgICBpZiAobGFzdCAmJiBsYXN0LmFkZGVkID09PSBhZGRlZCAmJiBsYXN0LnJlbW92ZWQgPT09IHJlbW92ZWQpIHtcbiAgICAgIC8vIFdlIG5lZWQgdG8gY2xvbmUgaGVyZSBhcyB0aGUgY29tcG9uZW50IGNsb25lIG9wZXJhdGlvbiBpcyBqdXN0XG4gICAgICAvLyBhcyBzaGFsbG93IGFycmF5IGNsb25lXG4gICAgICBjb21wb25lbnRzW2NvbXBvbmVudHMubGVuZ3RoIC0gMV0gPSB7Y291bnQ6IGxhc3QuY291bnQgKyAxLCBhZGRlZDogYWRkZWQsIHJlbW92ZWQ6IHJlbW92ZWQgfTtcbiAgICB9IGVsc2Uge1xuICAgICAgY29tcG9uZW50cy5wdXNoKHtjb3VudDogMSwgYWRkZWQ6IGFkZGVkLCByZW1vdmVkOiByZW1vdmVkIH0pO1xuICAgIH1cbiAgfSxcbiAgZXh0cmFjdENvbW1vbihiYXNlUGF0aCwgbmV3U3RyaW5nLCBvbGRTdHJpbmcsIGRpYWdvbmFsUGF0aCkge1xuICAgIGxldCBuZXdMZW4gPSBuZXdTdHJpbmcubGVuZ3RoLFxuICAgICAgICBvbGRMZW4gPSBvbGRTdHJpbmcubGVuZ3RoLFxuICAgICAgICBuZXdQb3MgPSBiYXNlUGF0aC5uZXdQb3MsXG4gICAgICAgIG9sZFBvcyA9IG5ld1BvcyAtIGRpYWdvbmFsUGF0aCxcblxuICAgICAgICBjb21tb25Db3VudCA9IDA7XG4gICAgd2hpbGUgKG5ld1BvcyArIDEgPCBuZXdMZW4gJiYgb2xkUG9zICsgMSA8IG9sZExlbiAmJiB0aGlzLmVxdWFscyhuZXdTdHJpbmdbbmV3UG9zICsgMV0sIG9sZFN0cmluZ1tvbGRQb3MgKyAxXSkpIHtcbiAgICAgIG5ld1BvcysrO1xuICAgICAgb2xkUG9zKys7XG4gICAgICBjb21tb25Db3VudCsrO1xuICAgIH1cblxuICAgIGlmIChjb21tb25Db3VudCkge1xuICAgICAgYmFzZVBhdGguY29tcG9uZW50cy5wdXNoKHtjb3VudDogY29tbW9uQ291bnR9KTtcbiAgICB9XG5cbiAgICBiYXNlUGF0aC5uZXdQb3MgPSBuZXdQb3M7XG4gICAgcmV0dXJuIG9sZFBvcztcbiAgfSxcblxuICBlcXVhbHMobGVmdCwgcmlnaHQpIHtcbiAgICBpZiAodGhpcy5vcHRpb25zLmNvbXBhcmF0b3IpIHtcbiAgICAgIHJldHVybiB0aGlzLm9wdGlvbnMuY29tcGFyYXRvcihsZWZ0LCByaWdodCk7XG4gICAgfSBlbHNlIHtcbiAgICAgIHJldHVybiBsZWZ0ID09PSByaWdodFxuICAgICAgICB8fCAodGhpcy5vcHRpb25zLmlnbm9yZUNhc2UgJiYgbGVmdC50b0xvd2VyQ2FzZSgpID09PSByaWdodC50b0xvd2VyQ2FzZSgpKTtcbiAgICB9XG4gIH0sXG4gIHJlbW92ZUVtcHR5KGFycmF5KSB7XG4gICAgbGV0IHJldCA9IFtdO1xuICAgIGZvciAobGV0IGkgPSAwOyBpIDwgYXJyYXkubGVuZ3RoOyBpKyspIHtcbiAgICAgIGlmIChhcnJheVtpXSkge1xuICAgICAgICByZXQucHVzaChhcnJheVtpXSk7XG4gICAgICB9XG4gICAgfVxuICAgIHJldHVybiByZXQ7XG4gIH0sXG4gIGNhc3RJbnB1dCh2YWx1ZSkge1xuICAgIHJldHVybiB2YWx1ZTtcbiAgfSxcbiAgdG9rZW5pemUodmFsdWUpIHtcbiAgICByZXR1cm4gdmFsdWUuc3BsaXQoJycpO1xuICB9LFxuICBqb2luKGNoYXJzKSB7XG4gICAgcmV0dXJuIGNoYXJzLmpvaW4oJycpO1xuICB9XG59O1xuXG5mdW5jdGlvbiBidWlsZFZhbHVlcyhkaWZmLCBjb21wb25lbnRzLCBuZXdTdHJpbmcsIG9sZFN0cmluZywgdXNlTG9uZ2VzdFRva2VuKSB7XG4gIGxldCBjb21wb25lbnRQb3MgPSAwLFxuICAgICAgY29tcG9uZW50TGVuID0gY29tcG9uZW50cy5sZW5ndGgsXG4gICAgICBuZXdQb3MgPSAwLFxuICAgICAgb2xkUG9zID0gMDtcblxuICBmb3IgKDsgY29tcG9uZW50UG9zIDwgY29tcG9uZW50TGVuOyBjb21wb25lbnRQb3MrKykge1xuICAgIGxldCBjb21wb25lbnQgPSBjb21wb25lbnRzW2NvbXBvbmVudFBvc107XG4gICAgaWYgKCFjb21wb25lbnQucmVtb3ZlZCkge1xuICAgICAgaWYgKCFjb21wb25lbnQuYWRkZWQgJiYgdXNlTG9uZ2VzdFRva2VuKSB7XG4gICAgICAgIGxldCB2YWx1ZSA9IG5ld1N0cmluZy5zbGljZShuZXdQb3MsIG5ld1BvcyArIGNvbXBvbmVudC5jb3VudCk7XG4gICAgICAgIHZhbHVlID0gdmFsdWUubWFwKGZ1bmN0aW9uKHZhbHVlLCBpKSB7XG4gICAgICAgICAgbGV0IG9sZFZhbHVlID0gb2xkU3RyaW5nW29sZFBvcyArIGldO1xuICAgICAgICAgIHJldHVybiBvbGRWYWx1ZS5sZW5ndGggPiB2YWx1ZS5sZW5ndGggPyBvbGRWYWx1ZSA6IHZhbHVlO1xuICAgICAgICB9KTtcblxuICAgICAgICBjb21wb25lbnQudmFsdWUgPSBkaWZmLmpvaW4odmFsdWUpO1xuICAgICAgfSBlbHNlIHtcbiAgICAgICAgY29tcG9uZW50LnZhbHVlID0gZGlmZi5qb2luKG5ld1N0cmluZy5zbGljZShuZXdQb3MsIG5ld1BvcyArIGNvbXBvbmVudC5jb3VudCkpO1xuICAgICAgfVxuICAgICAgbmV3UG9zICs9IGNvbXBvbmVudC5jb3VudDtcblxuICAgICAgLy8gQ29tbW9uIGNhc2VcbiAgICAgIGlmICghY29tcG9uZW50LmFkZGVkKSB7XG4gICAgICAgIG9sZFBvcyArPSBjb21wb25lbnQuY291bnQ7XG4gICAgICB9XG4gICAgfSBlbHNlIHtcbiAgICAgIGNvbXBvbmVudC52YWx1ZSA9IGRpZmYuam9pbihvbGRTdHJpbmcuc2xpY2Uob2xkUG9zLCBvbGRQb3MgKyBjb21wb25lbnQuY291bnQpKTtcbiAgICAgIG9sZFBvcyArPSBjb21wb25lbnQuY291bnQ7XG5cbiAgICAgIC8vIFJldmVyc2UgYWRkIGFuZCByZW1vdmUgc28gcmVtb3ZlcyBhcmUgb3V0cHV0IGZpcnN0IHRvIG1hdGNoIGNvbW1vbiBjb252ZW50aW9uXG4gICAgICAvLyBUaGUgZGlmZmluZyBhbGdvcml0aG0gaXMgdGllZCB0byBhZGQgdGhlbiByZW1vdmUgb3V0cHV0IGFuZCB0aGlzIGlzIHRoZSBzaW1wbGVzdFxuICAgICAgLy8gcm91dGUgdG8gZ2V0IHRoZSBkZXNpcmVkIG91dHB1dCB3aXRoIG1pbmltYWwgb3ZlcmhlYWQuXG4gICAgICBpZiAoY29tcG9uZW50UG9zICYmIGNvbXBvbmVudHNbY29tcG9uZW50UG9zIC0gMV0uYWRkZWQpIHtcbiAgICAgICAgbGV0IHRtcCA9IGNvbXBvbmVudHNbY29tcG9uZW50UG9zIC0gMV07XG4gICAgICAgIGNvbXBvbmVudHNbY29tcG9uZW50UG9zIC0gMV0gPSBjb21wb25lbnRzW2NvbXBvbmVudFBvc107XG4gICAgICAgIGNvbXBvbmVudHNbY29tcG9uZW50UG9zXSA9IHRtcDtcbiAgICAgIH1cbiAgICB9XG4gIH1cblxuICAvLyBTcGVjaWFsIGNhc2UgaGFuZGxlIGZvciB3aGVuIG9uZSB0ZXJtaW5hbCBpcyBpZ25vcmVkIChpLmUuIHdoaXRlc3BhY2UpLlxuICAvLyBGb3IgdGhpcyBjYXNlIHdlIG1lcmdlIHRoZSB0ZXJtaW5hbCBpbnRvIHRoZSBwcmlvciBzdHJpbmcgYW5kIGRyb3AgdGhlIGNoYW5nZS5cbiAgLy8gVGhpcyBpcyBvbmx5IGF2YWlsYWJsZSBmb3Igc3RyaW5nIG1vZGUuXG4gIGxldCBsYXN0Q29tcG9uZW50ID0gY29tcG9uZW50c1tjb21wb25lbnRMZW4gLSAxXTtcbiAgaWYgKGNvbXBvbmVudExlbiA+IDFcbiAgICAgICYmIHR5cGVvZiBsYXN0Q29tcG9uZW50LnZhbHVlID09PSAnc3RyaW5nJ1xuICAgICAgJiYgKGxhc3RDb21wb25lbnQuYWRkZWQgfHwgbGFzdENvbXBvbmVudC5yZW1vdmVkKVxuICAgICAgJiYgZGlmZi5lcXVhbHMoJycsIGxhc3RDb21wb25lbnQudmFsdWUpKSB7XG4gICAgY29tcG9uZW50c1tjb21wb25lbnRMZW4gLSAyXS52YWx1ZSArPSBsYXN0Q29tcG9uZW50LnZhbHVlO1xuICAgIGNvbXBvbmVudHMucG9wKCk7XG4gIH1cblxuICByZXR1cm4gY29tcG9uZW50cztcbn1cblxuZnVuY3Rpb24gY2xvbmVQYXRoKHBhdGgpIHtcbiAgcmV0dXJuIHsgbmV3UG9zOiBwYXRoLm5ld1BvcywgY29tcG9uZW50czogcGF0aC5jb21wb25lbnRzLnNsaWNlKDApIH07XG59XG4iXX0=
 
+  if (typeof ref === "function") {
+    ref(value);
+  } else {
+    ref.current = value;
+  }
+}
+/**
+ * Merges up to two React Refs into a single memoized function React Ref so you
+ * can pass it to an element.
+ *
+ * @example
+ * import React from "react";
+ * import { useForkRef } from "reakit-utils";
+ *
+ * const Component = React.forwardRef((props, ref) => {
+ *   const internalRef = React.useRef();
+ *   return <div {...props} ref={useForkRef(internalRef, ref)} />;
+ * });
+ */
 
 /***/ }),
 /* 2 */
@@ -3924,6 +3987,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3NyYy9kaWZmL2NoYXJhY3Rlci5qcyJdLCJuYW1lcyI6WyJkaWZmQ2hhcnMiLCJjaGFyYWN0ZXJEaWZmIiwib2xkU3RyIiwibmV3U3RyIiwib3B0aW9ucyIsImRpZmYiXSwibWFwcGluZ3MiOiI7Ozs7Z0NBR2dCQSxTLEdBQUFBLFM7O0FBSGhCOzs7Ozs7dUJBRU8sSUFBTUMseUZBQWdCLHdFQUF0QjtBQUNBLFNBQVNELFNBQVQsQ0FBbUJFLE1BQW5CLEVBQTJCQyxNQUEzQixFQUFtQ0MsT0FBbkMsRUFBNEM7QUFBRSxTQUFPSCxjQUFjSSxJQUFkLENBQW1CSCxNQUFuQixFQUEyQkMsTUFBM0IsRUFBbUNDLE9BQW5DLENBQVA7QUFBcUQiLCJmaWxlIjoiY2hhcmFjdGVyLmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IERpZmYgZnJvbSAnLi9iYXNlJztcblxuZXhwb3J0IGNvbnN0IGNoYXJhY3RlckRpZmYgPSBuZXcgRGlmZigpO1xuZXhwb3J0IGZ1bmN0aW9uIGRpZmZDaGFycyhvbGRTdHIsIG5ld1N0ciwgb3B0aW9ucykgeyByZXR1cm4gY2hhcmFjdGVyRGlmZi5kaWZmKG9sZFN0ciwgbmV3U3RyLCBvcHRpb25zKTsgfVxuIl19
 
+(function() { module.exports = this["wp"]["isShallowEqual"]; }());
 
 /***/ }),
 /* 3 */
@@ -5692,10 +5756,12 @@ function _unsupportedIterableToArray(o, minLen) {
 /* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(9);
 /* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_1__);
 
+var useCreateElement = function useCreateElement(type, props, children) {
+  if (children === void 0) {
+    children = props.children;
+  }
 
-/**
- * WordPress dependencies
- */
+  var context = Object(react__WEBPACK_IMPORTED_MODULE_0__["useContext"])(_SystemContext_js__WEBPACK_IMPORTED_MODULE_1__[/* SystemContext */ "a"]);
 
 var alignLeft = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_1__["SVG"], {
   xmlns: "http://www.w3.org/2000/svg",
@@ -5705,6 +5771,9 @@ var alignLeft = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createEl
 }));
 /* harmony default export */ __webpack_exports__["a"] = (alignLeft);
 
+  if (typeof type === "string" && isRenderProp(children)) {
+    var _ = props.children,
+        rest = Object(_rollupPluginBabelHelpers_0c84a174_js__WEBPACK_IMPORTED_MODULE_2__[/* a */ "b"])(props, ["children"]);
 
 /***/ }),
 
@@ -5743,9 +5812,15 @@ var alignCenter = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["create
 /* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_1__);
 
 
+// CONCATENATED MODULE: ./node_modules/reakit-utils/es/isObject.js
 /**
- * WordPress dependencies
+ * Checks whether `arg` is an object or not.
+ *
+ * @returns {boolean}
  */
+function isObject(arg) {
+  return typeof arg === "object" && arg != null;
+}
 
 var alignRight = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_1__["SVG"], {
   xmlns: "http://www.w3.org/2000/svg",
@@ -5793,9 +5868,6 @@ var moreHorizontal = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["cre
 /* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_1__);
 
 
-/**
- * WordPress dependencies
- */
 
 var plusCircle = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_1__["SVG"], {
   xmlns: "http://www.w3.org/2000/svg",
@@ -5817,10 +5889,27 @@ var plusCircle = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createE
 /* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(9);
 /* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_1__);
 
+/***/ }),
+/* 82 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return createOnKeyDown; });
 /**
  * WordPress dependencies
  */
+function createOnKeyDown(_temp) {
+  var _ref = _temp === void 0 ? {} : _temp,
+      keyMap = _ref.keyMap,
+      onKey = _ref.onKey,
+      stopPropagation = _ref.stopPropagation,
+      onKeyDown = _ref.onKeyDown,
+      _ref$shouldKeyDown = _ref.shouldKeyDown,
+      shouldKeyDown = _ref$shouldKeyDown === void 0 ? function () {
+    return true;
+  } : _ref$shouldKeyDown,
+      _ref$preventDefault = _ref.preventDefault,
+      preventDefault = _ref$preventDefault === void 0 ? true : _ref$preventDefault;
 
 var pencil = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_1__["SVG"], {
   xmlns: "http://www.w3.org/2000/svg",
@@ -5843,9 +5932,6 @@ var pencil = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createEleme
 /* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_1__);
 
 
-/**
- * WordPress dependencies
- */
 
 var upload = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_1__["SVG"], {
   xmlns: "http://www.w3.org/2000/svg",
@@ -5905,6 +5991,36 @@ var chevronUp = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createEl
 }));
 /* harmony default export */ __webpack_exports__["a"] = (chevronUp);
 
+    return Object(_rollupPluginBabelHelpers_1f0bf8c2_js__WEBPACK_IMPORTED_MODULE_0__[/* a */ "b"])({
+      unstable_clickOnEnter: unstable_clickOnEnter,
+      unstable_clickOnSpace: unstable_clickOnSpace
+    }, options);
+  },
+  useProps: function useProps(options, _ref2) {
+    var htmlOnKeyDown = _ref2.onKeyDown,
+        htmlOnKeyUp = _ref2.onKeyUp,
+        htmlProps = Object(_rollupPluginBabelHelpers_1f0bf8c2_js__WEBPACK_IMPORTED_MODULE_0__[/* _ */ "a"])(_ref2, ["onKeyDown", "onKeyUp"]);
+
+    var _React$useState = Object(react__WEBPACK_IMPORTED_MODULE_3__["useState"])(false),
+        active = _React$useState[0],
+        setActive = _React$useState[1];
+
+    var onKeyDownRef = Object(reakit_utils_useLiveRef__WEBPACK_IMPORTED_MODULE_6__[/* useLiveRef */ "a"])(htmlOnKeyDown);
+    var onKeyUpRef = Object(reakit_utils_useLiveRef__WEBPACK_IMPORTED_MODULE_6__[/* useLiveRef */ "a"])(htmlOnKeyUp);
+    var onKeyDown = Object(react__WEBPACK_IMPORTED_MODULE_3__["useCallback"])(function (event) {
+      var _onKeyDownRef$current;
+
+      (_onKeyDownRef$current = onKeyDownRef.current) === null || _onKeyDownRef$current === void 0 ? void 0 : _onKeyDownRef$current.call(onKeyDownRef, event);
+      if (event.defaultPrevented) return;
+      if (options.disabled) return;
+      if (event.metaKey) return;
+      if (!Object(reakit_utils_isSelfTarget__WEBPACK_IMPORTED_MODULE_7__[/* isSelfTarget */ "a"])(event)) return;
+      var isEnter = options.unstable_clickOnEnter && event.key === "Enter";
+      var isSpace = options.unstable_clickOnSpace && event.key === " ";
+
+      if (isEnter || isSpace) {
+        if (isNativeClick(event)) return;
+        event.preventDefault();
 
 /***/ }),
 
@@ -6631,6 +6747,11 @@ var with_colors_withEditorColorPalette = function withEditorColorPalette() {
  * @return {WPComponent} The component that can be used as a HOC.
  */
 
+    _this.attach = function () {
+      return _this.payload.forEach(function (p) {
+        return p instanceof Animated && p.addChild(_assertThisInitialized(_this));
+      });
+    };
 
 function createColorHOC(colorTypes, withColorPalette) {
   var colorMap = Object(external_this_lodash_["reduce"])(colorTypes, function (colorObject, colorType) {
@@ -6752,6 +6873,9 @@ function createColorHOC(colorTypes, withColorPalette) {
  * @return {Function} Higher-order component.
  */
 
+  _proto2.getAnimatedValue = function getAnimatedValue() {
+    return this.getValue(true);
+  };
 
 function createCustomColorsHOC(colorsArray) {
   return function () {
@@ -6930,6 +7054,13 @@ var ifBlockEditSelected = Object(external_this_wp_compose_["createHigherOrderCom
 
 
 
+          var isOvershooting = config.clamp && config.tension !== 0 ? from < to ? position > to : position < to : false;
+          var isVelocity = Math.abs(velocity) <= config.precision;
+          var isDisplacement = config.tension !== 0 ? Math.abs(to - position) <= config.precision : true;
+          endOfAnimation = isOvershooting || isVelocity && isDisplacement;
+          animation.lastVelocity = velocity;
+          animation.lastTime = time;
+        } // Trails aren't done until their parents conclude
 
 
 
@@ -7438,16 +7569,36 @@ var external_this_wp_a11y_ = __webpack_require__(50);
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/contrast-checker/index.js
 
 
-/**
- * External dependencies
- */
+    var target = attach && attach(this); // Reduces input { name: value } pairs into animated values
 
-/**
- * WordPress dependencies
- */
+    this.animations = Object.entries(this.merged).reduce(function (acc, _ref7) {
+      var name = _ref7[0],
+          value = _ref7[1];
+      // Issue cached entries, except on reset
+      var entry = acc[name] || {}; // Figure out what the value is supposed to be
+
+      var isNumber = is.num(value);
+      var isString = is.str(value) && !value.startsWith('#') && !/\d/.test(value) && !colorNames[value];
+      var isArray = is.arr(value);
+      var isInterpolation = !isNumber && !isArray && !isString;
+      var fromValue = !is.und(from[name]) ? from[name] : value;
+      var toValue = isNumber || isArray ? value : isString ? value : 1;
+      var toConfig = callProp(config, name);
+      if (target) toValue = target.animations[name].parent;
+      var parent = entry.parent,
+          interpolation$$1 = entry.interpolation,
+          toValues = toArray(target ? toValue.getPayload() : toValue),
+          animatedValues;
+      var newValue = value;
+      if (isInterpolation) newValue = interpolation({
+        range: [0, 1],
+        output: [value, value]
+      })(1);
+      var currentValue = interpolation$$1 && interpolation$$1.getValue(); // Change detection flags
 
 
-
+      if (reset || hasNewGoal && currentValueDiffersFromGoal || hasNewConfig) {
+        var _extends2;
 
 
 
@@ -8527,6 +8678,17 @@ var block_breadcrumb_BlockBreadcrumb = function BlockBreadcrumb() {
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/block-controls/index.js
 
+      case 'REMOVE_BLOCKS_AUGMENTED_WITH_CHILDREN':
+        return Object(external_this_lodash_["flow"])([// Remove inner block ordering for removed blocks
+        function (nextState) {
+          return Object(external_this_lodash_["omit"])(nextState, action.removedClientIds);
+        }, // Remove deleted blocks from other blocks' orderings
+        function (nextState) {
+          return Object(external_this_lodash_["mapValues"])(nextState, function (subState) {
+            return external_this_lodash_["without"].apply(void 0, [subState].concat(Object(toConsumableArray["a" /* default */])(action.removedClientIds)));
+          });
+        }])(state);
+    }
 
 /**
  * WordPress dependencies
@@ -8536,6 +8698,8 @@ var block_breadcrumb_BlockBreadcrumb = function BlockBreadcrumb() {
  * Internal dependencies
  */
 
+      case 'INSERT_BLOCKS':
+        return reducer_objectSpread({}, state, {}, mapBlockParents(action.blocks, action.rootClientId || ''));
 
 
 var block_controls_createSlotFill = Object(external_this_wp_components_["createSlotFill"])('BlockControls'),
@@ -9241,6 +9405,55 @@ function withPersistentBlockChange(reducer) {
     return nextState;
   };
 }
+var controls_controls = {
+  SELECT: Object(external_this_wp_data_["createRegistryControl"])(function (registry) {
+    return function (_ref) {
+      var _registry$select;
+
+      var storeName = _ref.storeName,
+          selectorName = _ref.selectorName,
+          args = _ref.args;
+      return (_registry$select = registry.select(storeName))[selectorName].apply(_registry$select, Object(toConsumableArray["a" /* default */])(args));
+    };
+  }),
+  SLEEP: function SLEEP(_ref2) {
+    var duration = _ref2.duration;
+    return new Promise(function (resolve) {
+      setTimeout(resolve, duration);
+    });
+  }
+};
+/* harmony default export */ var store_controls = (controls_controls);
+
+// CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/store/actions.js
+
+
+
+function actions_createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = actions_unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function actions_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return actions_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return actions_arrayLikeToArray(o, minLen); }
+
+function actions_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function actions_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function actions_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { actions_ownKeys(Object(source), true).forEach(function (key) { Object(defineProperty["a" /* default */])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { actions_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+var _marked = /*#__PURE__*/external_this_regeneratorRuntime_default.a.mark(ensureDefaultBlock),
+    _marked2 = /*#__PURE__*/external_this_regeneratorRuntime_default.a.mark(selectPreviousBlock),
+    _marked3 = /*#__PURE__*/external_this_regeneratorRuntime_default.a.mark(selectNextBlock),
+    _marked4 = /*#__PURE__*/external_this_regeneratorRuntime_default.a.mark(actions_replaceBlocks),
+    _marked5 = /*#__PURE__*/external_this_regeneratorRuntime_default.a.mark(actions_moveBlocksToPosition),
+    _marked6 = /*#__PURE__*/external_this_regeneratorRuntime_default.a.mark(actions_moveBlockToPosition),
+    _marked7 = /*#__PURE__*/external_this_regeneratorRuntime_default.a.mark(actions_insertBlocks),
+    _marked8 = /*#__PURE__*/external_this_regeneratorRuntime_default.a.mark(actions_removeBlocks),
+    _marked9 = /*#__PURE__*/external_this_regeneratorRuntime_default.a.mark(actions_setNavigationMode),
+    _marked10 = /*#__PURE__*/external_this_regeneratorRuntime_default.a.mark(actions_setBlockMovingClientId),
+    _marked11 = /*#__PURE__*/external_this_regeneratorRuntime_default.a.mark(actions_duplicateBlocks),
+    _marked12 = /*#__PURE__*/external_this_regeneratorRuntime_default.a.mark(actions_insertBeforeBlock),
+    _marked13 = /*#__PURE__*/external_this_regeneratorRuntime_default.a.mark(actions_insertAfterBlock),
+    _marked14 = /*#__PURE__*/external_this_regeneratorRuntime_default.a.mark(actions_flashBlock);
+
 /**
  * Higher-order reducer intended to augment the blocks reducer, assigning an
  * `isIgnoredChange` property value corresponding to whether a change in state
@@ -10275,6 +10488,7 @@ var external_this_regeneratorRuntime_default = /*#__PURE__*/__webpack_require__.
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/store/controls.js
 
+          return _context11.abrupt("return");
 
 /**
  * WordPress dependencies
@@ -10318,6 +10532,7 @@ var controls_controls = {
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/store/actions.js
 
+          return _context12.abrupt("return");
 
 
 function actions_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -10366,8 +10581,15 @@ external_this_regeneratorRuntime_default.a.mark(actions_insertAfterBlock);
  * WordPress dependencies
  */
 
+        case 7:
+          isLocked = _context12.sent;
 
+          if (!isLocked) {
+            _context12.next = 10;
+            break;
+          }
 
+          return _context12.abrupt("return");
 
 /**
  * Internal dependencies
@@ -10418,6 +10640,10 @@ function ensureDefaultBlock() {
  * @return {Object} Action object.
  */
 
+        case 12:
+          firstSelectedIndex = _context13.sent;
+          _context13.next = 15;
+          return actions_insertDefaultBlock({}, rootClientId, firstSelectedIndex + 1);
 
 function actions_resetBlocks(blocks) {
   return {
@@ -10436,6 +10662,13 @@ function actions_resetBlocks(blocks) {
  *                                 text value. See `wp.richText.create`.
  */
 
+        case 16:
+        case "end":
+          return _context13.stop();
+      }
+    }
+  }, _marked13);
+}
 /**
  * Returns an action object used in signalling that selection state should be
  * reset to the specified selection.
@@ -11660,13 +11893,43 @@ function selectors_objectSpread(target) { for (var i = 1; i < arguments.length; 
  * External dependencies
  */
 
-
+function __experimentalGetLastBlockAttributeChanges(state) {
+  return state.lastBlockAttributesChange;
+}
 /**
- * WordPress dependencies
+ * Returns the available reusable blocks
+ *
+ * @param {Object} state Global application state.
+ *
+ * @return {Array} Reusable blocks
+ */
+
+function getReusableBlocks(state) {
+  return Object(external_this_lodash_["get"])(state, ['settings', '__experimentalReusableBlocks'], selectors_EMPTY_ARRAY);
+}
+/**
+ * Returns whether the navigation mode is enabled.
+ *
+ * @param {Object} state Editor state.
+ *
+ * @return {boolean}     Is navigation mode enabled.
  */
 
 
+function selectors_isNavigationMode(state) {
+  return state.isNavigationMode;
+}
+/**
+ * Returns whether block moving mode is enabled.
+ *
+ * @param {Object} state Editor state.
+ *
+ * @return {string}     Client Id of moving block.
+ */
 
+function selectors_hasBlockMovingClientId(state) {
+  return state.hasBlockMovingClientId;
+}
 /**
  * A block selection object.
  *
@@ -11679,6 +11942,9 @@ function selectors_objectSpread(target) { for (var i = 1; i < arguments.length; 
  */
 // Module constants
 
+function isBlockHighlighted(state, clientId) {
+  return state.highlightedBlock === clientId;
+}
 /**
  * @private
  */
@@ -13178,6 +13444,10 @@ function selectors_didAutomaticChange(state) {
 
 
 
+  var _useResizeObserver3 = Object(external_this_wp_compose_["useResizeObserver"])(),
+      _useResizeObserver4 = Object(slicedToArray["a" /* default */])(_useResizeObserver3, 2),
+      containtResizeListener = _useResizeObserver4[0],
+      contentHeight = _useResizeObserver4[1].height; // Initialize on render instead of module top level, to avoid circular dependency issues.
 
 function effects_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -13366,6 +13636,14 @@ function validateBlocksToTemplate(action, store) {
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/store/middlewares.js
 
+function InserterListItem(_ref) {
+  var icon = _ref.icon,
+      _onClick = _ref.onClick,
+      isDisabled = _ref.isDisabled,
+      title = _ref.title,
+      className = _ref.className,
+      composite = _ref.composite,
+      props = Object(objectWithoutProperties["a" /* default */])(_ref, ["icon", "onClick", "isDisabled", "title", "className", "composite"]);
 
 /**
  * External dependencies
@@ -13457,8 +13735,23 @@ store_middlewares(store_store);
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/provider/with-registry-provider.js
 
+function BlockTypesList(_ref) {
+  var _ref$items = _ref.items,
+      items = _ref$items === void 0 ? [] : _ref$items,
+      onSelect = _ref.onSelect,
+      _ref$onHover = _ref.onHover,
+      onHover = _ref$onHover === void 0 ? function () {} : _ref$onHover,
+      children = _ref.children,
+      label = _ref.label;
+  var composite = Object(CompositeState_3a25dcee["g" /* u */])();
+  var normalizedItems = includeVariationsInInserterItems(items);
+  var orderId = normalizedItems.reduce(function (acc, item) {
+    return acc + '--' + item.id;
+  }, ''); // This ensures the composite state refreshes when the list order changes.
 
 
+  );
+}
 
 
 /**
@@ -13517,7 +13810,9 @@ var withRegistryProvider = Object(external_this_wp_compose_["createHigherOrderCo
 
 
 
+function block_types_tab_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
+function block_types_tab_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { block_types_tab_ownKeys(Object(source), true).forEach(function (key) { Object(defineProperty["a" /* default */])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { block_types_tab_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 /**
  * External dependencies
@@ -13526,6 +13821,7 @@ var withRegistryProvider = Object(external_this_wp_compose_["createHigherOrderCo
 /**
  * WordPress dependencies
  */
+
 
 
 
@@ -13717,10 +14013,9 @@ var more_horizontal = __webpack_require__(284);
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/warning/index.js
 
+/* harmony default export */ var use_patterns_state = (use_patterns_state_usePatternsState);
 
-/**
- * External dependencies
- */
+// CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/block-patterns-list/index.js
 
 /**
  * WordPress dependencies
@@ -13931,6 +14226,10 @@ function (_Component) {
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/block-list/block-invalid-warning.js
 
+  var getPatternIndex = Object(external_this_wp_element_["useCallback"])(function (pattern) {
+    if (!pattern.categories || !pattern.categories.length) {
+      return Infinity;
+    }
 
 
 
@@ -14089,15 +14388,29 @@ var block_invalid_warning_recoverBlock = function recoverBlock(_ref) {
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/block-list/block-crash-warning.js
 
+/**
+ * External dependencies
+ */
 
 /**
  * WordPress dependencies
  */
 
 /**
- * Internal dependencies
+ * @typedef WPInserterConfig
+ *
+ * @property {string=} rootClientId        Inserter Root Client ID.
+ * @property {string=} clientId            Inserter Client ID.
+ * @property {boolean} isAppender          Whether the inserter is an appender or not.
+ * @property {boolean} selectBlockOnInsert Whether the block should be selected on insert.
  */
 
+/**
+ * Returns the insertion point state given the inserter config.
+ *
+ * @param {WPInserterConfig} config Inserter Config.
+ * @return {Array} Insertion Point State (rootClientID, onInsertBlocks and onToggle).
+ */
 
 var block_crash_warning_warning = Object(external_this_wp_element_["createElement"])(warning, {
   className: "block-editor-block-list__block-crash-warning"
@@ -14117,6 +14430,11 @@ var block_crash_warning_warning = Object(external_this_wp_element_["createElemen
  * WordPress dependencies
  */
 
+  function getInsertionIndex() {
+    // If the clientId is defined, we insert at the position of the block.
+    if (clientId) {
+      return getBlockIndex(clientId, destinationRootClientId);
+    } // If there a selected block, we insert after the selected block.
 
 var block_crash_boundary_BlockCrashBoundary =
 /*#__PURE__*/
@@ -14165,19 +14483,39 @@ var react_autosize_textarea_lib_default = /*#__PURE__*/__webpack_require__.n(rea
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/block-list/block-html.js
 
+  var onToggleInsertionPoint = function onToggleInsertionPoint(show) {
+    if (show) {
+      var index = getInsertionIndex();
+      showInsertionPoint(destinationRootClientId, index);
+    } else {
+      hideInsertionPoint();
+    }
+  };
 
+  return [destinationRootClientId, onInsertBlocks, onToggleInsertionPoint];
+}
 
-/**
- * External dependencies
- */
+/* harmony default export */ var use_insertion_point = (useInsertionPoint);
 
 /**
  * WordPress dependencies
  */
 
 
+var tabs_blocksTab = {
+  name: 'blocks',
 
+  /* translators: Blocks tab title in the block inserter. */
+  title: Object(external_this_wp_i18n_["__"])('Blocks')
+};
+var tabs_patternsTab = {
+  name: 'patterns',
 
+  /* translators: Patterns tab title in the block inserter. */
+  title: Object(external_this_wp_i18n_["__"])('Patterns')
+};
+var tabs_reusableBlocksTab = {
+  name: 'reusable',
 
 function BlockHTML(_ref) {
   var clientId = _ref.clientId;
@@ -14506,6 +14844,7 @@ function getDeepestNode(node, type) {
       node = node[sibling];
     }
   }
+};
 
   return node;
 }
@@ -14715,6 +15054,10 @@ function useMultiSelection(ref) {
 
 
 
+
+
+
+
 /**
  * Internal dependencies
  */
@@ -14828,6 +15171,80 @@ var FocusCapture = Object(external_this_wp_element_["forwardRef"])(function (_re
 /**
  * Internal dependencies
  */
+
+var FocusCapture = Object(external_this_wp_element_["forwardRef"])(function (_ref, ref) {
+  var selectedClientId = _ref.selectedClientId,
+      isReverse = _ref.isReverse,
+      containerRef = _ref.containerRef,
+      noCapture = _ref.noCapture,
+      hasMultiSelection = _ref.hasMultiSelection,
+      multiSelectionContainer = _ref.multiSelectionContainer;
+  var isNavigationMode = Object(external_this_wp_data_["useSelect"])(function (select) {
+    return select('core/block-editor').isNavigationMode();
+  });
+
+  var _useDispatch = Object(external_this_wp_data_["useDispatch"])('core/block-editor'),
+      setNavigationMode = _useDispatch.setNavigationMode;
+
+  function onFocus() {
+    // Do not capture incoming focus if set by us in WritingFlow.
+    if (noCapture.current) {
+      noCapture.current = null;
+      return;
+    } // When focus coming in from out of the block list, and no block is
+    // selected, enable Navigation mode and select the first or last block
+    // depending on the direction.
+
+
+    if (!selectedClientId) {
+      if (hasMultiSelection) {
+        multiSelectionContainer.current.focus();
+        return;
+      }
+
+      setNavigationMode(true);
+      var tabbables = external_this_wp_dom_["focus"].tabbable.find(containerRef.current);
+
+      if (tabbables.length) {
+        if (isReverse) {
+          Object(external_this_lodash_["last"])(tabbables).focus();
+        } else {
+          Object(external_this_lodash_["first"])(tabbables).focus();
+        }
+      }
+
+      return;
+    } // If there is a selected block, move focus to the first or last
+    // tabbable element depending on the direction.
+
+
+    var wrapper = getBlockDOMNode(selectedClientId);
+
+    if (isReverse) {
+      var _tabbables = external_this_wp_dom_["focus"].tabbable.find(wrapper);
+
+      var lastTabbable = Object(external_this_lodash_["last"])(_tabbables) || wrapper;
+      lastTabbable.focus();
+    } else {
+      wrapper.focus();
+    }
+  }
+
+  return Object(external_this_wp_element_["createElement"])("div", {
+    ref: ref // Don't allow tabbing to this element in Navigation mode.
+    ,
+    tabIndex: !isNavigationMode ? '0' : undefined,
+    onFocus: onFocus // Needs to be positioned within the viewport, so focus to this
+    // element does not scroll the page.
+    ,
+    style: {
+      position: 'fixed'
+    }
+  });
+});
+/* harmony default export */ var focus_capture = (FocusCapture);
+
+// CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/writing-flow/index.js
 
 
 
@@ -14985,6 +15402,9 @@ function writing_flow_selector(select) {
  * wrapped around BlockList.
  */
 
+      if (startingBlockClientId && focusedBlockUid) {
+        setCanInsertMovingBlock(canInsertBlockType(getBlockName(startingBlockClientId), getBlockRootClientId(focusedBlockUid)));
+      }
 
 function WritingFlow(_ref) {
   var children = _ref.children;
@@ -15028,6 +15448,19 @@ function WritingFlow(_ref) {
       setNavigationMode(false);
     } // Multi-select blocks when Shift+clicking.
 
+          if (target === lastTabbable) {
+            // See comment above.
+            noCapture.current = true;
+            focusCaptureAfterRef.current.focus();
+            return;
+          }
+        }
+      } else if (isEscape) {
+        setNavigationMode(true);
+      }
+    } else if (hasMultiSelection && isTab && target === multiSelectionContainer.current) {
+      // See comment above.
+      noCapture.current = true;
 
     if (isSelectionEnabled && // The main button.
     // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button
@@ -15348,6 +15781,32 @@ function WritingFlow(_ref) {
 
 
 
+function InsertionPointInserter(_ref) {
+  var clientId = _ref.clientId,
+      setIsInserterForced = _ref.setIsInserterForced,
+      containerRef = _ref.containerRef;
+  var ref = Object(external_this_wp_element_["useRef"])(); // Hide the inserter above the selected block and during multi-selection.
+
+  var isInserterHidden = Object(external_this_wp_data_["useSelect"])(function (select) {
+    var _select = select('core/block-editor'),
+        getMultiSelectedBlockClientIds = _select.getMultiSelectedBlockClientIds,
+        getSelectedBlockClientId = _select.getSelectedBlockClientId,
+        hasMultiSelection = _select.hasMultiSelection;
+
+    var multiSelectedBlockClientIds = getMultiSelectedBlockClientIds();
+    var selectedBlockClientId = getSelectedBlockClientId();
+    return hasMultiSelection() ? multiSelectedBlockClientIds.includes(clientId) : clientId === selectedBlockClientId;
+  }, [clientId]);
+
+  function focusClosestTabbable(event) {
+    var clientX = event.clientX,
+        clientY = event.clientY,
+        target = event.target; // Only handle click on the wrapper specifically, and not an event
+    // bubbled from the inserter itself.
+
+    if (target !== ref.current) {
+      return;
+    }
 
 function Indicator(_ref) {
   var clientId = _ref.clientId;
@@ -15537,6 +15996,7 @@ function InsertionPoint(_ref2) {
  */
 
 
+
 /**
  * Block breadcrumb component, displaying the label of the block. If the block
  * descends from a root block, a button is displayed enabling the user to select
@@ -15614,16 +16074,45 @@ function breadcrumb_BlockBreadcrumb(_ref) {
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/navigable-toolbar/index.js
 
+    var _select = select('core/block-editor'),
+        __unstableGetBlockWithoutInnerBlocks = _select.__unstableGetBlockWithoutInnerBlocks,
+        getBlockIndex = _select.getBlockIndex,
+        hasBlockMovingClientId = _select.hasBlockMovingClientId,
+        getBlockListSettings = _select.getBlockListSettings;
+
+    var index = getBlockIndex(clientId, rootClientId);
 
 
+    var blockMovingMode = hasBlockMovingClientId();
+    return {
+      index: index,
+      name: name,
+      attributes: attributes,
+      blockMovingMode: blockMovingMode,
+      orientation: (_getBlockListSettings = getBlockListSettings(rootClientId)) === null || _getBlockListSettings === void 0 ? void 0 : _getBlockListSettings.orientation
+    };
+  }, [clientId, rootClientId]);
+  var index = selected.index,
+      name = selected.name,
+      attributes = selected.attributes,
+      blockMovingMode = selected.blockMovingMode,
+      orientation = selected.orientation;
 
-/**
- * WordPress dependencies
- */
+  var _useDispatch = Object(external_this_wp_data_["useDispatch"])('core/block-editor'),
+      setNavigationMode = _useDispatch.setNavigationMode,
+      removeBlock = _useDispatch.removeBlock;
 
+  var ref = Object(external_this_wp_element_["useRef"])(); // Focus the breadcrumb in navigation mode.
 
+  Object(external_this_wp_element_["useEffect"])(function () {
+    ref.current.focus(); // NVDA on windows suffers from a bug where focus changes are not announced properly
+    // See WordPress/gutenberg#24121 and nvaccess/nvda#5825 for more details
+    // To solve it we announce the focus change manually.
 
-
+    if (isWindows()) {
+      Object(external_this_wp_a11y_["speak"])(label);
+    }
+  }, []);
 
 function NavigableToolbar(_ref) {
   var children = _ref.children,
@@ -15671,6 +16160,7 @@ function NavigableToolbar(_ref) {
 
 
 
+// CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/navigable-toolbar/index.js
 
 function BlockContextualToolbar(_ref) {
   var focusOnMount = _ref.focusOnMount,
@@ -15692,7 +16182,7 @@ function BlockContextualToolbar(_ref) {
 
 
 /**
- * External dependencies
+ * WordPress dependencies
  */
 
 
@@ -15701,9 +16191,28 @@ function BlockContextualToolbar(_ref) {
  */
 
 
+function useUpdateLayoutEffect(effect, deps) {
+  var mounted = Object(external_this_wp_element_["useRef"])(false);
+  Object(external_this_wp_element_["useLayoutEffect"])(function () {
+    if (mounted.current) {
+      return effect();
+    }
 
+    mounted.current = true;
+  }, deps);
+}
 
+function hasOnlyToolbarItem(elements) {
+  var dataProp = 'experimentalToolbarItem';
+  return !elements.some(function (element) {
+    return !(dataProp in element.dataset);
+  });
+}
 
+function focusFirstTabbableIn(container) {
+  var _focus$tabbable$find = external_this_wp_dom_["focus"].tabbable.find(container),
+      _focus$tabbable$find2 = Object(slicedToArray["a" /* default */])(_focus$tabbable$find, 1),
+      firstTabbable = _focus$tabbable$find2[0];
 
 
 /**
@@ -15916,6 +16425,7 @@ function wrapperSelector(select) {
   var ancestorBlockListSettings = __experimentalGetBlockListSettingsForBlocks(blockParentsClientIds); // Find the index of the first Block with the `captureDescendantsToolbars` prop defined
   // This will be the top most ancestor because getBlockParents() returns tree from top -> bottom
 
+  var clientIds = _ref.clientIds;
 
   var topmostAncestorWithCaptureDescendantsToolbarsIndex = Object(external_this_lodash_["findIndex"])(ancestorBlockListSettings, ['__experimentalCaptureToolbars', true]);
   var capturingClientId;
@@ -15924,6 +16434,15 @@ function wrapperSelector(select) {
     capturingClientId = blockParentsClientIds[topmostAncestorWithCaptureDescendantsToolbarsIndex];
   }
 
+  var normalizedClientIds = Object(external_this_lodash_["castArray"])(clientIds);
+  var firstClientId = Object(external_this_lodash_["first"])(normalizedClientIds);
+  var block = getBlock(firstClientId);
+  var rootClientId = getBlockRootClientId(Object(external_this_lodash_["first"])(normalizedClientIds));
+  var firstIndex = getBlockIndex(firstClientId, rootClientId);
+  var lastIndex = getBlockIndex(Object(external_this_lodash_["last"])(normalizedClientIds), rootClientId);
+  var blockOrder = getBlockOrder(rootClientId);
+  var isFirst = firstIndex === 0;
+  var isLast = lastIndex === blockOrder.length - 1;
   return {
     clientId: clientId,
     rootClientId: getBlockRootClientId(clientId),
@@ -15974,16 +16493,71 @@ function WrappedBlockPopover() {
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/block-list/root-container.js
 
 
+
+/**
+ * Block parent selector component, displaying the hierarchy of the
+ * current block selection as a single icon to "go up" a level.
+ *
+ * @return {WPComponent} Parent block selector.
+ */
+
+function BlockParentSelector() {
+  var _useDispatch = Object(external_this_wp_data_["useDispatch"])('core/block-editor'),
+      selectBlock = _useDispatch.selectBlock;
+
+  var _useSelect = Object(external_this_wp_data_["useSelect"])(function (select) {
+    var _select = select('core/block-editor'),
+        getBlockName = _select.getBlockName,
+        getBlockParents = _select.getBlockParents,
+        getSelectedBlockClientId = _select.getSelectedBlockClientId;
+
+    var selectedBlockClientId = getSelectedBlockClientId();
+    var parents = getBlockParents(selectedBlockClientId);
+    var _firstParentClientId = parents[parents.length - 1];
+    var parentBlockName = getBlockName(_firstParentClientId);
+    return {
+      parentBlockType: Object(external_this_wp_blocks_["getBlockType"])(parentBlockName),
+      firstParentClientId: _firstParentClientId
+    };
+  }, []),
+      parentBlockType = _useSelect.parentBlockType,
+      firstParentClientId = _useSelect.firstParentClientId;
+
+  if (firstParentClientId !== undefined) {
+    return Object(external_this_wp_element_["createElement"])("div", {
+      className: "block-editor-block-parent-selector",
+      key: firstParentClientId
+    }, Object(external_this_wp_element_["createElement"])(external_this_wp_components_["ToolbarButton"], {
+      className: "block-editor-block-parent-selector__button",
+      onClick: function onClick() {
+        return selectBlock(firstParentClientId);
+      },
+      label: Object(external_this_wp_i18n_["sprintf"])(
+      /* translators: %s: Name of the block's parent. */
+      Object(external_this_wp_i18n_["__"])('Select parent (%s)'), parentBlockType.title),
+      showTooltip: true,
+      icon: Object(external_this_wp_element_["createElement"])(BlockIcon, {
+        icon: parentBlockType.icon
+      })
+    }));
+  }
+
+  return null;
+}
+
+// CONCATENATED MODULE: ./node_modules/@wordpress/icons/build-module/library/stack.js
+
 /**
  * WordPress dependencies
  */
 
-
-/**
- * Internal dependencies
- */
-
-
+var stack_stack = Object(external_this_wp_element_["createElement"])(external_this_wp_primitives_["SVG"], {
+  xmlns: "http://www.w3.org/2000/svg",
+  viewBox: "0 0 24 24"
+}, Object(external_this_wp_element_["createElement"])(external_this_wp_primitives_["Path"], {
+  d: "M20.2 8v11c0 .7-.6 1.2-1.2 1.2H6v1.5h13c1.5 0 2.7-1.2 2.7-2.8V8zM18 16.4V4.6c0-.9-.7-1.6-1.6-1.6H4.6C3.7 3 3 3.7 3 4.6v11.8c0 .9.7 1.6 1.6 1.6h11.8c.9 0 1.6-.7 1.6-1.6zm-13.5 0V4.6c0-.1.1-.1.1-.1h11.8c.1 0 .1.1.1.1v11.8c0 .1-.1.1-.1.1H4.6l-.1-.1z"
+}));
+/* harmony default export */ var library_stack = (stack_stack);
 
 
 
@@ -16013,6 +16587,7 @@ function root_container_selector(select) {
  * @param {WPSyntheticEvent} event Synthetic drag event.
  */
 
+function block_styles_createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = block_styles_unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
 function onDragStart(event) {
   // Ensure we target block content, not block controls.
@@ -16096,10 +16671,95 @@ function block_objectSpread(target) { for (var i = 1; i < arguments.length; i++)
  * WordPress dependencies
  */
 
+  var genericPreviewBlock = block_styles_useGenericPreviewBlock(block, type);
 
+  if (!styles || styles.length === 0) {
+    return null;
+  }
 
+  var renderedStyles = Object(external_this_lodash_["find"])(styles, 'isDefault') ? styles : [{
+    name: 'default',
+    label: Object(external_this_wp_i18n_["_x"])('Default', 'block style'),
+    isDefault: true
+  }].concat(Object(toConsumableArray["a" /* default */])(styles));
+  var activeStyle = getActiveStyle(renderedStyles, className);
+  return Object(external_this_wp_element_["createElement"])("div", {
+    className: "block-editor-block-styles"
+  }, renderedStyles.map(function (style) {
+    var styleClassName = replaceActiveStyle(className, activeStyle, style);
+    return Object(external_this_wp_element_["createElement"])(BlockStyleItem, {
+      genericPreviewBlock: genericPreviewBlock,
+      className: className,
+      isActive: activeStyle === style,
+      key: style.name,
+      onSelect: function onSelect() {
+        updateBlockAttributes(clientId, {
+          className: styleClassName
+        });
+        onHoverClassName(null);
+        onSwitch();
+      },
+      onBlur: function onBlur() {
+        return onHoverClassName(null);
+      },
+      onHover: function onHover() {
+        return onHoverClassName(styleClassName);
+      },
+      style: style,
+      styleClassName: styleClassName,
+      itemRole: itemRole
+    });
+  }));
+}
 
+function BlockStyleItem(_ref2) {
+  var genericPreviewBlock = _ref2.genericPreviewBlock,
+      style = _ref2.style,
+      isActive = _ref2.isActive,
+      onBlur = _ref2.onBlur,
+      onHover = _ref2.onHover,
+      onSelect = _ref2.onSelect,
+      styleClassName = _ref2.styleClassName,
+      itemRole = _ref2.itemRole;
+  var previewBlocks = Object(external_this_wp_element_["useMemo"])(function () {
+    return block_styles_objectSpread({}, genericPreviewBlock, {
+      attributes: block_styles_objectSpread({}, genericPreviewBlock.attributes, {
+        className: styleClassName
+      })
+    });
+  }, [genericPreviewBlock, styleClassName]);
+  return Object(external_this_wp_element_["createElement"])("div", {
+    key: style.name,
+    className: classnames_default()('block-editor-block-styles__item', {
+      'is-active': isActive
+    }),
+    onClick: function onClick() {
+      return onSelect();
+    },
+    onKeyDown: function onKeyDown(event) {
+      if (external_this_wp_keycodes_["ENTER"] === event.keyCode || external_this_wp_keycodes_["SPACE"] === event.keyCode) {
+        event.preventDefault();
+        onSelect();
+      }
+    },
+    onMouseEnter: onHover,
+    onMouseLeave: onBlur,
+    role: itemRole || 'button',
+    tabIndex: "0",
+    "aria-label": style.label || style.name
+  }, Object(external_this_wp_element_["createElement"])("div", {
+    className: "block-editor-block-styles__item-preview"
+  }, Object(external_this_wp_element_["createElement"])(block_preview, {
+    viewportWidth: 500,
+    blocks: previewBlocks
+  })), Object(external_this_wp_element_["createElement"])("div", {
+    className: "block-editor-block-styles__item-label"
+  }, style.label || style.name));
+}
 
+/* harmony default export */ var block_styles = (BlockStyles);
+
+// CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/block-switcher/block-transformations-menu.js
 
 
 
@@ -16111,8 +16771,35 @@ function block_objectSpread(target) { for (var i = 1; i < arguments.length; i++)
 
 
 
+var block_transformations_menu_BlockTransformationsMenu = function BlockTransformationsMenu(_ref) {
+  var className = _ref.className,
+      possibleBlockTransformations = _ref.possibleBlockTransformations,
+      onSelect = _ref.onSelect;
+  return Object(external_this_wp_element_["createElement"])(external_this_wp_components_["MenuGroup"], {
+    label: Object(external_this_wp_i18n_["__"])('Transform to'),
+    className: className
+  }, possibleBlockTransformations.map(function (item) {
+    var name = item.name,
+        icon = item.icon,
+        title = item.title;
+    return Object(external_this_wp_element_["createElement"])(external_this_wp_components_["MenuItem"], {
+      key: name,
+      className: Object(external_this_wp_blocks_["getBlockMenuDefaultClassName"])(name),
+      icon: Object(external_this_wp_element_["createElement"])(BlockIcon, {
+        icon: icon,
+        showColors: true
+      }),
+      onClick: function onClick(event) {
+        event.preventDefault();
+        onSelect(name);
+      }
+    }, title);
+  }));
+};
 
+/* harmony default export */ var block_transformations_menu = (block_transformations_menu_BlockTransformationsMenu);
 
+// CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/block-switcher/index.js
 
 
 
@@ -16547,7 +17234,7 @@ var external_this_wp_htmlEntities_ = __webpack_require__(58);
 
 
 /**
- * External dependencies
+ * WordPress dependencies
  */
 
 /**
@@ -16556,7 +17243,26 @@ var external_this_wp_htmlEntities_ = __webpack_require__(58);
 
 
 
+  var block = getBlock(clientId);
+  var isCodeEditingEnabled = getSettings().codeEditingEnabled;
+  return {
+    mode: getBlockMode(clientId),
+    blockType: block ? Object(external_this_wp_blocks_["getBlockType"])(block.name) : null,
+    isCodeEditingEnabled: isCodeEditingEnabled
+  };
+}), Object(external_this_wp_data_["withDispatch"])(function (dispatch, _ref3) {
+  var _ref3$onToggle = _ref3.onToggle,
+      onToggle = _ref3$onToggle === void 0 ? external_this_lodash_["noop"] : _ref3$onToggle,
+      clientId = _ref3.clientId;
+  return {
+    onToggleMode: function onToggleMode() {
+      dispatch('core/block-editor').toggleBlockMode(clientId);
+      onToggle();
+    }
+  };
+})])(BlockModeToggle));
 
+// CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/block-settings-menu/block-convert-button.js
 
 
 /**
@@ -16644,11 +17350,12 @@ function default_block_appender_DefaultBlockAppender(_ref) {
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/block-list-appender/index.js
 
+  var label = Object(external_this_wp_i18n_["__"])('Convert to Blocks');
 
-/**
- * External dependencies
- */
-
+  return Object(external_this_wp_element_["createElement"])(external_this_wp_components_["MenuItem"], {
+    onClick: onClick
+  }, !small && label);
+}
 
 /**
  * WordPress dependencies
@@ -16755,6 +17462,7 @@ __experimentalBlockListFooter.Slot = block_list_footer_Slot;
 
 
 
+function block_settings_menu_controls_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 var parseDropEvent = function parseDropEvent(event) {
   var result = {
@@ -16917,23 +17625,32 @@ function useBlockDropZone(_ref) {
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/block-list/index.js
 
+// CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/block-settings-menu/index.js
 
 
-/**
- * External dependencies
- */
 
 /**
  * WordPress dependencies
  */
-
-
 
 /**
  * Internal dependencies
  */
 
 
+/**
+ * WordPress dependencies
+ */
+
+var handle = Object(external_this_wp_element_["createElement"])(external_this_wp_primitives_["SVG"], {
+  viewBox: "0 0 24 24",
+  xmlns: "http://www.w3.org/2000/svg"
+}, Object(external_this_wp_element_["createElement"])(external_this_wp_primitives_["Path"], {
+  d: "M7 16.5h10V15H7v1.5zm0-9V9h10V7.5H7z"
+}));
+/* harmony default export */ var library_handle = (handle);
+
+// CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/block-draggable/draggable-chip.js
 
 
 
@@ -17084,6 +17801,9 @@ function ScaledBlockPreview(_ref) {
       y = _useState6$.y,
       setPosition = _useState6[1]; // Dynamically calculate the scale factor
 
+/**
+ * Internal dependencies
+ */
 
   Object(external_this_wp_element_["useLayoutEffect"])(function () {
     // Timer - required to account for async render of `BlockEditorProvider`
@@ -17126,6 +17846,8 @@ function ScaledBlockPreview(_ref) {
 
         setPreviewScale(_containerElementRect.width / viewportWidth);
       }
+    };
+  }, []);
 
       setIsReady(true);
     }, 100); // Cleanup
@@ -17223,6 +17945,15 @@ function BlockPreview(_ref2) {
  */
 
 
+  var _useDebouncedShowMove = useDebouncedShowMovers({
+    ref: ref,
+    debounceTimeout: debounceTimeout,
+    isFocused: isFocused,
+    onChange: onChange
+  }),
+      showMovers = _useDebouncedShowMove.showMovers,
+      debouncedShowMovers = _useDebouncedShowMove.debouncedShowMovers,
+      debouncedHideMovers = _useDebouncedShowMove.debouncedHideMovers;
 
 function InserterListItem(_ref) {
   var icon = _ref.icon,
@@ -17261,7 +17992,23 @@ function InserterListItem(_ref) {
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/block-types-list/index.js
 
+    return function () {
+      if (node) {
+        node.removeEventListener('focus', handleOnFocus);
+        node.removeEventListener('blur', handleOnBlur);
+      }
+    };
+  }, [ref, registerRef, setIsFocused, debouncedShowMovers, debouncedHideMovers]);
+  return {
+    showMovers: showMovers,
+    gestures: {
+      onMouseMove: debouncedShowMovers,
+      onMouseLeave: debouncedHideMovers
+    }
+  };
+}
 
+// CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/block-toolbar/index.js
 
 function block_types_list_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -17359,6 +18106,7 @@ function BlockTypesList(_ref) {
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/block-card/index.js
 
 
+
 /**
  * Internal dependencies
  */
@@ -17391,6 +18139,7 @@ function BlockCard(_ref) {
  * WordPress dependencies
  */
 
+  var shouldShowMovers = displayHeaderToolbar || showMovers;
 
 /**
  * Internal dependencies
@@ -17458,7 +18207,7 @@ function search_items_ownKeys(object, enumerableOnly) { var keys = Object.keys(o
 function search_items_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { search_items_ownKeys(Object(source), true).forEach(function (key) { Object(defineProperty["a" /* default */])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { search_items_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 /**
- * External dependencies
+ * Internal dependencies
  */
 
 /**
@@ -17572,19 +18321,55 @@ var search_items_searchItems = function searchItems(items, categories, collectio
 
 
 
+function block_popover_selector(select) {
+  var _select = select('core/block-editor'),
+      isNavigationMode = _select.isNavigationMode,
+      isMultiSelecting = _select.isMultiSelecting,
+      hasMultiSelection = _select.hasMultiSelection,
+      isTyping = _select.isTyping,
+      isCaretWithinFormattedText = _select.isCaretWithinFormattedText,
+      getSettings = _select.getSettings,
+      getLastMultiSelectedBlockClientId = _select.getLastMultiSelectedBlockClientId;
 
+  return {
+    isNavigationMode: isNavigationMode(),
+    isMultiSelecting: isMultiSelecting(),
+    isTyping: isTyping(),
+    isCaretWithinFormattedText: isCaretWithinFormattedText(),
+    hasMultiSelection: hasMultiSelection(),
+    hasFixedToolbar: getSettings().hasFixedToolbar,
+    lastClientId: getLastMultiSelectedBlockClientId()
+  };
+}
 
+function BlockPopover(_ref) {
+  var clientId = _ref.clientId,
+      rootClientId = _ref.rootClientId,
+      isValid = _ref.isValid,
+      isEmptyDefaultBlock = _ref.isEmptyDefaultBlock,
+      capturingClientId = _ref.capturingClientId;
 
+  var _useSelect = Object(external_this_wp_data_["useSelect"])(block_popover_selector, []),
+      isNavigationMode = _useSelect.isNavigationMode,
+      isMultiSelecting = _useSelect.isMultiSelecting,
+      isTyping = _useSelect.isTyping,
+      isCaretWithinFormattedText = _useSelect.isCaretWithinFormattedText,
+      hasMultiSelection = _useSelect.hasMultiSelection,
+      hasFixedToolbar = _useSelect.hasFixedToolbar,
+      lastClientId = _useSelect.lastClientId;
 
+  var isLargeViewport = Object(external_this_wp_compose_["useViewportMatch"])('medium');
 
+  var _useState = Object(external_this_wp_element_["useState"])(false),
+      _useState2 = Object(slicedToArray["a" /* default */])(_useState, 2),
+      isToolbarForced = _useState2[0],
+      setIsToolbarForced = _useState2[1];
 
 function menu_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function menu_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { menu_ownKeys(Object(source), true).forEach(function (key) { Object(defineProperty["a" /* default */])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { menu_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
-/**
- * External dependencies
- */
+  var node = blockNodes[clientId];
 
 
 
@@ -17592,10 +18377,25 @@ function menu_objectSpread(target) { for (var i = 1; i < arguments.length; i++) 
  * WordPress dependencies
  */
 
+  if (!node) {
+    return null;
+  }
 
+  var anchorRef = node;
 
+  if (hasMultiSelection) {
+    var bottomNode = blockNodes[lastClientId]; // Wait to render the popover until the bottom reference is available
+    // as well.
 
+    if (!bottomNode) {
+      return null;
+    }
 
+    anchorRef = {
+      top: node,
+      bottom: bottomNode
+    };
+  }
 
 
 
@@ -17605,6 +18405,12 @@ function menu_objectSpread(target) { for (var i = 1; i < arguments.length; i++) 
  * Internal dependencies
  */
 
+  function onBlur() {
+    setIsInserterShown(false);
+  } // Position above the anchor, pop out towards the right, and position in the
+  // left corner. For the side inserter, pop out towards the left, and
+  // position in the right corner.
+  // To do: refactor `Popover` to make this prop clearer.
 
 
 
@@ -18157,9 +18963,30 @@ function (_Component) {
  * WordPress dependencies
  */
 
+    var isReverse = -1 === initialPosition;
+    var target = (isReverse ? external_this_lodash_["last"] : external_this_lodash_["first"])(textInputs) || wrapper.current;
+    Object(external_this_wp_dom_["placeCaretAtHorizontalEdge"])(target, isReverse);
+  };
 
+  Object(external_this_wp_element_["useEffect"])(function () {
+    if (shouldFocusFirstElement) {
+      focusTabbable();
+    }
+  }, [shouldFocusFirstElement]); // Block Reordering animation
 
+  use_moving_animation(wrapper, isSelected || isPartOfMultiSelection, isSelected || isFirstMultiSelected, enableAnimation, index);
+  /**
+   * Interprets keydown event intent to remove or insert after block if key
+   * event occurs on wrapper node. This can occur when the block has no text
+   * fields of its own, particularly after initial insertion, to allow for
+   * easy deletion and continuous writing flow to add additional content.
+   *
+   * @param {KeyboardEvent} event Keydown event.
+   */
 
+  var onKeyDown = function onKeyDown(event) {
+    var keyCode = event.keyCode,
+        target = event.target;
 
 
 
@@ -18169,7 +18996,13 @@ function (_Component) {
  * Internal dependencies
  */
 
+    if (keyCode !== external_this_wp_keycodes_["ENTER"] && keyCode !== external_this_wp_keycodes_["BACKSPACE"] && keyCode !== external_this_wp_keycodes_["DELETE"]) {
+      return;
+    }
 
+    if (target !== wrapper.current || Object(external_this_wp_dom_["isTextField"])(target)) {
+      return;
+    }
 
 var inserter_defaultRenderToggle = function defaultRenderToggle(_ref) {
   var onToggle = _ref.onToggle,
@@ -18364,6 +19197,10 @@ function (_Component) {
             getBlockSelectionEnd = _select3.getBlockSelectionEnd,
             getBlockOrder = _select3.getBlockOrder; // If the clientId is defined, we insert at the position of the block.
 
+  function onMouseOut(event) {
+    if (event.defaultPrevented) {
+      return;
+    }
 
         if (clientId) {
           return getBlockIndex(clientId, rootClientId);
@@ -18376,6 +19213,7 @@ function (_Component) {
           return getBlockIndex(end, rootClientId) + 1;
         } // Otherwise, we insert at the end of the current rootClientId
 
+// CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/block-list/block.js
 
         return getBlockOrder(rootClientId).length;
       }
@@ -18400,6 +19238,7 @@ function (_Component) {
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/button-block-appender/index.js
 
+function block_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { block_ownKeys(Object(source), true).forEach(function (key) { Object(defineProperty["a" /* default */])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { block_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 /**
  * External dependencies
@@ -18468,6 +19307,8 @@ function button_block_appender_ButtonBlockAppender(_ref) {
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/block-navigation/list.js
 
+function mergeWrapperProps(propsA, propsB) {
+  var newProps = block_objectSpread({}, propsA, {}, propsB);
 
 /**
  * External dependencies
@@ -18545,18 +19386,37 @@ function BlockNavigationList(_ref) {
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/block-navigation/index.js
 
+    return {
+      isDragging: isDraggingBlocks(),
+      isHighlighted: isBlockHighlighted(clientId)
+    };
+  }, [clientId]),
+      isDragging = _useSelect.isDragging,
+      isHighlighted = _useSelect.isHighlighted;
 
-/**
- * External dependencies
- */
+  var _useDispatch = Object(external_this_wp_data_["useDispatch"])('core/block-editor'),
+      removeBlock = _useDispatch.removeBlock;
 
-/**
- * WordPress dependencies
- */
+  var onRemove = Object(external_this_wp_element_["useCallback"])(function () {
+    return removeBlock(clientId);
+  }, [clientId]); // Handling the error state
 
+  var _useState = Object(external_this_wp_element_["useState"])(false),
+      _useState2 = Object(slicedToArray["a" /* default */])(_useState, 2),
+      hasError = _useState2[0],
+      setErrorState = _useState2[1];
 
+  var onBlockError = function onBlockError() {
+    return setErrorState(true);
+  };
 
+  var blockType = Object(external_this_wp_blocks_["getBlockType"])(name);
+  var lightBlockWrapper = Object(external_this_wp_blocks_["hasBlockSupport"])(blockType, 'lightBlockWrapper', false);
+  var isUnregisteredBlock = name === Object(external_this_wp_blocks_["getUnregisteredTypeHandlerName"])(); // Determine whether the block has props to apply to the wrapper.
 
+  if (blockType.getEditWrapperProps) {
+    wrapperProps = mergeWrapperProps(wrapperProps, blockType.getEditWrapperProps(attributes));
+  }
 
 /**
  * Internal dependencies
@@ -18618,15 +19478,70 @@ function BlockNavigation(_ref) {
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/block-navigation/dropdown.js
 
+  var isAncestorOfSelectedBlock = hasSelectedInnerBlock(clientId, checkDeep); // The fallback to `{}` is a temporary fix.
+  // This function should never be called when a block is not present in
+  // the state. It happens now because the order in withSelect rendering
+  // is not correct.
 
 
-/**
- * WordPress dependencies
- */
+  var isFirstMultiSelected = isFirstMultiSelectedBlock(clientId); // Do not add new properties here, use `useSelect` instead to avoid
+  // leaking new props to the public API (editor.BlockListBlock filter).
+
+  return {
+    isMultiSelected: isBlockMultiSelected(clientId),
+    isPartOfMultiSelection: isBlockMultiSelected(clientId) || isAncestorMultiSelected(clientId),
+    isFirstMultiSelected: isFirstMultiSelected,
+    isLastMultiSelected: getLastMultiSelectedBlockClientId() === clientId,
+    multiSelectedClientIds: isFirstMultiSelected ? getMultiSelectedBlockClientIds() : undefined,
+    // We only care about this prop when the block is selected
+    // Thus to avoid unnecessary rerenders we avoid updating the prop if
+    // the block is not selected.
+    isTypingWithinBlock: (isSelected || isAncestorOfSelectedBlock) && isTyping(),
+    mode: getBlockMode(clientId),
+    isSelectionEnabled: isSelectionEnabled(),
+    isLocked: !!templateLock,
+    isFocusMode: focusMode && isLargeViewport,
+    isRTL: isRTL,
+    // Users of the editor.BlockListBlock filter used to be able to
+    // access the block prop.
+    // Ideally these blocks would rely on the clientId prop only.
+    // This is kept for backward compatibility reasons.
+    block: block,
+    name: name,
+    attributes: attributes,
+    isValid: isValid,
+    isSelected: isSelected,
+    isAncestorOfSelectedBlock: isAncestorOfSelectedBlock
+  };
+});
+var applyWithDispatch = Object(external_this_wp_data_["withDispatch"])(function (dispatch, ownProps, _ref4) {
+  var select = _ref4.select;
+
+  var _dispatch = dispatch('core/block-editor'),
+      updateBlockAttributes = _dispatch.updateBlockAttributes,
+      insertBlocks = _dispatch.insertBlocks,
+      mergeBlocks = _dispatch.mergeBlocks,
+      replaceBlocks = _dispatch.replaceBlocks,
+      _toggleSelection = _dispatch.toggleSelection,
+      __unstableMarkLastChangeAsPersistent = _dispatch.__unstableMarkLastChangeAsPersistent; // Do not add new properties here, use `useDispatch` instead to avoid
+  // leaking new props to the public API (editor.BlockListBlock filter).
 
 
-
-
+  return {
+    setAttributes: function setAttributes(newAttributes) {
+      var clientId = ownProps.clientId,
+          isFirstMultiSelected = ownProps.isFirstMultiSelected,
+          multiSelectedClientIds = ownProps.multiSelectedClientIds;
+      var clientIds = isFirstMultiSelected ? multiSelectedClientIds : [clientId];
+      updateBlockAttributes(clientIds, newAttributes);
+    },
+    onInsertBlocks: function onInsertBlocks(blocks, index) {
+      var rootClientId = ownProps.rootClientId;
+      insertBlocks(blocks, index, rootClientId);
+    },
+    onInsertBlocksAfter: function onInsertBlocksAfter(blocks) {
+      var clientId = ownProps.clientId,
+          rootClientId = ownProps.rootClientId;
 
 /**
  * Internal dependencies
@@ -18695,10 +19610,16 @@ function BlockNavigationDropdown(_ref2) {
  * External dependencies
  */
 
+// CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/block-navigation/utils.js
 /**
  * WordPress dependencies
  */
 
+var utils_getBlockPositionDescription = function getBlockPositionDescription(position, siblingCount, level) {
+  return Object(external_this_wp_i18n_["sprintf"])(
+  /* translators: 1: The numerical position of the block. 2: The total number of blocks. 3. The level of nesting for the block. */
+  Object(external_this_wp_i18n_["__"])('Block %1$d of %2$d, Level %3$d'), position, siblingCount, level);
+};
 
 
 
@@ -18801,6 +19722,40 @@ function block_vertical_alignment_toolbar_objectSpread(target) { for (var i = 1;
  * WordPress dependencies
  */
 
+function BlockNavigationBlockSelectButton(_ref, ref) {
+  var className = _ref.className,
+      block = _ref.block,
+      isSelected = _ref.isSelected,
+      onClick = _ref.onClick,
+      position = _ref.position,
+      siblingCount = _ref.siblingCount,
+      level = _ref.level,
+      tabIndex = _ref.tabIndex,
+      onFocus = _ref.onFocus;
+  var name = block.name,
+      attributes = block.attributes;
+  var blockType = Object(external_this_wp_blocks_["getBlockType"])(name);
+  var blockDisplayName = Object(external_this_wp_blocks_["__experimentalGetBlockLabel"])(blockType, attributes);
+  var instanceId = Object(external_this_wp_compose_["useInstanceId"])(BlockNavigationBlockSelectButton);
+  var descriptionId = "block-navigation-block-select-button__".concat(instanceId);
+  var blockPositionDescription = utils_getBlockPositionDescription(position, siblingCount, level);
+  return Object(external_this_wp_element_["createElement"])(external_this_wp_element_["Fragment"], null, Object(external_this_wp_element_["createElement"])(external_this_wp_components_["Button"], {
+    className: classnames_default()('block-editor-block-navigation-block-select-button', className),
+    onClick: onClick,
+    "aria-describedby": descriptionId,
+    ref: ref,
+    tabIndex: tabIndex,
+    onFocus: onFocus
+  }, Object(external_this_wp_element_["createElement"])(BlockIcon, {
+    icon: blockType.icon,
+    showColors: true
+  }), blockDisplayName, isSelected && Object(external_this_wp_element_["createElement"])(external_this_wp_components_["VisuallyHidden"], null, Object(external_this_wp_i18n_["__"])('(selected block)'))), Object(external_this_wp_element_["createElement"])("div", {
+    className: "block-editor-block-navigation-block-select-button__description",
+    id: descriptionId
+  }, blockPositionDescription));
+}
+
+/* harmony default export */ var block_select_button = (Object(external_this_wp_element_["forwardRef"])(BlockNavigationBlockSelectButton));
 
 /**
  * Internal dependencies
@@ -18896,6 +19851,9 @@ function BlockVerticalAlignmentToolbar(_ref) {
 
 
 
+var getSlotName = function getSlotName(clientId) {
+  return "BlockNavigationBlock-".concat(clientId);
+};
 
 /**
  * Internal dependencies
@@ -19038,6 +19996,9 @@ function GradientPickerWithGradients(props) {
  * External dependencies
  */
 
+/**
+ * External dependencies
+ */
 
 /**
  * WordPress dependencies
@@ -19088,17 +20049,39 @@ function GradientPickerWithGradients(props) {
  * External dependencies
  */
 
+
+
 /**
  * WordPress dependencies
  */
 
 
 
+/**
+ * Wrap `BlockNavigationRows` with `TreeGrid`. BlockNavigationRows is a
+ * recursive component (it renders itself), so this ensures TreeGrid is only
+ * present at the very top of the navigation grid.
+ *
+ * @param {Object} props                        Components props.
+ * @param {Object} props.__experimentalFeatures Object used in context provider.
+ */
 
 /**
  * Internal dependencies
  */
 
+  var contextValue = Object(external_this_wp_element_["useMemo"])(function () {
+    return {
+      __experimentalFeatures: __experimentalFeatures
+    };
+  }, [__experimentalFeatures]);
+  return Object(external_this_wp_element_["createElement"])(external_this_wp_components_["__experimentalTreeGrid"], {
+    className: "block-editor-block-navigation-tree",
+    "aria-label": Object(external_this_wp_i18n_["__"])('Block navigation structure')
+  }, Object(external_this_wp_element_["createElement"])(BlockNavigationContext.Provider, {
+    value: contextValue
+  }, Object(external_this_wp_element_["createElement"])(BlockNavigationBranch, props)));
+}
 
 function GradientPanel(props) {
   var gradients = Object(external_this_wp_data_["useSelect"])(function (select) {
@@ -19133,7 +20116,16 @@ function GradientPanel(props) {
 
 
 
+function BlockNavigation(_ref) {
+  var rootBlock = _ref.rootBlock,
+      rootBlocks = _ref.rootBlocks,
+      selectedBlockClientId = _ref.selectedBlockClientId,
+      selectBlock = _ref.selectBlock,
+      __experimentalFeatures = _ref.__experimentalFeatures;
 
+  if (!rootBlocks || rootBlocks.length === 0) {
+    return null;
+  }
 
 var image_size_control_ImageSizeControl =
 /*#__PURE__*/
@@ -19333,10 +20325,40 @@ var inner_blocks_default_block_appender_DefaultBlockAppender = function DefaultB
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/inner-blocks/index.js
 
 
+var SHORTCUTS_ELEMENT = Object(external_this_wp_element_["createElement"])(external_this_wp_components_["KeyboardShortcuts"], {
+  bindGlobal: true,
+  shortcuts: Object(external_this_lodash_["fromPairs"])(HANDLED_SHORTCUTS.map(function (shortcut) {
+    return [shortcut, function (event) {
+      return event.preventDefault();
+    }];
+  }))
+});
+/**
+ * Component which registered keyboard event handlers to prevent default
+ * behaviors for key combinations otherwise handled internally by RichText.
+ *
+ * @return {WPComponent} The component to be rendered.
+ */
 
+var RemoveBrowserShortcuts = function RemoveBrowserShortcuts() {
+  return SHORTCUTS_ELEMENT;
+};
 
+// CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/rich-text/file-paste-handler.js
+/**
+ * WordPress dependencies
+ */
 
+function filePasteHandler(files) {
+  return files.filter(function (_ref) {
+    var type = _ref.type;
+    return /^image\/(?:jpe?g|png|gif)$/.test(type);
+  }).map(function (file) {
+    return "<img src=\"".concat(Object(external_this_wp_blob_["createBlobURL"])(file), "\">");
+  }).join('');
+}
 
+// CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/rich-text/format-toolbar/index.js
 
 
 
@@ -19352,6 +20374,42 @@ var inner_blocks_default_block_appender_DefaultBlockAppender = function DefaultB
 
 
 
+var format_toolbar_POPOVER_PROPS = {
+  position: 'bottom right',
+  isAlternate: true
+};
+
+var format_toolbar_FormatToolbar = function FormatToolbar() {
+  return Object(external_this_wp_element_["createElement"])("div", {
+    className: "block-editor-format-toolbar"
+  }, Object(external_this_wp_element_["createElement"])(external_this_wp_components_["ToolbarGroup"], null, ['bold', 'italic', 'link', 'text-color'].map(function (format) {
+    return Object(external_this_wp_element_["createElement"])(external_this_wp_components_["Slot"], {
+      name: "RichText.ToolbarControls.".concat(format),
+      key: format
+    });
+  }), Object(external_this_wp_element_["createElement"])(external_this_wp_components_["Slot"], {
+    name: "RichText.ToolbarControls"
+  }, function (fills) {
+    return fills.length !== 0 && Object(external_this_wp_element_["createElement"])(external_this_wp_components_["__experimentalToolbarItem"], null, function (toggleProps) {
+      return Object(external_this_wp_element_["createElement"])(external_this_wp_components_["DropdownMenu"], {
+        icon: chevron_down["a" /* default */],
+        label: Object(external_this_wp_i18n_["__"])('More rich text controls'),
+        toggleProps: toggleProps,
+        controls: Object(external_this_lodash_["orderBy"])(fills.map(function (_ref) {
+          var _ref2 = Object(slicedToArray["a" /* default */])(_ref, 1),
+              props = _ref2[0].props;
+
+          return props;
+        }), 'title'),
+        popoverProps: format_toolbar_POPOVER_PROPS
+      });
+    });
+  })));
+};
+
+/* harmony default export */ var format_toolbar = (format_toolbar_FormatToolbar);
+
+// CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/rich-text/format-toolbar-container.js
 
 
 
@@ -19579,7 +20637,11 @@ inner_blocks_InnerBlocks.Content = Object(external_this_wp_blocks_["withBlockCon
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/inspector-advanced-controls/index.js
 /**
- * WordPress dependencies
+ * Get the multiline tag based on the multiline prop.
+ *
+ * @param {?(string|boolean)} multiline The multiline prop.
+ *
+ * @return {?string} The multiline tag.
  */
 
 /**
@@ -19603,7 +20665,17 @@ var asyncToGenerator = __webpack_require__(49);
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/link-control/settings-drawer.js
 
+  if (allowedFormats) {
+    return allowedFormats;
+  }
 
+  external_this_wp_deprecated_default()('wp.blockEditor.RichText formattingControls prop', {
+    alternative: 'allowedFormats'
+  });
+  return formattingControls.map(function (name) {
+    return "core/".concat(name);
+  });
+}
 
 function settings_drawer_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -19613,11 +20685,49 @@ function settings_drawer_objectSpread(target) { for (var i = 1; i < arguments.le
  * External dependencies
  */
 
-/**
- * WordPress dependencies
- */
+    return rich_text_objectSpread({
+      isCaretWithinFormattedText: isCaretWithinFormattedText(),
+      selectionStart: isSelected ? selectionStart.offset : undefined,
+      selectionEnd: isSelected ? selectionEnd.offset : undefined,
+      isSelected: isSelected,
+      didAutomaticChange: didAutomaticChange(),
+      disabled: isMultiSelecting() || hasMultiSelection(),
+      undo: undo
+    }, extraProps);
+  }; // This selector must run on every render so the right selection state is
+  // retreived from the store on merge.
+  // To do: fix this somehow.
 
 
+  var _useSelect = Object(external_this_wp_data_["useSelect"])(selector),
+      isCaretWithinFormattedText = _useSelect.isCaretWithinFormattedText,
+      selectionStart = _useSelect.selectionStart,
+      selectionEnd = _useSelect.selectionEnd,
+      isSelected = _useSelect.isSelected,
+      didAutomaticChange = _useSelect.didAutomaticChange,
+      disabled = _useSelect.disabled,
+      undo = _useSelect.undo,
+      shouldBlurOnUnmount = _useSelect.shouldBlurOnUnmount;
+
+  var _useDispatch = Object(external_this_wp_data_["useDispatch"])('core/block-editor'),
+      __unstableMarkLastChangeAsPersistent = _useDispatch.__unstableMarkLastChangeAsPersistent,
+      enterFormattedText = _useDispatch.enterFormattedText,
+      exitFormattedText = _useDispatch.exitFormattedText,
+      selectionChange = _useDispatch.selectionChange,
+      __unstableMarkAutomaticChange = _useDispatch.__unstableMarkAutomaticChange;
+
+  var multilineTag = getMultilineTag(multiline);
+  var adjustedAllowedFormats = getAllowedFormats({
+    allowedFormats: allowedFormats,
+    formattingControls: formattingControls,
+    disableFormats: disableFormats
+  });
+  var hasFormats = !adjustedAllowedFormats || adjustedAllowedFormats.length > 0;
+  var adjustedValue = originalValue;
+  var adjustedOnChange = originalOnChange; // Handle deprecated format.
+
+  if (Array.isArray(originalValue)) {
+    adjustedValue = external_this_wp_blocks_["children"].toHTML(originalValue);
 
 var defaultSettings = [{
   id: 'opensInNewTab',
@@ -19718,8 +20828,17 @@ var search_item_LinkControlSearchItem = function LinkControlSearchItem(_ref) {
  * WordPress dependencies
  */
 
+    if (mode === 'AUTO' && Object(external_this_wp_richText_["isEmpty"])(value) && rich_text_isShortcode(plainText)) {
+      mode = 'BLOCKS';
+    }
 
 
+    var content = Object(external_this_wp_blocks_["pasteHandler"])({
+      HTML: html,
+      plainText: plainText,
+      mode: mode,
+      tagName: tagName
+    });
 
 /**
  * Internal dependencies
@@ -19805,10 +20924,34 @@ var search_input_LinkControlSearchInput = function LinkControlSearchInput(_ref) 
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/link-control/index.js
 
 
+// CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/block-navigation/editor.js
+
+
+/**
+ * WordPress dependencies
+ */
+
+/**
+ * Internal dependencies
+ */
 
 
 
+function BlockNavigationEditor(_ref) {
+  var value = _ref.value,
+      onChange = _ref.onChange;
+  return Object(external_this_wp_element_["createElement"])(block_slot_BlockNavigationBlockFill, null, Object(external_this_wp_element_["createElement"])(rich_text, {
+    value: value,
+    onChange: onChange,
+    placeholder: Object(external_this_wp_i18n_["__"])('Navigation item'),
+    keepPlaceholderOnFocus: true,
+    withoutInteractiveFormatting: true,
+    allowedFormats: ['core/bold', 'core/italic', 'core/image', 'core/strikethrough']
+  }));
+}
 
+// EXTERNAL MODULE: ./node_modules/@wordpress/icons/build-module/library/layout.js
+var layout = __webpack_require__(298);
 
 function link_control_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -19826,6 +20969,94 @@ function link_control_objectSpread(target) { for (var i = 1; i < arguments.lengt
 
 
 
+
+function BlockVariationPicker(_ref) {
+  var _ref$icon = _ref.icon,
+      icon = _ref$icon === void 0 ? layout["a" /* default */] : _ref$icon,
+      _ref$label = _ref.label,
+      label = _ref$label === void 0 ? Object(external_this_wp_i18n_["__"])('Choose variation') : _ref$label,
+      _ref$instructions = _ref.instructions,
+      instructions = _ref$instructions === void 0 ? Object(external_this_wp_i18n_["__"])('Select a variation to start with.') : _ref$instructions,
+      variations = _ref.variations,
+      onSelect = _ref.onSelect,
+      allowSkip = _ref.allowSkip;
+  var classes = classnames_default()('block-editor-block-variation-picker', {
+    'has-many-variations': variations.length > 4
+  });
+  return Object(external_this_wp_element_["createElement"])(external_this_wp_components_["Placeholder"], {
+    icon: icon,
+    label: label,
+    instructions: instructions,
+    className: classes
+  }, Object(external_this_wp_element_["createElement"])("ul", {
+    className: "block-editor-block-variation-picker__variations",
+    role: "list",
+    "aria-label": Object(external_this_wp_i18n_["__"])('Block variations')
+  }, variations.map(function (variation) {
+    return Object(external_this_wp_element_["createElement"])("li", {
+      key: variation.name
+    }, Object(external_this_wp_element_["createElement"])(external_this_wp_components_["Button"], {
+      isSecondary: true,
+      icon: variation.icon,
+      iconSize: 48,
+      onClick: function onClick() {
+        return onSelect(variation);
+      },
+      className: "block-editor-block-variation-picker__variation",
+      label: variation.description || variation.title
+    }), Object(external_this_wp_element_["createElement"])("span", {
+      className: "block-editor-block-variation-picker__variation-label",
+      role: "presentation"
+    }, variation.title));
+  })), allowSkip && Object(external_this_wp_element_["createElement"])("div", {
+    className: "block-editor-block-variation-picker__skip"
+  }, Object(external_this_wp_element_["createElement"])(external_this_wp_components_["Button"], {
+    isLink: true,
+    onClick: function onClick() {
+      return onSelect();
+    }
+  }, Object(external_this_wp_i18n_["__"])('Skip'))));
+}
+
+/* harmony default export */ var block_variation_picker = (BlockVariationPicker);
+
+// CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/block-vertical-alignment-toolbar/icons.js
+
+
+/**
+ * WordPress dependencies
+ */
+
+var alignBottom = Object(external_this_wp_element_["createElement"])(external_this_wp_components_["SVG"], {
+  xmlns: "http://www.w3.org/2000/svg",
+  viewBox: "0 0 24 24"
+}, Object(external_this_wp_element_["createElement"])(external_this_wp_components_["Path"], {
+  d: "M15 4H9v11h6V4zM4 18.5V20h16v-1.5H4z"
+}));
+var alignCenter = Object(external_this_wp_element_["createElement"])(external_this_wp_components_["SVG"], {
+  xmlns: "http://www.w3.org/2000/svg",
+  viewBox: "0 0 24 24"
+}, Object(external_this_wp_element_["createElement"])(external_this_wp_components_["Path"], {
+  d: "M20 11h-5V4H9v7H4v1.5h5V20h6v-7.5h5z"
+}));
+var alignTop = Object(external_this_wp_element_["createElement"])(external_this_wp_components_["SVG"], {
+  xmlns: "http://www.w3.org/2000/svg",
+  viewBox: "0 0 24 24"
+}, Object(external_this_wp_element_["createElement"])(external_this_wp_components_["Path"], {
+  d: "M9 20h6V9H9v11zM4 4v1.5h16V4H4z"
+}));
+
+// CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/block-vertical-alignment-toolbar/index.js
+
+
+
+function block_vertical_alignment_toolbar_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function block_vertical_alignment_toolbar_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { block_vertical_alignment_toolbar_ownKeys(Object(source), true).forEach(function (key) { Object(defineProperty["a" /* default */])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { block_vertical_alignment_toolbar_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+/**
+ * WordPress dependencies
+ */
 
 
 
@@ -20189,9 +21420,22 @@ var keyboard_return = __webpack_require__(192);
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/url-input/index.js
 
 
+  return Object(external_this_wp_element_["createElement"])(external_this_wp_components_["BaseControl"], {
+    className: classnames_default()('block-editor-gradient-picker-control', className)
+  }, Object(external_this_wp_element_["createElement"])(external_this_wp_components_["BaseControl"].VisualLabel, null, label), Object(external_this_wp_element_["createElement"])(gradient_picker, Object(esm_extends["a" /* default */])({
+    value: value,
+    onChange: onChange,
+    className: "block-editor-gradient-picker-control__gradient-picker-presets",
+    gradients: gradients,
+    disableCustomGradients: disableCustomGradients
+  }, props)));
+}
 
 
 
+/**
+ * External dependencies
+ */
 
 
 
@@ -20544,6 +21788,9 @@ function (_Component) {
       };
       /* eslint-disable jsx-a11y/no-autofocus */
 
+      if (hasTemplateChanged) {
+        existingTemplate.current = template;
+        var nextBlocks = Object(external_this_wp_blocks_["synchronizeBlocksWithTemplate"])(innerBlocks, template);
 
       return Object(external_this_wp_element_["createElement"])(external_this_wp_components_["BaseControl"], {
         label: label,
@@ -20627,6 +21874,12 @@ function (_Component) {
  * @see https://github.com/WordPress/gutenberg/blob/master/packages/block-editor/src/components/url-input/README.md
  */
 
+  if (!blockTypeCache.has(attributes)) {
+    var context = Object(external_this_lodash_["mapValues"])(blockType.providesContext, function (attributeName) {
+      return attributes[attributeName];
+    });
+    blockTypeCache.set(attributes, context);
+  }
 
 /* harmony default export */ var url_input = (Object(external_this_wp_compose_["compose"])(external_this_wp_compose_["withSafeTimeout"], external_this_wp_components_["withSpokenMessages"], external_this_wp_compose_["withInstanceId"], Object(external_this_wp_data_["withSelect"])(function (select, props) {
   // If a link suggestions handler is already provided then
@@ -20646,7 +21899,9 @@ function (_Component) {
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/url-popover/link-editor.js
 
 
+function inner_blocks_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
+function inner_blocks_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { inner_blocks_ownKeys(Object(source), true).forEach(function (key) { Object(defineProperty["a" /* default */])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { inner_blocks_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 /**
  * External dependencies
@@ -20875,7 +22130,13 @@ var media_replace_flow_MediaReplaceFlow = function MediaReplaceFlow(_ref) {
         return setShowEditURLInput(!showEditURLInput);
       }
     });
-  }
+  });
+  return Object(external_this_wp_element_["createElement"])("fieldset", {
+    className: "block-editor-link-control__settings"
+  }, Object(external_this_wp_element_["createElement"])(external_this_wp_components_["VisuallyHidden"], {
+    as: "legend"
+  }, Object(external_this_wp_i18n_["__"])('Currently selected link settings')), theSettings);
+};
 
   return Object(external_this_wp_element_["createElement"])(external_this_wp_components_["Dropdown"], {
     contentClassName: "block-editor-media-replace-flow__options",
@@ -20953,12 +22214,49 @@ var chevron_down = __webpack_require__(288);
 
 
 
-
+var search_item_LinkControlSearchItem = function LinkControlSearchItem(_ref) {
+  var itemProps = _ref.itemProps,
+      suggestion = _ref.suggestion,
+      _ref$isSelected = _ref.isSelected,
+      isSelected = _ref$isSelected === void 0 ? false : _ref$isSelected,
+      onClick = _ref.onClick,
+      _ref$isURL = _ref.isURL,
+      isURL = _ref$isURL === void 0 ? false : _ref$isURL,
+      _ref$searchTerm = _ref.searchTerm,
+      searchTerm = _ref$searchTerm === void 0 ? '' : _ref$searchTerm;
+  return Object(external_this_wp_element_["createElement"])(external_this_wp_components_["Button"], Object(esm_extends["a" /* default */])({}, itemProps, {
+    onClick: onClick,
+    className: classnames_default()('block-editor-link-control__search-item', {
+      'is-selected': isSelected,
+      'is-url': isURL,
+      'is-entity': !isURL
+    })
+  }), isURL && Object(external_this_wp_element_["createElement"])(build_module_icon["a" /* default */], {
+    className: "block-editor-link-control__search-item-icon",
+    icon: library_globe
+  }), Object(external_this_wp_element_["createElement"])("span", {
+    className: "block-editor-link-control__search-item-header"
+  }, Object(external_this_wp_element_["createElement"])("span", {
+    className: "block-editor-link-control__search-item-title"
+  }, Object(external_this_wp_element_["createElement"])(external_this_wp_components_["TextHighlight"], {
+    text: suggestion.title,
+    highlight: searchTerm
+  })), Object(external_this_wp_element_["createElement"])("span", {
+    "aria-hidden": !isURL,
+    className: "block-editor-link-control__search-item-info"
+  }, !isURL && (Object(external_this_wp_url_["filterURLForDisplay"])(Object(external_this_wp_url_["safeDecodeURI"])(suggestion.url)) || ''), isURL && Object(external_this_wp_i18n_["__"])('Press ENTER to add this link'))), suggestion.type && Object(external_this_wp_element_["createElement"])("span", {
+    className: "block-editor-link-control__search-item-type"
+  }, suggestion.type));
+};
+/* harmony default export */ var search_item = (search_item_LinkControlSearchItem);
 
 /**
  * WordPress dependencies
  */
 
+// EXTERNAL MODULE: ./node_modules/dom-scroll-into-view/lib/index.js
+var dom_scroll_into_view_lib = __webpack_require__(123);
+var dom_scroll_into_view_lib_default = /*#__PURE__*/__webpack_require__.n(dom_scroll_into_view_lib);
 
 
 
@@ -21044,13 +22342,44 @@ url_popover_URLPopover.LinkViewer = LinkViewer;
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/media-placeholder/index.js
 
+var url_input_URLInput = /*#__PURE__*/function (_Component) {
+  Object(inherits["a" /* default */])(URLInput, _Component);
 
 
 
 
 
+      if (showSuggestions && selectedSuggestion !== null && this.suggestionNodes[selectedSuggestion] && !this.scrollingIntoView) {
+        this.scrollingIntoView = true;
+        dom_scroll_into_view_lib_default()(this.suggestionNodes[selectedSuggestion], this.autocompleteRef.current, {
+          onlyScrollIfNeeded: true
+        });
+        this.props.setTimeout(function () {
+          _this2.scrollingIntoView = false;
+        }, 100);
+      } // Only attempt an update on suggestions if the input value has actually changed.
 
 
+      if (prevProps.value !== value && this.shouldShowInitialSuggestions()) {
+        this.updateSuggestions();
+      }
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      if (this.shouldShowInitialSuggestions()) {
+        this.updateSuggestions();
+      }
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      delete this.suggestionsRequest;
+    }
+  }, {
+    key: "bindSuggestionNode",
+    value: function bindSuggestionNode(index) {
+      var _this3 = this;
 
 /**
  * External dependencies
@@ -21062,6 +22391,9 @@ url_popover_URLPopover.LinkViewer = LinkViewer;
  */
 
 
+      if (!fetchLinkSuggestions) {
+        return;
+      }
 
 
 
@@ -21072,8 +22404,24 @@ url_popover_URLPopover.LinkViewer = LinkViewer;
  * Internal dependencies
  */
 
+          _this4.isUpdatingSuggestions = false;
+        }
+      }); // Note that this assignment is handled *before* the async search request
+      // as a Promise always resolves on the next tick of the event loop.
 
 
+      if (!this.props.disableSuggestions) {
+        this.updateSuggestions(inputValue.trim());
+      }
+    }
+  }, {
+    key: "onFocus",
+    value: function onFocus() {
+      var suggestions = this.state.suggestions;
+      var _this$props3 = this.props,
+          disableSuggestions = _this$props3.disableSuggestions,
+          value = _this$props3.value; // When opening the link editor, if there's a value present, we want to load the suggestions pane with the results for this input search value
+      // Don't re-run the suggestions on focus if there are already suggestions present (prevents searching again when tabbing between the input and buttons)
 
 
 var media_placeholder_InsertFromURLPopover = function InsertFromURLPopover(_ref) {
@@ -21464,6 +22812,9 @@ var media_placeholder_applyWithSelect = Object(external_this_wp_data_["withSelec
 
 
 
+/**
+ * External dependencies
+ */
 
 /**
  * WordPress dependencies
@@ -21615,6 +22966,7 @@ function ResponsiveBlockControl(props) {
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/rich-text/remove-browser-shortcuts.js
 
+/* eslint-disable jsdoc/valid-types */
 
 /**
  * External dependencies
@@ -21625,6 +22977,7 @@ function ResponsiveBlockControl(props) {
  */
 
 
+/* eslint-disable jsdoc/valid-types */
 
 /**
  * Set of keyboard shortcuts handled internally by RichText.
@@ -21680,6 +23033,10 @@ function filePasteHandler(files) {
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/rich-text/format-toolbar/index.js
 
 
+  var _useState3 = Object(external_this_wp_element_["useState"])(forceIsEditingLink !== undefined ? forceIsEditingLink : !value || !value.url),
+      _useState4 = Object(slicedToArray["a" /* default */])(_useState3, 2),
+      isEditingLink = _useState4[0],
+      setIsEditingLink = _useState4[1];
 
 /**
  * External dependencies
@@ -21760,10 +23117,16 @@ var format_toolbar_container_FormatToolbarContainer = function FormatToolbarCont
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/rich-text/shortcut.js
 
 
+              _context2.next = 18;
+              break;
 
 
 
 
+            case 15:
+              setErrorMessage(_context2.t0.message || Object(external_this_wp_i18n_["__"])('An unknown error occurred during creation. Please try again.'));
+              setIsResolvingLink(false);
+              setIsEditingLink(true);
 
 
 
@@ -21819,6 +23182,21 @@ function (_Component) {
  * WordPress dependencies
  */
 
+      return Object(external_this_wp_element_["createElement"])(search_item, {
+        key: "".concat(suggestion.id, "-").concat(suggestion.type),
+        itemProps: buildSuggestionItemProps(suggestion, index),
+        suggestion: suggestion,
+        index: index,
+        onClick: function onClick() {
+          stopEditing();
+          onChange(link_control_objectSpread({}, value, {}, suggestion));
+        },
+        isSelected: index === selectedSuggestion,
+        isURL: directLinkEntryTypes.includes(suggestion.type.toLowerCase()),
+        searchTerm: inputValue
+      });
+    })));
+  };
 
 function RichTextToolbarButton(_ref) {
   var name = _ref.name,
@@ -22459,6 +23837,7 @@ ForwardedRichTextContainer.Content.defaultProps = {
  * WordPress dependencies
  */
 
+  var _super = url_popover_createSuper(URLPopover);
 
 
 
@@ -22556,7 +23935,9 @@ var arrowLeft = Object(external_this_wp_element_["createElement"])(external_this
 
 
 
+function media_placeholder_createSuper(Derived) { return function () { var Super = Object(getPrototypeOf["a" /* default */])(Derived), result; if (media_placeholder_isNativeReflectConstruct()) { var NewTarget = Object(getPrototypeOf["a" /* default */])(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return Object(possibleConstructorReturn["a" /* default */])(this, result); }; }
 
+function media_placeholder_isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 /**
  * WordPress dependencies
@@ -22566,7 +23947,7 @@ var arrowLeft = Object(external_this_wp_element_["createElement"])(external_this
 
 
 /**
- * Internal dependencies
+ * WordPress dependencies
  */
 
 
@@ -22656,9 +24037,6 @@ var library_close = __webpack_require__(120);
 
 
 
-/**
- * External dependencies
- */
 
 /**
  * WordPress dependencies
@@ -22950,6 +24328,46 @@ var image_url_input_ui_ImageURLInputUI = function ImageURLInputUI(_ref) {
 };
 
 
+      mediaUpload({
+        allowedTypes: allowedTypes,
+        filesList: files,
+        onFileChange: setMedia,
+        onError: onError
+      });
+    }
+  }, {
+    key: "openURLInput",
+    value: function openURLInput() {
+      this.setState({
+        isURLInputVisible: true
+      });
+    }
+  }, {
+    key: "closeURLInput",
+    value: function closeURLInput() {
+      this.setState({
+        isURLInputVisible: false
+      });
+    }
+  }, {
+    key: "renderPlaceholder",
+    value: function renderPlaceholder(content, onClick) {
+      var _this$props2 = this.props,
+          _this$props2$allowedT = _this$props2.allowedTypes,
+          allowedTypes = _this$props2$allowedT === void 0 ? [] : _this$props2$allowedT,
+          className = _this$props2.className,
+          icon = _this$props2.icon,
+          isAppender = _this$props2.isAppender,
+          _this$props2$labels = _this$props2.labels,
+          labels = _this$props2$labels === void 0 ? {} : _this$props2$labels,
+          onDoubleClick = _this$props2.onDoubleClick,
+          mediaPreview = _this$props2.mediaPreview,
+          notices = _this$props2.notices,
+          onSelectURL = _this$props2.onSelectURL,
+          mediaUpload = _this$props2.mediaUpload,
+          children = _this$props2.children;
+      var instructions = labels.instructions;
+      var title = labels.title;
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/block-settings-menu/block-settings-menu-first-item.js
 /**
@@ -23026,6 +24444,15 @@ function default_templates_objectSpread(target) { for (var i = 1; i < arguments.
  * External dependencies
  */
 
+      if (dropZoneUIOnly || disableMediaButtons) {
+        if (dropZoneUIOnly) {
+          external_this_wp_deprecated_default()('wp.blockEditor.MediaPlaceholder dropZoneUIOnly prop', {
+            alternative: 'disableMediaButtons'
+          });
+        }
+
+        return Object(external_this_wp_element_["createElement"])(check, null, this.renderDropZone());
+      }
 
 var defaultTemplates = [{
   name: 'About',
@@ -23056,7 +24483,16 @@ var Preview = function Preview() {
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/page-template-picker/picker.js
 
 
+  return MediaPlaceholder;
+}(external_this_wp_element_["Component"]);
+var media_placeholder_applyWithSelect = Object(external_this_wp_data_["withSelect"])(function (select) {
+  var _select = select('core/block-editor'),
+      getSettings = _select.getSettings;
 
+  return {
+    mediaUpload: getSettings().mediaUpload
+  };
+});
 /**
  * WordPress dependencies
  */
@@ -23155,7 +24591,21 @@ var use_page_template_picker_visible_experimentalUsePageTemplatePickerVisible = 
  * Internal dependencies
  */
 
+var EditableText = Object(external_this_wp_element_["forwardRef"])(function (props, ref) {
+  return Object(external_this_wp_element_["createElement"])(rich_text, Object(esm_extends["a" /* default */])({
+    ref: ref
+  }, props, {
+    __unstableDisableFormats: true,
+    preserveWhiteSpace: true
+  }));
+});
 
+EditableText.Content = function (_ref) {
+  var _ref$value = _ref.value,
+      value = _ref$value === void 0 ? '' : _ref$value,
+      _ref$tagName = _ref.tagName,
+      Tag = _ref$tagName === void 0 ? 'div' : _ref$tagName,
+      props = Object(objectWithoutProperties["a" /* default */])(_ref, ["value", "tagName"]);
 
 var __experimentalWithPageTemplatePickerVisible = Object(external_this_wp_compose_["createHigherOrderComponent"])(function (WrappedComponent) {
   return function (props) {
@@ -24154,6 +25604,8 @@ function (_Component) {
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/block-selection-clearer/index.js
 
+// EXTERNAL MODULE: ./node_modules/css-mediaquery/index.js
+var css_mediaquery = __webpack_require__(265);
 
 
 
@@ -24396,6 +25848,9 @@ function BlockActions(_ref) {
 
 
 
+/**
+ * WordPress dependencies
+ */
 
 
 
@@ -24658,6 +26113,17 @@ function block_switcher_objectSpread(target) { for (var i = 1; i < arguments.len
 
 
 
+/* eslint-disable @wordpress/no-unused-vars-before-return */
+// Adapted from https://github.com/reworkcss/css
+// because we needed to remove source map support.
+// http://www.w3.org/TR/CSS21/grammar.htm
+// https://github.com/visionmedia/css-parse/pull/49#issuecomment-30088027
+var commentre = /\/\*[^*]*\*+([^/*][^*]*\*+)*\//g;
+/* harmony default export */ var parse = (function (css, options) {
+  options = options || {};
+  /**
+   * Positional.
+   */
 
 /**
  * Internal dependencies
@@ -24986,6 +26452,9 @@ function BlockToolbar(_ref) {
  * WordPress dependencies
  */
 
+  function atkeyframes() {
+    var pos = position();
+    var m = match(/^@([-\w]+)?keyframes\s*/);
 
 function getPasteEventData(_ref) {
   var clipboardData = _ref.clipboardData;
@@ -25059,6 +26528,9 @@ function getPasteEventData(_ref) {
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/copy-handler/index.js
 
+  function atsupports() {
+    var pos = position();
+    var m = match(/^@supports *([^{]+)/);
 
 /**
  * WordPress dependencies
@@ -25066,6 +26538,7 @@ function getPasteEventData(_ref) {
 
 
 
+    var style = comments().concat(rules());
 
 /**
  * Internal dependencies
@@ -25388,6 +26861,12 @@ function MultiSelectScrollIntoView() {
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/components/observe-typing/index.js
 
+function trim(str) {
+  return str ? str.replace(/^\s+|\s+$/g, '') : '';
+}
+/**
+ * Adds non-enumerable parent node reference to each node.
+ */
 
 /**
  * External dependencies
@@ -25488,6 +26967,12 @@ function ObserveTyping(_ref) {
    * (shift) selection.
    */
 
+function compress_Compiler(options) {
+  stringify_compiler.call(this, options);
+}
+/**
+ * Inherit from `Base.prototype`.
+ */
 
   function stopTypingOnSelectionUncollapse() {
     var selection = window.getSelection();
@@ -25515,6 +27000,12 @@ function ObserveTyping(_ref) {
    * @param {KeyboardEvent} event Keypress or keydown event to interpret.
    */
 
+compress_Compiler.prototype.comment = function (node) {
+  return this.emit('', node.position);
+};
+/**
+ * Visit import node.
+ */
 
   function startTypingInTextField(event) {
     var type = event.type,
@@ -25812,6 +27303,13 @@ function (_Component) {
         window.cancelAnimationFrame(this.onKeyDown.rafId);
       } // Use an animation frame for a smooth result.
 
+  return this.emit(node.selectors.map(function (s) {
+    return indent + s;
+  }).join(',\n'), node.position) + this.emit(' {\n') + this.emit(this.indent(1)) + this.mapVisit(decls, '\n') + this.emit(this.indent(-1)) + this.emit('\n' + this.indent() + '}');
+};
+/**
+ * Visit declaration node.
+ */
 
       this.onKeyDown.rafId = window.requestAnimationFrame(function () {
         _this3.maintainCaretPosition(event);
@@ -25876,6 +27374,22 @@ var TypewriterOrIEBypass = isIE ? function (props) {
 
 
 
+      var updatedNode = callback(node);
+      return this.update(updatedNode);
+    });
+    return stringify(updated);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('Error while traversing the CSS: ' + err);
+    return null;
+  }
+}
+
+
+
+
+
+function url_rewrite_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { url_rewrite_ownKeys(Object(source), true).forEach(function (key) { Object(defineProperty["a" /* default */])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { url_rewrite_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 
 
@@ -25898,11 +27412,12 @@ var TypewriterOrIEBypass = isIE ? function (props) {
 
 
 
-
-
-
-
-
+function replaceURLs(raw, URLs) {
+  URLs.forEach(function (item) {
+    raw = raw.replace(item.source, item.newUrl);
+  });
+  return raw;
+}
 
 
 
@@ -25950,6 +27465,32 @@ var TypewriterOrIEBypass = isIE ? function (props) {
  */
 
 
+function InserterLibrary(_ref) {
+  var rootClientId = _ref.rootClientId,
+      clientId = _ref.clientId,
+      isAppender = _ref.isAppender,
+      showInserterHelpPanel = _ref.showInserterHelpPanel,
+      _ref$showMostUsedBloc = _ref.showMostUsedBlocks,
+      showMostUsedBlocks = _ref$showMostUsedBloc === void 0 ? false : _ref$showMostUsedBloc,
+      selectBlockOnInsert = _ref.__experimentalSelectBlockOnInsert,
+      _ref$onSelect = _ref.onSelect,
+      onSelect = _ref$onSelect === void 0 ? external_this_lodash_["noop"] : _ref$onSelect;
+  var destinationRootClientId = Object(external_this_wp_data_["useSelect"])(function (select) {
+    var _select = select('core/block-editor'),
+        getBlockRootClientId = _select.getBlockRootClientId;
+
+    return rootClientId || getBlockRootClientId(clientId) || undefined;
+  }, [clientId, rootClientId]);
+  return Object(external_this_wp_element_["createElement"])(menu, {
+    onSelect: onSelect,
+    rootClientId: destinationRootClientId,
+    clientId: clientId,
+    isAppender: isAppender,
+    showInserterHelpPanel: showInserterHelpPanel,
+    showMostUsedBlocks: showMostUsedBlocks,
+    __experimentalSelectBlockOnInsert: selectBlockOnInsert
+  });
+}
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/hooks/align.js
 
@@ -26276,6 +27817,11 @@ function addSaveProps(extraProps, blockType, attributes) {
   if (Object(external_this_wp_blocks_["hasBlockSupport"])(blockType, 'anchor')) {
     extraProps.id = attributes.anchor === '' ? null : attributes.anchor;
   }
+  /**
+   * Stops typing when focus transitions to a non-text field element.
+   *
+   * @param {FocusEvent} event Focus event.
+   */
 
   return extraProps;
 }
@@ -26479,6 +28025,15 @@ Object(external_this_wp_hooks_["addFilter"])('blocks.getSaveContent.extraProps',
  * Internal dependencies
  */
 
+      var windowScroll = scrollContainer === document.body;
+      var scrollY = windowScroll ? window.scrollY : scrollContainer.scrollTop;
+      var scrollContainerY = windowScroll ? 0 : scrollContainer.getBoundingClientRect().top;
+      var relativeScrollPosition = windowScroll ? this.caretRect.top / window.innerHeight : (this.caretRect.top - scrollContainerY) / (window.innerHeight - scrollContainerY); // If the scroll position is at the start, the active editable element
+      // is the last one, and the caret is positioned within the initial
+      // trigger percentage of the page, do not scroll the page.
+      // The typewriter effect should not kick in until an empty page has been
+      // filled with the initial trigger percentage or the user scrolls
+      // intentionally down.
 
 
 
@@ -31932,7 +33487,7 @@ exports.useSprings = useSprings;
 
 module.exports = __webpack_require__(150);
 
-/***/ }),
+// CONCATENATED MODULE: ./node_modules/@wordpress/block-editor/build-module/utils/index.js
 
 /***/ 89:
 /***/ (function(module, exports, __webpack_require__) {
@@ -31988,13 +33543,13 @@ function refx( effects ) {
 module.exports = refx;
 
 
-/***/ }),
 
 /***/ 9:
 /***/ (function(module, exports) {
 
 (function() { module.exports = this["wp"]["primitives"]; }());
 
-/***/ })
 
-/******/ });
+
+/***/ })
+/******/ ]);

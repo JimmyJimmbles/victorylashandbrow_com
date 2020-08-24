@@ -111,6 +111,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 }(this, function (moment) {
 	"use strict";
 
+	// Resolves es6 module loading issue
+	if (moment.version === undefined && moment.default) {
+		moment = moment.default;
+	}
+
 	// Do not load moment-timezone a second time.
 	// if (moment.tz !== undefined) {
 	// 	logError('Moment Timezone ' + moment.tz.version + ' was already loaded ' + (moment.tz.dataVersion ? 'with data from ' : 'without any data') + moment.tz.dataVersion);
@@ -804,6 +809,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "date", function() { return date; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "gmdate", function() { return gmdate; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "dateI18n", function() { return dateI18n; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "gmdateI18n", function() { return gmdateI18n; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isInTheFuture", function() { return isInTheFuture; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDate", function() { return getDate; });
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(33);
@@ -1134,20 +1140,23 @@ function format(dateFormat) {
   return momentDate.format(newFormat);
 }
 /**
- * Formats a date (like `date()` in PHP), in the site's timezone.
+ * Formats a date (like `date()` in PHP).
  *
  * @param {string}                           dateFormat PHP-style formatting string.
  *                                                      See php.net/date.
  * @param {(Date|string|Moment|null)}        dateValue  Date object or string,
  *                                                      parsable by moment.js.
  *
- * @return {string} Formatted date.
+ * @see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+ * @see https://en.wikipedia.org/wiki/ISO_8601#Time_offsets_from_UTC
+ *
+ * @return {string} Formatted date in English.
  */
 
 function date(dateFormat) {
   var dateValue = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : new Date();
-  var offset = settings.timezone.offset * HOUR_IN_MINUTES;
-  var dateMoment = moment__WEBPACK_IMPORTED_MODULE_0___default()(dateValue).utcOffset(offset, true);
+  var timezone = arguments.length > 2 ? arguments[2] : undefined;
+  var dateMoment = buildMoment(dateValue, timezone);
   return format(dateFormat, dateMoment);
 }
 /**
@@ -1158,7 +1167,7 @@ function date(dateFormat) {
  * @param {(Date|string|Moment|null)}        dateValue  Date object or string,
  *                                                      parsable by moment.js.
  *
- * @return {string} Formatted date.
+ * @return {string} Formatted date in English.
  */
 
 function gmdate(dateFormat) {
@@ -1167,7 +1176,20 @@ function gmdate(dateFormat) {
   return format(dateFormat, dateMoment);
 }
 /**
- * Formats a date (like `date_i18n()` in PHP).
+ * Formats a date (like `wp_date()` in PHP), translating it into site's locale.
+ *
+ * Backward Compatibility Notice: if `timezone` is set to `true`, the function
+ * behaves like `gmdateI18n`.
+ *
+ * @param {string}                     dateFormat PHP-style formatting string.
+ *                                                See php.net/date.
+ * @param {Date|string|Moment|null}    dateValue  Date object or string, parsable by
+ *                                                moment.js.
+ * @param {string|number|boolean|null} timezone   Timezone to output result in or a
+ *                                                UTC offset. Defaults to timezone from
+ *                                                site. Notice: `boolean` is effectively
+ *                                                deprecated, but still supported for
+ *                                                backward compatibility reasons.
  *
  * @param {string}                           dateFormat PHP-style formatting string.
  *                                                      See php.net/date.
@@ -1181,14 +1203,36 @@ function gmdate(dateFormat) {
 
 function dateI18n(dateFormat) {
   var dateValue = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : new Date();
-  var gmt = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-  // Defaults.
-  var offset = gmt ? 0 : settings.timezone.offset * HOUR_IN_MINUTES; // Convert to moment object.
+  var timezone = arguments.length > 2 ? arguments[2] : undefined;
 
-  var dateMoment = moment__WEBPACK_IMPORTED_MODULE_0___default()(dateValue).utcOffset(offset, true); // Set the locale.
+  if (true === timezone) {
+    return gmdateI18n(dateFormat, dateValue);
+  }
 
-  dateMoment.locale(settings.l10n.locale); // Format and return.
+  if (false === timezone) {
+    timezone = undefined;
+  }
 
+  var dateMoment = buildMoment(dateValue, timezone);
+  dateMoment.locale(settings.l10n.locale);
+  return format(dateFormat, dateMoment);
+}
+/**
+ * Formats a date (like `wp_date()` in PHP), translating it into site's locale
+ * and using the UTC timezone.
+ *
+ * @param {string}                  dateFormat PHP-style formatting string.
+ *                                             See php.net/date.
+ * @param {Date|string|Moment|null} dateValue  Date object or string,
+ *                                             parsable by moment.js.
+ *
+ * @return {string} Formatted date.
+ */
+
+function gmdateI18n(dateFormat) {
+  var dateValue = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : new Date();
+  var dateMoment = moment__WEBPACK_IMPORTED_MODULE_0___default()(dateValue).utc();
+  dateMoment.locale(settings.l10n.locale);
   return format(dateFormat, dateMoment);
 }
 /**
@@ -1219,6 +1263,56 @@ function getDate(dateString) {
 
   return moment__WEBPACK_IMPORTED_MODULE_0___default.a.tz(dateString, WP_ZONE).toDate();
 }
+/**
+ * Creates a moment instance using the given timezone or, if none is provided, using global settings.
+ *
+ * @param {Date|string|Moment|null} dateValue Date object or string, parsable
+ *                                            by moment.js.
+ * @param {string|number|null}      timezone  Timezone to output result in or a
+ *                                            UTC offset. Defaults to timezone from
+ *                                            site.
+ *
+ * @see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+ * @see https://en.wikipedia.org/wiki/ISO_8601#Time_offsets_from_UTC
+ *
+ * @return {Moment} a moment instance.
+ */
+
+function buildMoment(dateValue) {
+  var timezone = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  var dateMoment = moment__WEBPACK_IMPORTED_MODULE_0___default()(dateValue);
+
+  if (timezone && !isUTCOffset(timezone)) {
+    return dateMoment.tz(timezone);
+  }
+
+  if (timezone && isUTCOffset(timezone)) {
+    return dateMoment.utcOffset(timezone);
+  }
+
+  if (settings.timezone.string) {
+    return dateMoment.tz(settings.timezone.string);
+  }
+
+  return dateMoment.utcOffset(settings.timezone.offset);
+}
+/**
+ * Returns whether a certain UTC offset is valid or not.
+ *
+ * @param {number|string} offset a UTC offset.
+ *
+ * @return {boolean} whether a certain UTC offset is valid or not.
+ */
+
+
+function isUTCOffset(offset) {
+  if ('number' === typeof offset) {
+    return true;
+  }
+
+  return VALID_UTC_OFFSET.test(offset);
+}
+
 setupWPTimezone();
 
 

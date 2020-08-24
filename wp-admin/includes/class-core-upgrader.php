@@ -104,7 +104,7 @@ class Core_Upgrader extends WP_Upgrader {
 		 */
 		if ( $parsed_args['do_rollback'] && $current->packages->rollback ) {
 			$to_download = 'rollback';
-		} elseif ( $current->packages->partial && 'reinstall' != $current->response && $wp_version == $current->partial_version && $partial ) {
+		} elseif ( $current->packages->partial && 'reinstall' !== $current->response && $wp_version == $current->partial_version && $partial ) {
 			$to_download = 'partial';
 		} elseif ( $current->packages->new_bundled && version_compare( $wp_version, $current->new_bundled, '<' )
 			&& ( ! defined( 'CORE_UPGRADE_SKIP_NEW_BUNDLED' ) || ! CORE_UPGRADE_SKIP_NEW_BUNDLED ) ) {

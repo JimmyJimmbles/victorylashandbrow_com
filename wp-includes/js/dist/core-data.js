@@ -124,32 +124,61 @@ var unsupportedIterableToArray = __webpack_require__(27);
 function _nonIterableSpread() {
   throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
-// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _toConsumableArray; });
 
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
 
+function _defineProperties(target, props) {
+  for (var i = 0; i < props.length; i++) {
+    var descriptor = props[i];
+    descriptor.enumerable = descriptor.enumerable || false;
+    descriptor.configurable = true;
+    if ("value" in descriptor) descriptor.writable = true;
+    Object.defineProperty(target, descriptor.key, descriptor);
+  }
+}
 
 
 function _toConsumableArray(arr) {
   return _arrayWithoutHoles(arr) || Object(iterableToArray["a" /* default */])(arr) || Object(unsupportedIterableToArray["a" /* default */])(arr) || _nonIterableSpread();
 }
 
-/***/ }),
+/**
+ * Given an instance of EquivalentKeyMap, returns its internal value pair tuple
+ * for a key, if one exists. The tuple members consist of the last reference
+ * value for the key (used in efficient subsequent lookups) and the value
+ * assigned for the key at the leaf node.
+ *
+ * @param {EquivalentKeyMap} instance EquivalentKeyMap instance.
+ * @param {*} key                     The key for which to return value pair.
+ *
+ * @return {?Array} Value pair, if exists.
+ */
+function getValuePair(instance, key) {
+  var _map = instance._map,
+      _arrayTreeMap = instance._arrayTreeMap,
+      _objectTreeMap = instance._objectTreeMap; // Map keeps a reference to the last object-like key used to set the
+  // value, which can be used to shortcut immediately to the value.
 
-/***/ 2:
-/***/ (function(module, exports) {
+  if (_map.has(key)) {
+    return _map.get(key);
+  } // Sort keys to ensure stable retrieval from tree.
 
-(function() { module.exports = this["lodash"]; }());
 
-/***/ }),
+  var properties = Object.keys(key).sort(); // Tree by type to avoid conflicts on numeric object keys, empty value.
 
 /***/ 20:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-"use strict";
+  var valuePair = map.get('_ekm_value');
 
-// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/arrayWithHoles.js
-var arrayWithHoles = __webpack_require__(38);
+  if (!valuePair) {
+    return;
+  } // If reached, it implies that an object-like key was set with another
+  // reference, so delete the reference and replace with the current.
 
 // CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/iterableToArrayLimit.js
 function _iterableToArrayLimit(arr, i) {
@@ -159,22 +188,54 @@ function _iterableToArrayLimit(arr, i) {
   var _d = false;
   var _e = undefined;
 
-  try {
-    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-      _arr.push(_s.value);
+  _map.delete(valuePair[0]);
 
-      if (i && _arr.length === i) break;
+  valuePair[0] = key;
+  map.set('_ekm_value', valuePair);
+
+  _map.set(key, valuePair);
+
+  return valuePair;
+}
+/**
+ * Variant of a Map object which enables lookup by equivalent (deeply equal)
+ * object and array keys.
+ */
+
+
+var EquivalentKeyMap =
+/*#__PURE__*/
+function () {
+  /**
+   * Constructs a new instance of EquivalentKeyMap.
+   *
+   * @param {Iterable.<*>} iterable Initial pair of key, value for map.
+   */
+  function EquivalentKeyMap(iterable) {
+    _classCallCheck(this, EquivalentKeyMap);
+
+    this.clear();
+
+    if (iterable instanceof EquivalentKeyMap) {
+      // Map#forEach is only means of iterating with support for IE11.
+      var iterablePairs = [];
+      iterable.forEach(function (value, key) {
+        iterablePairs.push([key, value]);
+      });
+      iterable = iterablePairs;
     }
-  } catch (err) {
-    _d = true;
-    _e = err;
-  } finally {
-    try {
-      if (!_n && _i["return"] != null) _i["return"]();
-    } finally {
-      if (_d) throw _e;
+
+    if (iterable != null) {
+      for (var i = 0; i < iterable.length; i++) {
+        this.set(iterable[i][0], iterable[i][1]);
+      }
     }
   }
+  /**
+   * Accessor property returning the number of elements.
+   *
+   * @return {number} Number of elements.
+   */
 
   return _arr;
 }
@@ -184,17 +245,32 @@ var unsupportedIterableToArray = __webpack_require__(27);
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/nonIterableRest.js
 var nonIterableRest = __webpack_require__(39);
 
-// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/slicedToArray.js
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _slicedToArray; });
+  _createClass(EquivalentKeyMap, [{
+    key: "set",
 
+    /**
+     * Add or update an element with a specified key and value.
+     *
+     * @param {*} key   The key of the element to add.
+     * @param {*} value The value of the element to add.
+     *
+     * @return {EquivalentKeyMap} Map instance.
+     */
+    value: function set(key, value) {
+      // Shortcut non-object-like to set on internal Map.
+      if (key === null || _typeof(key) !== 'object') {
+        this._map.set(key, value);
 
+        return this;
+      } // Sort keys to ensure stable assignment into tree.
 
 
 function _slicedToArray(arr, i) {
   return Object(arrayWithHoles["a" /* default */])(arr) || _iterableToArrayLimit(arr, i) || Object(unsupportedIterableToArray["a" /* default */])(arr, i) || Object(nonIterableRest["a" /* default */])();
 }
 
-/***/ }),
+      var properties = Object.keys(key).sort();
+      var valuePair = [key, value]; // Tree by type to avoid conflicts on numeric object keys, empty value.
 
 /***/ 23:
 /***/ (function(module, exports) {
@@ -236,7 +312,9 @@ function _unsupportedIterableToArray(o, minLen) {
   if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return Object(_arrayLikeToArray__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])(o, minLen);
 }
 
-/***/ }),
+        if (!map.has(property)) {
+          map.set(property, new EquivalentKeyMap());
+        }
 
 /***/ 30:
 /***/ (function(module, exports) {
@@ -254,14 +332,20 @@ function _iterableToArray(iter) {
   if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
 }
 
-/***/ }),
+        map = map.get(propertyValue);
+      } // If an _ekm_value exists, there was already an equivalent key. Before
+      // overriding, ensure that the old key reference is removed from map to
+      // avoid memory leak of accumulating equivalent keys. This is, in a
+      // sense, a poor man's WeakMap, while still enabling iterability.
 
 /***/ 37:
 /***/ (function(module, exports) {
 
 (function() { module.exports = this["wp"]["deprecated"]; }());
 
-/***/ }),
+      if (previousValuePair) {
+        this._map.delete(previousValuePair[0]);
+      }
 
 /***/ 38:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -672,6 +756,7 @@ var external_this_wp_isShallowEqual_default = /*#__PURE__*/__webpack_require__.n
 /**
  * External dependencies
  */
+hasWeakMap = typeof WeakMap !== 'undefined';
 
 /**
  * Given the current and next item entity, returns the minimally "modified"
@@ -683,6 +768,9 @@ var external_this_wp_isShallowEqual_default = /*#__PURE__*/__webpack_require__.n
  *
  * @return {Object} Minimally modified merged item.
  */
+function arrayOf( value ) {
+	return [ value ];
+}
 
 function conservativeMapItem(item, nextItem) {
   // Return next item in its entirety if there is no original item.
@@ -808,6 +896,8 @@ var replaceAction = function replaceAction(replacer) {
  *
  * @return {Function} Enhanced caching function.
  */
+/* harmony default export */ __webpack_exports__["a"] = (function( selector, getDependants ) {
+	var rootCache, getCache;
 
 function withWeakMapCache(fn) {
   var cache = new WeakMap();
@@ -834,6 +924,8 @@ function withWeakMapCache(fn) {
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/core-data/build-module/utils/index.js
 
+		for ( i = 0; i < dependants.length; i++ ) {
+			dependant = dependants[ i ];
 
 
 
@@ -841,6 +933,12 @@ function withWeakMapCache(fn) {
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/core-data/build-module/queried-data/actions.js
 
+	/**
+	 * Resets root memoization cache.
+	 */
+	function clear() {
+		rootCache = hasWeakMap ? new WeakMap() : createCache();
+	}
 
 function actions_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -855,15 +953,25 @@ function actions_objectSpread(target) { for (var i = 1; i < arguments.length; i+
  *
  * @param {Array} items Items received.
  *
- * @return {Object} Action object.
+ * @return {Function} Higher-order reducer.
  */
+var ifMatchingAction = function ifMatchingAction(isMatch) {
+  return function (reducer) {
+    return function (state, action) {
+      if (state === undefined || isMatch(action)) {
+        return reducer(state, action);
+      }
 
 function receiveItems(items) {
   return {
     type: 'RECEIVE_ITEMS',
     items: Object(external_this_lodash_["castArray"])(items)
   };
-}
+};
+
+/* harmony default export */ var if_matching_action = (ifMatchingAction);
+
+// CONCATENATED MODULE: ./node_modules/@wordpress/core-data/build-module/utils/replace-action.js
 /**
  * Returns an action object used in signalling that queried data has been
  * received.
@@ -871,7 +979,7 @@ function receiveItems(items) {
  * @param {Array}   items Queried items received.
  * @param {?Object} query Optional query object.
  *
- * @return {Object} Action object.
+ * @return {Function} Higher-order reducer.
  */
 
 function receiveQueriedItems(items) {
@@ -913,6 +1021,14 @@ var external_this_wp_url_ = __webpack_require__(30);
  * @property {string} stableKey An encoded stable string of all non-pagination
  *                              query parameters.
  */
+var on_sub_key_onSubKey = function onSubKey(actionProperty) {
+  return function (reducer) {
+    return function () {
+      var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      var action = arguments.length > 1 ? arguments[1] : undefined;
+      // Retrieve subkey from action. Do not track if undefined; useful for cases
+      // where reducer is scoped by action shape.
+      var key = action[actionProperty];
 
 /**
  * Given a query object, returns an object of parts, including pagination
@@ -2249,15 +2365,10 @@ function build_module_reducer_ownKeys(object, enumerableOnly) { var keys = Objec
 
 function build_module_reducer_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { build_module_reducer_ownKeys(Object(source), true).forEach(function (key) { Object(defineProperty["a" /* default */])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { build_module_reducer_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
+// CONCATENATED MODULE: ./node_modules/@wordpress/core-data/build-module/queried-data/selectors.js
 /**
  * External dependencies
  */
-
-/**
- * WordPress dependencies
- */
-
-
 
 /**
  * Internal dependencies
@@ -4103,6 +4214,340 @@ Object(external_this_wp_data_["registerStore"])(REDUCER_KEY, {
 
 
 
+// EXTERNAL MODULE: external {"this":["wp","element"]}
+var external_this_wp_element_ = __webpack_require__(0);
+
+// EXTERNAL MODULE: external {"this":["wp","blocks"]}
+var external_this_wp_blocks_ = __webpack_require__(10);
+
+/***/ 5:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _defineProperty; });
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
+function entity_provider_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+/***/ 51:
+/***/ (function(module, exports) {
+
+(function() { module.exports = this["wp"]["isShallowEqual"]; }());
+
+/***/ }),
+
+/***/ 64:
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * WordPress dependencies
+ */
+
+
+
+/**
+ * Internal dependencies
+ */
+
+
+
+var entity_provider_entities = entity_provider_objectSpread({}, defaultEntities.reduce(function (acc, entity) {
+  if (!acc[entity.kind]) {
+    acc[entity.kind] = {};
+  }
+
+  acc[entity.kind][entity.name] = {
+    context: Object(external_this_wp_element_["createContext"])()
+  };
+  return acc;
+}, {}), {}, kinds.reduce(function (acc, kind) {
+  acc[kind.name] = {};
+  return acc;
+}, {}));
+
+var entity_provider_getEntity = function getEntity(kind, type) {
+  if (!entity_provider_entities[kind]) {
+    throw new Error("Missing entity config for kind: ".concat(kind, "."));
+  }
+
+  if (!entity_provider_entities[kind][type]) {
+    entity_provider_entities[kind][type] = {
+      context: Object(external_this_wp_element_["createContext"])()
+    };
+  }
+
+  return entity_provider_entities[kind][type];
+};
+/**
+ * Context provider component for providing
+ * an entity for a specific entity type.
+ *
+ * @param {Object} props          The component's props.
+ * @param {string} props.kind     The entity kind.
+ * @param {string} props.type     The entity type.
+ * @param {number} props.id       The entity ID.
+ * @param {*}      props.children The children to wrap.
+ *
+ * @return {Object} The provided children, wrapped with
+ *                   the entity's context provider.
+ */
+
+
+function EntityProvider(_ref) {
+  var kind = _ref.kind,
+      type = _ref.type,
+      id = _ref.id,
+      children = _ref.children;
+  var Provider = entity_provider_getEntity(kind, type).context.Provider;
+  return Object(external_this_wp_element_["createElement"])(Provider, {
+    value: id
+  }, children);
+}
+/**
+ * Hook that returns the ID for the nearest
+ * provided entity of the specified type.
+ *
+ * @param {string} kind The entity kind.
+ * @param {string} type The entity type.
+ */
+
+function useEntityId(kind, type) {
+  return Object(external_this_wp_element_["useContext"])(entity_provider_getEntity(kind, type).context);
+}
+/**
+ * Hook that returns the value and a setter for the
+ * specified property of the nearest provided
+ * entity of the specified type.
+ *
+ * @param {string} kind  The entity kind.
+ * @param {string} type  The entity type.
+ * @param {string} prop  The property name.
+ * @param {string} [_id] An entity ID to use instead of the context-provided one.
+ *
+ * @return {[*, Function]} A tuple where the first item is the
+ *                          property value and the second is the
+ *                          setter.
+ */
+
+function useEntityProp(kind, type, prop, _id) {
+  var providerId = useEntityId(kind, type);
+  var id = _id !== null && _id !== void 0 ? _id : providerId;
+
+  var _useSelect = Object(external_this_wp_data_["useSelect"])(function (select) {
+    var _select = select('core'),
+        getEntityRecord = _select.getEntityRecord,
+        getEditedEntityRecord = _select.getEditedEntityRecord;
+
+    var entity = getEntityRecord(kind, type, id); // Trigger resolver.
+
+    var editedEntity = getEditedEntityRecord(kind, type, id);
+    return entity && editedEntity ? {
+      value: editedEntity[prop],
+      fullValue: entity[prop]
+    } : {};
+  }, [kind, type, id, prop]),
+      value = _useSelect.value,
+      fullValue = _useSelect.fullValue;
+
+  var _useDispatch = Object(external_this_wp_data_["useDispatch"])('core'),
+      editEntityRecord = _useDispatch.editEntityRecord;
+
+  var setValue = Object(external_this_wp_element_["useCallback"])(function (newValue) {
+    editEntityRecord(kind, type, id, Object(defineProperty["a" /* default */])({}, prop, newValue));
+  }, [kind, type, id, prop]);
+  return [value, setValue, fullValue];
+}
+/**
+ * Hook that returns block content getters and setters for
+ * the nearest provided entity of the specified type.
+ *
+ * The return value has the shape `[ blocks, onInput, onChange ]`.
+ * `onInput` is for block changes that don't create undo levels
+ * or dirty the post, non-persistent changes, and `onChange` is for
+ * peristent changes. They map directly to the props of a
+ * `BlockEditorProvider` and are intended to be used with it,
+ * or similar components or hooks.
+ *
+ * @param {string} kind                            The entity kind.
+ * @param {string} type                            The entity type.
+ * @param {Object} options
+ * @param {Object} [options.initialEdits]          Initial edits object for the entity record.
+ * @param {string} [options.blocksProp='blocks']   The name of the entity prop that holds the blocks array.
+ * @param {string} [options.contentProp='content'] The name of the entity prop that holds the serialized blocks.
+ * @param {string} [options.id]                    An entity ID to use instead of the context-provided one.
+ *
+ * @return {[WPBlock[], Function, Function]} The block array and setters.
+ */
+
+function useEntityBlockEditor(kind, type) {
+  var _ref2 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
+      initialEdits = _ref2.initialEdits,
+      _ref2$blocksProp = _ref2.blocksProp,
+      blocksProp = _ref2$blocksProp === void 0 ? 'blocks' : _ref2$blocksProp,
+      _ref2$contentProp = _ref2.contentProp,
+      contentProp = _ref2$contentProp === void 0 ? 'content' : _ref2$contentProp,
+      _id = _ref2.id;
+
+  var providerId = useEntityId(kind, type);
+  var id = _id !== null && _id !== void 0 ? _id : providerId;
+
+  var _useEntityProp = useEntityProp(kind, type, contentProp, id),
+      _useEntityProp2 = Object(slicedToArray["a" /* default */])(_useEntityProp, 2),
+      content = _useEntityProp2[0],
+      setContent = _useEntityProp2[1];
+
+  var _useDispatch2 = Object(external_this_wp_data_["useDispatch"])('core'),
+      editEntityRecord = _useDispatch2.editEntityRecord;
+
+  Object(external_this_wp_element_["useEffect"])(function () {
+    if (initialEdits) {
+      editEntityRecord(kind, type, id, initialEdits, {
+        undoIgnore: true
+      });
+    }
+  }, [id]);
+  var initialBlocks = Object(external_this_wp_element_["useMemo"])(function () {
+    // Guard against other instances that might have
+    // set content to a function already.
+    if (content && typeof content !== 'function') {
+      var parsedContent = Object(external_this_wp_blocks_["parse"])(content);
+      return parsedContent.length ? parsedContent : [];
+    }
+
+    return [];
+  }, [content]);
+
+  var _useEntityProp3 = useEntityProp(kind, type, blocksProp, id),
+      _useEntityProp4 = Object(slicedToArray["a" /* default */])(_useEntityProp3, 2),
+      _useEntityProp4$ = _useEntityProp4[0],
+      blocks = _useEntityProp4$ === void 0 ? initialBlocks : _useEntityProp4$,
+      onInput = _useEntityProp4[1];
+
+  var onChange = Object(external_this_wp_element_["useCallback"])(function (nextBlocks) {
+    onInput(nextBlocks); // Use a function edit to avoid serializing often.
+
+    setContent(function (_ref3) {
+      var blocksToSerialize = _ref3.blocks;
+      return Object(external_this_wp_blocks_["serialize"])(blocksToSerialize);
+    });
+  }, [onInput, setContent]);
+  return [blocks, onInput, onChange];
+}
+
+// CONCATENATED MODULE: ./node_modules/@wordpress/core-data/build-module/index.js
+
+
+function build_module_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function build_module_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { build_module_ownKeys(Object(source), true).forEach(function (key) { Object(defineProperty["a" /* default */])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { build_module_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+/**
+ * WordPress dependencies
+ */
+
+/**
+ * Internal dependencies
+ */
+
+
+
+
+
+
+
+ // The entity selectors/resolvers and actions are shortcuts to their generic equivalents
+// (getEntityRecord, getEntityRecords, updateEntityRecord, updateEntityRecordss)
+// Instead of getEntityRecord, the consumer could use more user-frieldly named selector: getPostType, getTaxonomy...
+// The "kind" and the "name" of the entity are combined to generate these shortcuts.
+
+var entitySelectors = defaultEntities.reduce(function (result, entity) {
+  var kind = entity.kind,
+      name = entity.name;
+
+  result[entities_getMethodName(kind, name)] = function (state, key) {
+    return getEntityRecord(state, kind, name, key);
+  };
+
+  result[entities_getMethodName(kind, name, 'get', true)] = function (state) {
+    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
+    }
+
+    return getEntityRecords.apply(build_module_selectors_namespaceObject, [state, kind, name].concat(args));
+  };
+
+  return result;
+}, {});
+var entityResolvers = defaultEntities.reduce(function (result, entity) {
+  var kind = entity.kind,
+      name = entity.name;
+
+  result[entities_getMethodName(kind, name)] = function (key) {
+    return resolvers_getEntityRecord(kind, name, key);
+  };
+
+  var pluralMethodName = entities_getMethodName(kind, name, 'get', true);
+
+  result[pluralMethodName] = function () {
+    for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      args[_key2] = arguments[_key2];
+    }
+
+    return resolvers_getEntityRecords.apply(resolvers_namespaceObject, [kind, name].concat(args));
+  };
+
+  result[pluralMethodName].shouldInvalidate = function (action) {
+    var _resolvers$getEntityR;
+
+    for (var _len3 = arguments.length, args = new Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+      args[_key3 - 1] = arguments[_key3];
+    }
+
+    return (_resolvers$getEntityR = resolvers_getEntityRecords).shouldInvalidate.apply(_resolvers$getEntityR, [action, kind, name].concat(args));
+  };
+
+  return result;
+}, {});
+var entityActions = defaultEntities.reduce(function (result, entity) {
+  var kind = entity.kind,
+      name = entity.name;
+
+  result[entities_getMethodName(kind, name, 'save')] = function (key) {
+    return saveEntityRecord(kind, name, key);
+  };
+
+  return result;
+}, {});
+Object(external_this_wp_data_["registerStore"])(REDUCER_KEY, {
+  reducer: build_module_reducer,
+  controls: build_module_controls,
+  actions: build_module_objectSpread({}, build_module_actions_namespaceObject, {}, entityActions),
+  selectors: build_module_objectSpread({}, build_module_selectors_namespaceObject, {}, entitySelectors),
+  resolvers: build_module_objectSpread({}, resolvers_namespaceObject, {}, entityResolvers)
+});
+
+
+
+
+/***/ }),
+
+/***/ 45:
+/***/ (function(module, exports) {
+
+(function() { module.exports = this["wp"]["apiFetch"]; }());
 
 /***/ }),
 
@@ -4128,325 +4573,10 @@ function _defineProperty(obj, key, value) {
 
 /***/ }),
 
-/***/ 51:
+/***/ 64:
 /***/ (function(module, exports) {
 
 (function() { module.exports = this["wp"]["isShallowEqual"]; }());
-
-/***/ }),
-
-/***/ 64:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-function _typeof(obj) {
-  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-    _typeof = function (obj) {
-      return typeof obj;
-    };
-  } else {
-    _typeof = function (obj) {
-      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-    };
-  }
-
-  return _typeof(obj);
-}
-
-function _classCallCheck(instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-}
-
-function _defineProperties(target, props) {
-  for (var i = 0; i < props.length; i++) {
-    var descriptor = props[i];
-    descriptor.enumerable = descriptor.enumerable || false;
-    descriptor.configurable = true;
-    if ("value" in descriptor) descriptor.writable = true;
-    Object.defineProperty(target, descriptor.key, descriptor);
-  }
-}
-
-function _createClass(Constructor, protoProps, staticProps) {
-  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
-  if (staticProps) _defineProperties(Constructor, staticProps);
-  return Constructor;
-}
-
-/**
- * Given an instance of EquivalentKeyMap, returns its internal value pair tuple
- * for a key, if one exists. The tuple members consist of the last reference
- * value for the key (used in efficient subsequent lookups) and the value
- * assigned for the key at the leaf node.
- *
- * @param {EquivalentKeyMap} instance EquivalentKeyMap instance.
- * @param {*} key                     The key for which to return value pair.
- *
- * @return {?Array} Value pair, if exists.
- */
-function getValuePair(instance, key) {
-  var _map = instance._map,
-      _arrayTreeMap = instance._arrayTreeMap,
-      _objectTreeMap = instance._objectTreeMap; // Map keeps a reference to the last object-like key used to set the
-  // value, which can be used to shortcut immediately to the value.
-
-  if (_map.has(key)) {
-    return _map.get(key);
-  } // Sort keys to ensure stable retrieval from tree.
-
-
-  var properties = Object.keys(key).sort(); // Tree by type to avoid conflicts on numeric object keys, empty value.
-
-  var map = Array.isArray(key) ? _arrayTreeMap : _objectTreeMap;
-
-  for (var i = 0; i < properties.length; i++) {
-    var property = properties[i];
-    map = map.get(property);
-
-    if (map === undefined) {
-      return;
-    }
-
-    var propertyValue = key[property];
-    map = map.get(propertyValue);
-
-    if (map === undefined) {
-      return;
-    }
-  }
-
-  var valuePair = map.get('_ekm_value');
-
-  if (!valuePair) {
-    return;
-  } // If reached, it implies that an object-like key was set with another
-  // reference, so delete the reference and replace with the current.
-
-
-  _map.delete(valuePair[0]);
-
-  valuePair[0] = key;
-  map.set('_ekm_value', valuePair);
-
-  _map.set(key, valuePair);
-
-  return valuePair;
-}
-/**
- * Variant of a Map object which enables lookup by equivalent (deeply equal)
- * object and array keys.
- */
-
-
-var EquivalentKeyMap =
-/*#__PURE__*/
-function () {
-  /**
-   * Constructs a new instance of EquivalentKeyMap.
-   *
-   * @param {Iterable.<*>} iterable Initial pair of key, value for map.
-   */
-  function EquivalentKeyMap(iterable) {
-    _classCallCheck(this, EquivalentKeyMap);
-
-    this.clear();
-
-    if (iterable instanceof EquivalentKeyMap) {
-      // Map#forEach is only means of iterating with support for IE11.
-      var iterablePairs = [];
-      iterable.forEach(function (value, key) {
-        iterablePairs.push([key, value]);
-      });
-      iterable = iterablePairs;
-    }
-
-    if (iterable != null) {
-      for (var i = 0; i < iterable.length; i++) {
-        this.set(iterable[i][0], iterable[i][1]);
-      }
-    }
-  }
-  /**
-   * Accessor property returning the number of elements.
-   *
-   * @return {number} Number of elements.
-   */
-
-
-  _createClass(EquivalentKeyMap, [{
-    key: "set",
-
-    /**
-     * Add or update an element with a specified key and value.
-     *
-     * @param {*} key   The key of the element to add.
-     * @param {*} value The value of the element to add.
-     *
-     * @return {EquivalentKeyMap} Map instance.
-     */
-    value: function set(key, value) {
-      // Shortcut non-object-like to set on internal Map.
-      if (key === null || _typeof(key) !== 'object') {
-        this._map.set(key, value);
-
-        return this;
-      } // Sort keys to ensure stable assignment into tree.
-
-
-      var properties = Object.keys(key).sort();
-      var valuePair = [key, value]; // Tree by type to avoid conflicts on numeric object keys, empty value.
-
-      var map = Array.isArray(key) ? this._arrayTreeMap : this._objectTreeMap;
-
-      for (var i = 0; i < properties.length; i++) {
-        var property = properties[i];
-
-        if (!map.has(property)) {
-          map.set(property, new EquivalentKeyMap());
-        }
-
-        map = map.get(property);
-        var propertyValue = key[property];
-
-        if (!map.has(propertyValue)) {
-          map.set(propertyValue, new EquivalentKeyMap());
-        }
-
-        map = map.get(propertyValue);
-      } // If an _ekm_value exists, there was already an equivalent key. Before
-      // overriding, ensure that the old key reference is removed from map to
-      // avoid memory leak of accumulating equivalent keys. This is, in a
-      // sense, a poor man's WeakMap, while still enabling iterability.
-
-
-      var previousValuePair = map.get('_ekm_value');
-
-      if (previousValuePair) {
-        this._map.delete(previousValuePair[0]);
-      }
-
-      map.set('_ekm_value', valuePair);
-
-      this._map.set(key, valuePair);
-
-      return this;
-    }
-    /**
-     * Returns a specified element.
-     *
-     * @param {*} key The key of the element to return.
-     *
-     * @return {?*} The element associated with the specified key or undefined
-     *              if the key can't be found.
-     */
-
-  }, {
-    key: "get",
-    value: function get(key) {
-      // Shortcut non-object-like to get from internal Map.
-      if (key === null || _typeof(key) !== 'object') {
-        return this._map.get(key);
-      }
-
-      var valuePair = getValuePair(this, key);
-
-      if (valuePair) {
-        return valuePair[1];
-      }
-    }
-    /**
-     * Returns a boolean indicating whether an element with the specified key
-     * exists or not.
-     *
-     * @param {*} key The key of the element to test for presence.
-     *
-     * @return {boolean} Whether an element with the specified key exists.
-     */
-
-  }, {
-    key: "has",
-    value: function has(key) {
-      if (key === null || _typeof(key) !== 'object') {
-        return this._map.has(key);
-      } // Test on the _presence_ of the pair, not its value, as even undefined
-      // can be a valid member value for a key.
-
-
-      return getValuePair(this, key) !== undefined;
-    }
-    /**
-     * Removes the specified element.
-     *
-     * @param {*} key The key of the element to remove.
-     *
-     * @return {boolean} Returns true if an element existed and has been
-     *                   removed, or false if the element does not exist.
-     */
-
-  }, {
-    key: "delete",
-    value: function _delete(key) {
-      if (!this.has(key)) {
-        return false;
-      } // This naive implementation will leave orphaned child trees. A better
-      // implementation should traverse and remove orphans.
-
-
-      this.set(key, undefined);
-      return true;
-    }
-    /**
-     * Executes a provided function once per each key/value pair, in insertion
-     * order.
-     *
-     * @param {Function} callback Function to execute for each element.
-     * @param {*}        thisArg  Value to use as `this` when executing
-     *                            `callback`.
-     */
-
-  }, {
-    key: "forEach",
-    value: function forEach(callback) {
-      var _this = this;
-
-      var thisArg = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this;
-
-      this._map.forEach(function (value, key) {
-        // Unwrap value from object-like value pair.
-        if (key !== null && _typeof(key) === 'object') {
-          value = value[1];
-        }
-
-        callback.call(thisArg, value, key, _this);
-      });
-    }
-    /**
-     * Removes all elements.
-     */
-
-  }, {
-    key: "clear",
-    value: function clear() {
-      this._map = new Map();
-      this._arrayTreeMap = new Map();
-      this._objectTreeMap = new Map();
-    }
-  }, {
-    key: "size",
-    get: function get() {
-      return this._map.size;
-    }
-  }]);
-
-  return EquivalentKeyMap;
-}();
-
-module.exports = EquivalentKeyMap;
-
 
 /***/ })
 

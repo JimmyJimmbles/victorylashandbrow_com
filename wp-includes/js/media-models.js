@@ -116,7 +116,7 @@ window.wp = window.wp || {};
  * @memberOf wp
  * @namespace
  *
- * @param  {object} attributes The properties passed to the main media controller.
+ * @param {Object} attributes The properties passed to the main media controller.
  * @return {wp.media.view.MediaFrame} A media workflow.
  */
 media = wp.media = function( attributes ) {
@@ -185,13 +185,13 @@ media.model.Selection = __webpack_require__( 28 );
  *
  * Used to order models within a collection - @see wp.media.model.Attachments.comparator().
  *
- * @param  {mixed}  a  The primary parameter to compare.
- * @param  {mixed}  b  The primary parameter to compare.
- * @param  {string} ac The fallback parameter to compare, a's cid.
- * @param  {string} bc The fallback parameter to compare, b's cid.
- * @return {number}    -1: a should come before b.
- *                      0: a and b are of the same rank.
- *                      1: b should come before a.
+ * @param {mixed}  a  The primary parameter to compare.
+ * @param {mixed}  b  The primary parameter to compare.
+ * @param {string} ac The fallback parameter to compare, a's cid.
+ * @param {string} bc The fallback parameter to compare, b's cid.
+ * @return {number} -1: a should come before b.
+ *                   0: a and b are of the same rank.
+ *                   1: b should come before a.
  */
 media.compare = function( a, b, ac, bc ) {
 	if ( _.isEqual( a, b ) ) {
@@ -613,7 +613,7 @@ var Attachments = Backbone.Collection.extend(/** @lends wp.media.model.Attachmen
 	 * @access private
 	 *
 	 * @param {Backbone.Model} model
-	 * @param {Boolean} query
+	 * @param {boolean} query
 	 */
 	_changeQuery: function( model, query ) {
 		if ( query ) {
@@ -716,7 +716,7 @@ var Attachments = Backbone.Collection.extend(/** @lends wp.media.model.Attachmen
 	 * Add or remove all attachments from another collection depending on each one's validity.
 	 *
 	 * @param {wp.media.model.Attachments} attachments
-	 * @param {object} [options={}]
+	 * @param {Object} [options={}]
 	 *
 	 * @fires wp.media.model.Attachments#reset
 	 *
@@ -882,7 +882,7 @@ var Attachments = Backbone.Collection.extend(/** @lends wp.media.model.Attachmen
 		return this.mirroring ? this.mirroring.hasMore() : false;
 	},
 	/**
-	 * A custom AJAX-response parser.
+	 * A custom Ajax-response parser.
 	 *
 	 * See trac ticket #24753
 	 *
@@ -1115,8 +1115,8 @@ var Attachments = wp.media.model.Attachments,
  */
 Query = Attachments.extend(/** @lends wp.media.model.Query.prototype */{
 	/**
-	 * @param {array}  [models=[]]  Array of initial models to populate the collection.
-	 * @param {object} [options={}]
+	 * @param {Array}  [models=[]]  Array of initial models to populate the collection.
+	 * @param {Object} [options={}]
 	 */
 	initialize: function( models, options ) {
 		var allowed;
@@ -1215,7 +1215,7 @@ Query = Attachments.extend(/** @lends wp.media.model.Query.prototype */{
 	 * Overrides Backbone.Collection.sync
 	 * Overrides wp.media.model.Attachments.sync
 	 *
-	 * @param {String} method
+	 * @param {string} method
 	 * @param {Backbone.Model} model
 	 * @param {Object} [options={}]
 	 * @return {Promise}

@@ -123,7 +123,7 @@ function _classCallCheck(instance, Constructor) {
 
 /***/ }),
 
-/***/ 2:
+/***/ 24:
 /***/ (function(module, exports) {
 
 (function() { module.exports = this["lodash"]; }());
@@ -163,40 +163,92 @@ __webpack_require__.r(__webpack_exports__);
  * @see https://dom.spec.whatwg.org/#domtokenlist
  */
 
-var TokenList =
-/*#__PURE__*/
-function () {
+var TokenList = /*#__PURE__*/function () {
   /**
    * Constructs a new instance of TokenList.
    *
    * @param {string} initialValue Initial value to assign.
    */
   function TokenList() {
-    var _this = this;
-
     var initialValue = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
 
     Object(_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_1__[/* default */ "a"])(this, TokenList);
 
-    this.value = initialValue;
-    ['entries', 'forEach', 'keys', 'values'].forEach(function (fn) {
-      _this[fn] = function () {
-        var _this$_valueAsArray;
+    this.value = initialValue; // Disable reason: These are type hints on the class.
+
+    /* eslint-disable no-unused-expressions */
+
+    /** @type {string} */
+
+    this._currentValue;
+    /** @type {string[]} */
+
+    this._valueAsArray;
+    /* eslint-enable no-unused-expressions */
+  } // Disable reason: JSDoc lint doesn't understand TypeScript types
+
+  /* eslint-disable jsdoc/valid-types */
 
         return (_this$_valueAsArray = _this._valueAsArray)[fn].apply(_this$_valueAsArray, arguments);
       };
     });
   }
   /**
-   * Returns the associated set as string.
-   *
-   * @see https://dom.spec.whatwg.org/#dom-domtokenlist-value
-   *
-   * @return {string} Token set as string.
+   * @param {Parameters<Array<string>['entries']>} args
    */
 
 
   Object(_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_2__[/* default */ "a"])(TokenList, [{
+    key: "entries",
+    value: function entries() {
+      var _this$_valueAsArray;
+
+      return (_this$_valueAsArray = this._valueAsArray).entries.apply(_this$_valueAsArray, arguments);
+    }
+    /**
+     * @param {Parameters<Array<string>['forEach']>} args
+     */
+
+  }, {
+    key: "forEach",
+    value: function forEach() {
+      var _this$_valueAsArray2;
+
+      return (_this$_valueAsArray2 = this._valueAsArray).forEach.apply(_this$_valueAsArray2, arguments);
+    }
+    /**
+     * @param {Parameters<Array<string>['keys']>} args
+     */
+
+  }, {
+    key: "keys",
+    value: function keys() {
+      var _this$_valueAsArray3;
+
+      return (_this$_valueAsArray3 = this._valueAsArray).keys.apply(_this$_valueAsArray3, arguments);
+    }
+    /**
+     * @param {Parameters<Array<string>['values']>} args
+     */
+
+  }, {
+    key: "values",
+    value: function values() {
+      var _this$_valueAsArray4;
+
+      return (_this$_valueAsArray4 = this._valueAsArray).values.apply(_this$_valueAsArray4, arguments);
+    }
+    /* eslint-enable jsdoc/valid-types */
+
+    /**
+     * Returns the associated set as string.
+     *
+     * @see https://dom.spec.whatwg.org/#dom-domtokenlist-value
+     *
+     * @return {string} Token set as string.
+     */
+
+  }, {
     key: "toString",
 
     /**
@@ -220,9 +272,7 @@ function () {
 
   }, {
     key: Symbol.iterator,
-    value:
-    /*#__PURE__*/
-    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function value() {
+    value: /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function value() {
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function value$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {

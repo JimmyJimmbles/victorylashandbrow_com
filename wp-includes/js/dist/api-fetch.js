@@ -162,6 +162,7 @@ function _objectWithoutPropertiesLoose(source, excluded) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+// ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/defineProperty.js
@@ -364,6 +365,11 @@ function fetch_all_middleware_objectSpread(target) { for (var i = 1; i < argumen
 /**
  * WordPress dependencies
  */
+
+/**
+ * Internal dependencies
+ */
+
  // Apply query arguments to both URL and Path, whichever is present.
 
 var fetch_all_middleware_modifyQuery = function modifyQuery(_ref, queryArgs) {

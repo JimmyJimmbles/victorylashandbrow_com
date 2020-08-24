@@ -1089,6 +1089,8 @@ function getQueryString(url) {
   if (matches) {
     return matches[1];
   }
+
+  return /^[^\s#?]+$/.test(path);
 }
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/url/build-module/is-valid-query-string.js
@@ -1469,23 +1471,16 @@ function cleanForSlug(string) {
 
 
 
-/***/ }),
 
 /***/ 92:
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
 
 
 var stringify = __webpack_require__(417);
 var parse = __webpack_require__(418);
 var formats = __webpack_require__(257);
 
-module.exports = {
-    formats: formats,
-    parse: parse,
-    stringify: stringify
-};
 
 
 /***/ })

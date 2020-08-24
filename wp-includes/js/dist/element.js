@@ -213,7 +213,7 @@ function _slicedToArray(arr, i) {
 /***/ 21:
 /***/ (function(module, exports) {
 
-(function() { module.exports = this["React"]; }());
+(function() { module.exports = this["lodash"]; }());
 
 /***/ }),
 
@@ -334,6 +334,7 @@ function _objectWithoutPropertiesLoose(source, excluded) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+// ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/slicedToArray.js + 1 modules
@@ -1037,6 +1038,13 @@ function raw_html_objectSpread(target) { for (var i = 1; i < arguments.length; i
 /**
  * Internal dependencies
  */
+ // Disable reason: JSDoc linter doesn't seem to parse the union (`&`) correctly.
+
+/* eslint-disable jsdoc/valid-types */
+
+/** @typedef {{children: string} & import('react').ComponentPropsWithoutRef<'div'>} RawHTMLProps */
+
+/* eslint-enable jsdoc/valid-types */
 
 /**
  * Component used as equivalent of Fragment with unescaped HTML, in cases where
@@ -1044,9 +1052,8 @@ function raw_html_objectSpread(target) { for (var i = 1; i < arguments.length; i
  * To preserve additional props, a `div` wrapper _will_ be created if any props
  * aside from `children` are passed.
  *
- * @param {Object} props
- * @param {string} props.children HTML to render.
- * @param {Object} props.props    Any additonal props to be set on the containing div.
+ * @param {RawHTMLProps} props Children should be a string of HTML. Other props
+ *                             will be passed through to div wrapper.
  *
  * @return {WPComponent} Dangerously-rendering component.
  */
@@ -1115,6 +1122,7 @@ function serialize_objectSpread(target) { for (var i = 1; i < arguments.length; 
 
 
 
+/** @typedef {import('./react').WPElement} WPElement */
 
 var _createContext = Object(external_this_React_["createContext"])(),
     Provider = _createContext.Provider,
@@ -1126,14 +1134,14 @@ var ForwardRef = Object(external_this_React_["forwardRef"])(function () {
 /**
  * Valid attribute types.
  *
- * @type {Set}
+ * @type {Set<string>}
  */
 
 var ATTRIBUTES_TYPES = new Set(['string', 'boolean', 'number']);
 /**
  * Element tags which can be self-closing.
  *
- * @type {Set}
+ * @type {Set<string>}
  */
 
 var SELF_CLOSING_TAGS = new Set(['area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr']);
@@ -1150,7 +1158,7 @@ var SELF_CLOSING_TAGS = new Set(['area', 'base', 'br', 'col', 'command', 'embed'
  *         [ tr.firstChild.textContent.trim() ]: true
  *     } ), {} ) ).sort();
  *
- * @type {Set}
+ * @type {Set<string>}
  */
 
 var BOOLEAN_ATTRIBUTES = new Set(['allowfullscreen', 'allowpaymentrequest', 'allowusermedia', 'async', 'autofocus', 'autoplay', 'checked', 'controls', 'default', 'defer', 'disabled', 'download', 'formnovalidate', 'hidden', 'ismap', 'itemscope', 'loop', 'multiple', 'muted', 'nomodule', 'novalidate', 'open', 'playsinline', 'readonly', 'required', 'reversed', 'selected', 'typemustmatch']);
@@ -1172,7 +1180,7 @@ var BOOLEAN_ATTRIBUTES = new Set(['allowfullscreen', 'allowpaymentrequest', 'all
  *
  *  - `alt`: https://blog.whatwg.org/omit-alt
  *
- * @type {Set}
+ * @type {Set<string>}
  */
 
 var ENUMERATED_ATTRIBUTES = new Set(['autocapitalize', 'autocomplete', 'charset', 'contenteditable', 'crossorigin', 'decoding', 'dir', 'draggable', 'enctype', 'formenctype', 'formmethod', 'http-equiv', 'inputmode', 'kind', 'method', 'preload', 'scope', 'shape', 'spellcheck', 'translate', 'type', 'wrap']);
@@ -1192,7 +1200,7 @@ var ENUMERATED_ATTRIBUTES = new Set(['autocapitalize', 'autocomplete', 'charset'
  *     .map( ( [ key ] ) => key )
  *     .sort();
  *
- * @type {Set}
+ * @type {Set<string>}
  */
 
 var CSS_PROPERTIES_SUPPORTS_UNITLESS = new Set(['animation', 'animationIterationCount', 'baselineShift', 'borderImageOutset', 'borderImageSlice', 'borderImageWidth', 'columnCount', 'cx', 'cy', 'fillOpacity', 'flexGrow', 'flexShrink', 'floodOpacity', 'fontWeight', 'gridColumnEnd', 'gridColumnStart', 'gridRowEnd', 'gridRowStart', 'lineHeight', 'opacity', 'order', 'orphans', 'r', 'rx', 'ry', 'shapeImageThreshold', 'stopOpacity', 'strokeDasharray', 'strokeDashoffset', 'strokeMiterlimit', 'strokeOpacity', 'strokeWidth', 'tabSize', 'widows', 'x', 'y', 'zIndex', 'zoom']);
@@ -1229,7 +1237,7 @@ function isInternalAttribute(attribute) {
  * @param {string} attribute Attribute name.
  * @param {*}      value     Non-normalized attribute value.
  *
- * @return {string} Normalized attribute value.
+ * @return {*} Normalized attribute value.
  */
 
 
@@ -1306,9 +1314,9 @@ function getNormalStylePropertyValue(property, value) {
 /**
  * Serializes a React element to string.
  *
- * @param {WPElement} element       Element to serialize.
- * @param {?Object}   context       Context object.
- * @param {?Object}   legacyContext Legacy context object.
+ * @param {import('react').ReactNode} element         Element to serialize.
+ * @param {Object}                    [context]       Context object.
+ * @param {Object}                    [legacyContext] Legacy context object.
  *
  * @return {string} Serialized element.
  */
@@ -1333,7 +1341,9 @@ function renderElement(element, context) {
       return element.toString();
   }
 
-  var type = element.type,
+  var type =
+  /** @type {{type?: any, props?: any}} */
+  element.type,
       props = element.props;
 
   switch (type) {
@@ -1380,11 +1390,11 @@ function renderElement(element, context) {
 /**
  * Serializes a native component type to string.
  *
- * @param {?string} type          Native component type to serialize, or null if
- *                                rendering as fragment of children content.
- * @param {Object}  props         Props object.
- * @param {?Object} context       Context object.
- * @param {?Object} legacyContext Legacy context object.
+ * @param {?string} type            Native component type to serialize, or null if
+ *                                  rendering as fragment of children content.
+ * @param {Object}  props           Props object.
+ * @param {Object}  [context]       Context object.
+ * @param {Object}  [legacyContext] Legacy context object.
  *
  * @return {string} Serialized element.
  */
@@ -1418,23 +1428,33 @@ function renderNativeComponent(type, props, context) {
 
   return '<' + type + attributes + '>' + content + '</' + type + '>';
 }
+/** @typedef {import('./react').WPComponent} WPComponent */
+
 /**
  * Serializes a non-native component type to string.
  *
- * @param {Function} Component     Component type to serialize.
- * @param {Object}   props         Props object.
- * @param {?Object}  context       Context object.
- * @param {?Object}  legacyContext Legacy context object.
+ * @param {WPComponent} Component       Component type to serialize.
+ * @param {Object}      props           Props object.
+ * @param {Object}      [context]       Context object.
+ * @param {Object}      [legacyContext] Legacy context object.
  *
  * @return {string} Serialized element
  */
 
 function renderComponent(Component, props, context) {
   var legacyContext = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-  var instance = new Component(props, legacyContext);
+  var instance = new
+  /** @type {import('react').ComponentClass} */
+  Component(props, legacyContext);
 
-  if (typeof instance.getChildContext === 'function') {
-    Object.assign(legacyContext, instance.getChildContext());
+  if (typeof // Ignore reason: Current prettier reformats parens and mangles type assertion
+  // prettier-ignore
+
+  /** @type {{getChildContext?: () => unknown}} */
+  instance.getChildContext === 'function') {
+    Object.assign(legacyContext,
+    /** @type {{getChildContext?: () => unknown}} */
+    instance.getChildContext());
   }
 
   var html = renderElement(instance.render(), context, legacyContext);
@@ -1443,9 +1463,9 @@ function renderComponent(Component, props, context) {
 /**
  * Serializes an array of children to string.
  *
- * @param {Array}   children      Children to serialize.
- * @param {?Object} context       Context object.
- * @param {?Object} legacyContext Legacy context object.
+ * @param {import('react').ReactNodeArray} children        Children to serialize.
+ * @param {Object}                         [context]       Context object.
+ * @param {Object}                         [legacyContext] Legacy context object.
  *
  * @return {string} Serialized children.
  */

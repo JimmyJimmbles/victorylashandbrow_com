@@ -258,7 +258,7 @@ wpList = {
 	 * Calls a confirm callback to verify the action that is about to be performed.
 	 *
 	 * @param {HTMLElement} list     The DOM element.
-	 * @param {object}      settings Settings for this list.
+	 * @param {Object}      settings Settings for this list.
 	 * @param {string}      action   The type of action to perform: 'add', 'delete', or 'dim'.
 	 * @return {object|boolean} Settings if confirmed, false if not.
 	 */
@@ -294,7 +294,7 @@ wpList = {
 	},
 
 	/**
-	 * Adds an item to the list via AJAX.
+	 * Adds an item to the list via Ajax.
 	 *
 	 * @param {HTMLElement} element  The DOM element.
 	 * @param {object}      settings Settings for this list.
@@ -396,7 +396,7 @@ wpList = {
 	},
 
 	/**
-	 * Delete an item in the list via AJAX.
+	 * Delete an item in the list via Ajax.
 	 *
 	 * @param {HTMLElement} element  A DOM element containing item data.
 	 * @param {object}      settings Settings for this list.
@@ -483,7 +483,7 @@ wpList = {
 	},
 
 	/**
-	 * Dim an item in the list via AJAX.
+	 * Dim an item in the list via Ajax.
 	 *
 	 * @param {HTMLElement} element  A DOM element containing item data.
 	 * @param {object}      settings Settings for this list.

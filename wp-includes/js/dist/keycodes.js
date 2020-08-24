@@ -118,7 +118,7 @@ function _nonIterableSpread() {
   throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 // CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _toConsumableArray; });
+
 
 
 
@@ -186,7 +186,32 @@ function _iterableToArray(iter) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+// ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
+
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, "BACKSPACE", function() { return /* binding */ BACKSPACE; });
+__webpack_require__.d(__webpack_exports__, "TAB", function() { return /* binding */ TAB; });
+__webpack_require__.d(__webpack_exports__, "ENTER", function() { return /* binding */ ENTER; });
+__webpack_require__.d(__webpack_exports__, "ESCAPE", function() { return /* binding */ ESCAPE; });
+__webpack_require__.d(__webpack_exports__, "SPACE", function() { return /* binding */ SPACE; });
+__webpack_require__.d(__webpack_exports__, "LEFT", function() { return /* binding */ LEFT; });
+__webpack_require__.d(__webpack_exports__, "UP", function() { return /* binding */ UP; });
+__webpack_require__.d(__webpack_exports__, "RIGHT", function() { return /* binding */ RIGHT; });
+__webpack_require__.d(__webpack_exports__, "DOWN", function() { return /* binding */ DOWN; });
+__webpack_require__.d(__webpack_exports__, "DELETE", function() { return /* binding */ DELETE; });
+__webpack_require__.d(__webpack_exports__, "F10", function() { return /* binding */ F10; });
+__webpack_require__.d(__webpack_exports__, "ALT", function() { return /* binding */ ALT; });
+__webpack_require__.d(__webpack_exports__, "CTRL", function() { return /* binding */ CTRL; });
+__webpack_require__.d(__webpack_exports__, "COMMAND", function() { return /* binding */ COMMAND; });
+__webpack_require__.d(__webpack_exports__, "SHIFT", function() { return /* binding */ SHIFT; });
+__webpack_require__.d(__webpack_exports__, "ZERO", function() { return /* binding */ ZERO; });
+__webpack_require__.d(__webpack_exports__, "modifiers", function() { return /* binding */ modifiers; });
+__webpack_require__.d(__webpack_exports__, "rawShortcut", function() { return /* binding */ rawShortcut; });
+__webpack_require__.d(__webpack_exports__, "displayShortcutList", function() { return /* binding */ displayShortcutList; });
+__webpack_require__.d(__webpack_exports__, "displayShortcut", function() { return /* binding */ displayShortcut; });
+__webpack_require__.d(__webpack_exports__, "shortcutAriaLabel", function() { return /* binding */ shortcutAriaLabel; });
+__webpack_require__.d(__webpack_exports__, "isKeyboardEvent", function() { return /* binding */ isKeyboardEvent; });
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/defineProperty.js
 var defineProperty = __webpack_require__(5);
@@ -221,27 +246,6 @@ function isAppleOS() {
 }
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/keycodes/build-module/index.js
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BACKSPACE", function() { return BACKSPACE; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TAB", function() { return TAB; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ENTER", function() { return ENTER; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ESCAPE", function() { return ESCAPE; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SPACE", function() { return SPACE; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LEFT", function() { return LEFT; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UP", function() { return UP; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RIGHT", function() { return RIGHT; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DOWN", function() { return DOWN; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DELETE", function() { return DELETE; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "F10", function() { return F10; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ALT", function() { return ALT; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CTRL", function() { return CTRL; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "COMMAND", function() { return COMMAND; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SHIFT", function() { return SHIFT; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "modifiers", function() { return modifiers; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "rawShortcut", function() { return rawShortcut; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "displayShortcutList", function() { return displayShortcutList; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "displayShortcut", function() { return displayShortcut; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "shortcutAriaLabel", function() { return shortcutAriaLabel; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isKeyboardEvent", function() { return isKeyboardEvent; });
 
 
 
@@ -356,6 +360,11 @@ var COMMAND = 'meta';
  */
 
 var SHIFT = 'shift';
+/**
+ * Keycode for ZERO key.
+ */
+
+var ZERO = 48;
 /**
  * Object that contains functions that return the available modifier
  * depending on platform.
@@ -487,6 +496,20 @@ var shortcutAriaLabel = Object(external_this_lodash_["mapValues"])(modifiers, fu
   };
 });
 /**
+ * From a given KeyboardEvent, returns an array of active modifier constants for
+ * the event.
+ *
+ * @param {KeyboardEvent} event Keyboard event.
+ *
+ * @return {Array<ALT|CTRL|COMMAND|SHIFT>} Active modifier constants.
+ */
+
+function getEventModifiers(event) {
+  return [ALT, CTRL, COMMAND, SHIFT].filter(function (key) {
+    return event["".concat(key, "Key")];
+  });
+}
+/**
  * An object that contains functions to check if a keyboard event matches a
  * predefined shortcut combination.
  * E.g. isKeyboardEvent.primary( event, 'm' ) will return true if the event
@@ -500,10 +523,9 @@ var isKeyboardEvent = Object(external_this_lodash_["mapValues"])(modifiers, func
     var _isApple = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : isAppleOS;
 
     var mods = getModifiers(_isApple);
+    var eventMods = getEventModifiers(event);
 
-    if (!mods.every(function (key) {
-      return event["".concat(key, "Key")];
-    })) {
+    if (Object(external_this_lodash_["xor"])(mods, eventMods).length) {
       return false;
     }
 
