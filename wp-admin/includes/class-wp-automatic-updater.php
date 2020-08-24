@@ -649,7 +649,6 @@ class WP_Automatic_Updater {
 		);
 
 		$next_user_core_update = get_preferred_from_update_core();
-
 		// If the update transient is empty, use the update we just performed.
 		if ( ! $next_user_core_update ) {
 			$next_user_core_update = $core_update;

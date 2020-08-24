@@ -2,16 +2,21 @@
 // setup
 // --------------------------------------------------
 
+@import './functions.scss';
 @import './colors.scss';
 @import './variables.scss';
 
 // --------------------------------------------------
 // modules
 // --------------------------------------------------
-
+@import './placeholders.scss';
 @import './normalize.scss';
 @import './base.scss';
+@import './typography.scss';
 @import './button.scss';
+@import './container.scss';
 @import './form.scss';
 @import './row.scss';
 @import './section.scss';
+@import './link.scss';
+@import './utilities.scss';

@@ -10,8 +10,8 @@ $colors: (
   ),
   'black': (
     'name': 'black',
-    'base': #ffffff,
-    'hover': darken(#ffffff, 10%),
+    'base': #2d2d2d,
+    'hover': darken(#2d2d2d, 10%),
   ),
   'primary': (
     'name': 'Primary',
@@ -27,6 +27,11 @@ $colors: (
     'name': 'Pink',
     'base': #faeeed,
     'hover': darken(#faeeed, 10%),
+  ),
+  'gray-light': (
+    'name': 'Gray Light',
+    'base': #dfe3e5,
+    'hover': darken(#dfe3e5, 10%),
   ),
   'gray': (
     'name': 'Gray',
@@ -47,6 +52,11 @@ $colors: (
     'name': 'Gray Darkest',
     'base': #717171,
     'hover': lighten(#717171, 10%),
+  ),
+  'red': (
+    'name': 'red',
+    'base': #ff0033,
+    'hover': darken(#ff0033, 10%),
   ),
 );
 

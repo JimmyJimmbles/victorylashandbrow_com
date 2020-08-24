@@ -38,6 +38,7 @@
 // --------------------------------------------------
 
 .row {
+  position: relative;
   box-sizing: border-box;
   display: flex;
   align-items: stretch;
@@ -47,8 +48,8 @@
   flex-shrink: 1;
   flex-wrap: wrap;
   justify-content: flex-start;
-  margin-left: -$row-gutter-width / 2;
-  margin-right: -$row-gutter-width / 2;
+  margin-left: -$row-gutter-width;
+  margin-right: -$row-gutter-width;
 }
 
 // --------------------------------------------------
@@ -115,6 +116,21 @@
   flex-direction: row-reverse;
 }
 
+.row--service {
+  position: relative;
+  margin: -$row-gutter-width;
+  margin-bottom: $row-gutter-width;
+
+  .column,
+  [class*='column-xs-'],
+  [class*='column-sm-'],
+  [class*='column-md-'],
+  [class*='column-lg-'],
+  [class*='column-xl-'] {
+    padding: $row-gutter-width;
+  }
+}
+
 // --------------------------------------------------
 // row columns
 // --------------------------------------------------
@@ -125,11 +141,14 @@
 [class*='column-md-'],
 [class*='column-lg-'],
 [class*='column-xl-'] {
+  position: relative;
   box-sizing: border-box;
   flex-basis: auto;
   flex-grow: 1;
   flex-shrink: 0;
   max-width: 100%;
+  padding-left: $row-gutter-width;
+  padding-right: $row-gutter-width;
 }
 
 @include column();

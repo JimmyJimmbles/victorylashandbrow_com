@@ -1,0 +1,41 @@
+// --------------------------------------------------
+// variables
+// --------------------------------------------------
+
+$decoration-sizes: (
+  'xxs': rem(80),
+  'xs': rem(100),
+  'sm': rem(150),
+  'md': rem(200),
+  'lg': rem(250),
+  'xl': rem(300),
+);
+
+// --------------------------------------------------
+// create decorations
+// --------------------------------------------------
+
+@mixin create-decoration($sizes: $decoration-sizes, $colors: $colors) {
+  @each $size in $sizes {
+  }
+}
+
+// --------------------------------------------------
+// base
+// --------------------------------------------------
+
+.decoration {
+  position: absolute;
+  background-color: transparent;
+  border-radius: rem(200);
+  border-style: $global-border-style-primary;
+  border-width: $global-border-width;
+  display: block;
+  animation: spin 30s linear infinite reverse;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(1turn);
+  }
+}

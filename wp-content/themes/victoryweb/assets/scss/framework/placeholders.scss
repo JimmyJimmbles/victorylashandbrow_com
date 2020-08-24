@@ -1,0 +1,76 @@
+// --------------------------------------------------
+// clearfix
+// --------------------------------------------------
+
+%clearfix {
+  zoom: 1;
+  &::before,
+  &::after {
+    content: '';
+    display: table;
+  }
+  &::after {
+    clear: both;
+  }
+}
+
+// --------------------------------------------------
+// squash
+// --------------------------------------------------
+
+%squash-start {
+  > :first-child {
+    margin-top: 0 !important;
+
+    > :first-child {
+      margin-top: 0 !important;
+    }
+  }
+}
+
+%squash-end {
+  > :last-child {
+    margin-bottom: 0 !important;
+
+    > :last-child {
+      margin-bottom: 0 !important;
+    }
+  }
+}
+
+// --------------------------------------------------
+// screen reader visibility
+// --------------------------------------------------
+
+%screen-reader-only {
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute !important;
+  width: 1px;
+  word-wrap: normal !important;
+}
+
+// --------------------------------------------------
+// clear list styles
+// --------------------------------------------------
+
+%clear-list-styles {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+// --------------------------------------------------
+// flex styes
+// --------------------------------------------------
+
+%flex-row-wrap {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}

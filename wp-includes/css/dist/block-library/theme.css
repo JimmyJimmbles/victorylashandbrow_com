@@ -12,30 +12,11 @@
  * Colors
  */
 /**
- * Deprecated colors.
- * Please avoid using these.
- */
-/**
- * Fonts & basic variables.
+ * Often re-used variables
  */
 /**
  * Grid System.
  * https://make.wordpress.org/design/2019/10/31/proposal-a-consistent-spacing-system-for-wordpress/
- */
-/**
- * Dimensions.
- */
-/**
- * Shadows.
- */
-/**
- * Editor widths.
- */
-/**
- * Block UI.
- */
-/**
- * Border radii.
  */
 /**
  * Breakpoint mixins
@@ -116,9 +97,6 @@
 .wp-block-navigation ul,
 .wp-block-navigation ul li {
   list-style: none; }
-
-.wp-block-navigation-link.wp-block-navigation-link {
-  margin: 0; }
 
 .wp-block-quote {
   border-left: 4px solid #000;

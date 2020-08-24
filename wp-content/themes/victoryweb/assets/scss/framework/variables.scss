@@ -7,16 +7,20 @@ $breakpoint-sm: 576px;
 $breakpoint-md: 768px;
 $breakpoint-lg: 992px;
 $breakpoint-xl: 1200px;
+$breakpoint-xxl: 1440px;
 
 $mq-min-sm: '(min-width: #{$breakpoint-sm})';
 $mq-min-md: '(min-width: #{$breakpoint-md})';
 $mq-min-lg: '(min-width: #{$breakpoint-lg})';
 $mq-min-xl: '(min-width: #{$breakpoint-xl})';
+$mq-min-xxl: '(min-width: #{$breakpoint-xxl})';
 
 $mq-max-xs: '(max-width: #{$breakpoint-sm - 1px})';
 $mq-max-sm: '(max-width: #{$breakpoint-md - 1px})';
 $mq-max-md: '(max-width: #{$breakpoint-lg - 1px})';
-$mq-max-lg: '(max-width: #{$breakpoint-xl - 1px})';
+$mq-max-lg: '(max-width: #{$breakpoint-lg - 1px})';
+$mq-max-xl: '(max-width: #{$breakpoint-xl - 1px})';
+$mq-max-xxl: '(max-width: #{$breakpoint-xxl - 1px})';
 
 // --------------------------------------------------
 // row spacing
@@ -45,7 +49,7 @@ $global-border-secondary: $global-border-width $global-border-color-secondary
 // box shadow
 // --------------------------------------------------
 
-$global-box-shadow: 2px 2px 4px rgba(113, 113, 113, 0.2);
+$global-box-shadow: 1px 2px 5px rgba(106, 106, 106, 0.25);
 
 // --------------------------------------------------
 // transitions
@@ -108,7 +112,7 @@ $font-size-h6: $font-size-md;
 // --------------------------------------------------
 
 $line-height-base: 1.5;
-$line-height-headings: $line-height-base * 0.75;
+$line-height-headings: $line-height-base * 0.9;
 
 // --------------------------------------------------
 // type margin
@@ -122,7 +126,7 @@ $type-margin-base: $line-height-base * 1rem;
 
 $padding-xxs: rem(24);
 $padding-xs: rem(32);
-$padding-sm: rem(56);
-$padding-md: rem(80);
-$padding-lg: rem(120);
-$padding-xl: rem(136);
+$padding-sm: rem(48);
+$padding-md: rem(64);
+$padding-lg: rem(88);
+$padding-xl: rem(104);

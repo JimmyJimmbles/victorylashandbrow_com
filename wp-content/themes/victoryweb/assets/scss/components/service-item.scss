@@ -1,0 +1,120 @@
+// --------------------------------------------------
+// base
+// --------------------------------------------------
+
+.service-item {
+  cursor: pointer;
+  position: relative;
+  display: block;
+  border-radius: $global-border-radius;
+  box-shadow: $global-box-shadow;
+  height: rem(300);
+  width: 100%;
+
+  @media #{$mq-min-md} {
+    height: rem(350);
+    margin: 0 auto;
+  }
+
+  @media #{$mq-min-lg} {
+    height: rem(225);
+    max-width: rem(325);
+  }
+}
+
+// --------------------------------------------------
+// content
+// --------------------------------------------------
+
+.service-item__content {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: $global-border-radius;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  height: 100%;
+  padding: $padding-xxs;
+}
+
+// --------------------------------------------------
+// title
+// --------------------------------------------------
+
+.service-item__title {
+  background-color: color('primary');
+  border-radius: $global-border-radius;
+  color: color('white');
+  letter-spacing: 2px;
+  margin: 0;
+  padding: rem(10) rem(45);
+}
+
+// --------------------------------------------------
+// trigger
+// --------------------------------------------------
+
+.service-item__trigger {
+  background-color: #fff;
+  border-radius: rem(100);
+  box-shadow: $global-box-shadow;
+  position: absolute;
+  right: rem(-10);
+  bottom: rem(-10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: rem(50);
+  height: rem(50);
+
+  &::after {
+    content: '';
+    color: color('primary');
+    background-color: color('white');
+    border-color: color('white') color('primary') color('primary')
+      color('white');
+    border-style: solid;
+    border-width: rem(8);
+    position: absolute;
+    width: 0;
+    height: 0;
+  }
+}
+
+// --------------------------------------------------
+// details
+// --------------------------------------------------
+
+.service-details-enter {
+  opacity: 0;
+  transform: scale(0.9);
+}
+.service-details-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 300ms, transform 300ms;
+}
+.service-details-exit {
+  opacity: 1;
+}
+.service-details-exit-active {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.service-details-container {
+  position: relative;
+  margin: $row-gutter-width 0;
+  background-color: color('white');
+  height: 0;
+  visibility: hidden;
+  padding: 0 !important;
+
+  &--active {
+    min-height: 300px;
+    visibility: visible;
+  }
+}

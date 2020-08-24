@@ -251,11 +251,7 @@ function _wp_menu_output( $menu, $submenu, $submenu_as_parent = true ) {
 
 				$title = wptexturize( $sub_item[0] );
 
-				if ( ! empty( $menu_hook )
-					|| ( ( 'index.php' !== $sub_item[2] )
-						&& file_exists( WP_PLUGIN_DIR . "/$sub_file" )
-						&& ! file_exists( ABSPATH . "/wp-admin/$sub_file" ) )
-				) {
+				if ( ! empty( $menu_hook ) || ( ( 'index.php' != $sub_item[2] ) && file_exists( WP_PLUGIN_DIR . "/$sub_file" ) && ! file_exists( ABSPATH . "/wp-admin/$sub_file" ) ) ) {
 					// If admin.php is the current page or if the parent exists as a file in the plugins or admin directory.
 					if ( ( ! $admin_is_parent && file_exists( WP_PLUGIN_DIR . "/$menu_file" ) && ! is_dir( WP_PLUGIN_DIR . "/{$item[2]}" ) ) || file_exists( $menu_file ) ) {
 						$sub_item_url = add_query_arg( array( 'page' => $sub_item[2] ), $item[2] );

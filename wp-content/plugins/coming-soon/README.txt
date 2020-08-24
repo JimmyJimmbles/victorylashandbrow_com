@@ -3,7 +3,7 @@ Contributors: seedprod, smub
 Donate link: http://www.seedprod.com
 Tags: maintenance mode, coming soon page, coming soon, under construction, landing page, launch, maintenance, construction, offline, unavailable, under construction page, launch page
 Requires at least: 3.5.1
-Tested up to: 5.5
+Tested up to: 5.4
 Stable tag: 5.1.3
 Text Domain: coming-soon
 License: GPLv2 or later

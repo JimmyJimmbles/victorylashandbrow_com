@@ -123,7 +123,7 @@ if ( isset( $_GET['action'] ) ) {
 			</div>
 		<?php
 		require_once ABSPATH . 'wp-admin/admin-footer.php';
-		exit;
+		exit();
 	} elseif ( array_key_exists( $_GET['action'], $manage_actions ) ) {
 		$action = $_GET['action'];
 		check_admin_referer( $action . '_' . $id );
@@ -210,7 +210,7 @@ if ( isset( $_GET['action'] ) ) {
 								</div>
 								<?php
 								require_once ABSPATH . 'wp-admin/admin-footer.php';
-								exit;
+								exit();
 							break;
 
 							case 'spam':

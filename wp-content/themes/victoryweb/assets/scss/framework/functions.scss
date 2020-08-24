@@ -1,0 +1,30 @@
+// --------------------------------------------------
+// rem
+// --------------------------------------------------
+
+// Calculate the rem value for a given pixel value
+// based on the default font-size
+@function rem($size, $base-font-size: 18) {
+  @if (unitless($size)) {
+    $size: $size * 1px;
+  }
+
+  @if (unitless($base-font-size)) {
+    $base-font-size: $base-font-size * 1px;
+  }
+
+  @return $size / $base-font-size * 1rem;
+}
+
+// --------------------------------------------------
+// map-deep-get
+// --------------------------------------------------
+
+// Fetch nested keys
+@function map-deep-get($map, $keys...) {
+  @each $key in $keys {
+    $map: map-get($map, $key);
+  }
+
+  @return $map;
+}

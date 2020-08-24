@@ -664,7 +664,8 @@ class WP {
 			return;
 		}
 
-		$set_404 = true;
+		// Never 404 for the admin, robots, favicon, or if we found posts.
+		if ( is_admin() || is_robots() || is_favicon() || $wp_query->posts ) {
 
 		// Never 404 for the admin, robots, or favicon.
 		if ( is_admin() || is_robots() || is_favicon() ) {

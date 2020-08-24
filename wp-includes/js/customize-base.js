@@ -962,7 +962,7 @@ window.wp = window.wp || {};
 	 * @alias wp.customize.utils.parseQueryString
 	 *
 	 * @param {string} queryString Query string.
-	 * @return {Object} Parsed query string.
+	 * @return {object} Parsed query string.
 	 */
 	api.utils.parseQueryString = function parseQueryString( queryString ) {
 		var queryParams = {};

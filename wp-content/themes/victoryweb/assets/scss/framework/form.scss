@@ -16,6 +16,51 @@ $form-input-transition: $global-transition-fast;
 
 $form-input-focus-border-color: color('gray-dark');
 $form-input-focus-color: $form-input-color;
+$form-input-placeholder-color: rgba($form-input-color, 0.75);
+$form-input-disabled-background-color: color('gray-light');
+
+// --------------------------------------------------
+// form
+// --------------------------------------------------
+
+fieldset {
+  border: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+legend {
+  display: block;
+  font-weight: $font-weight-bold;
+  margin-top: $type-margin-base * 1.5;
+  margin-bottom: $type-margin-base;
+}
+
+.form__field {
+  margin-bottom: $type-margin-base;
+}
+
+.form__label {
+  display: inline-block;
+  margin-bottom: rem(15);
+  touch-action: manipulation;
+  font-weight: $font-weight-bold;
+}
+
+// --------------------------------------------------
+// required
+// --------------------------------------------------
+
+.form__field--required {
+  .form__label {
+    &::after {
+      content: '*';
+      color: color('red');
+    }
+  }
+}
 
 // --------------------------------------------------
 // input
@@ -41,5 +86,20 @@ $form-input-focus-color: $form-input-color;
     border-color: $form-input-focus-border-color;
     color: $form-input-focus-color;
     outline: 0;
+  }
+
+  &::placeholder {
+    color: $form-input-placeholder-color;
+    opacity: 1;
+  }
+
+  &:disabled,
+  &[readonly] {
+    background-color: $form-input-disabled-background-color;
+    opacity: 1;
+  }
+
+  &::-ms-expand {
+    display: none;
   }
 }

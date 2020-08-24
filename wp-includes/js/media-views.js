@@ -145,7 +145,7 @@ media.events = _.extend( {}, Backbone.Events );
  * Makes it easier to bind events using transitions.
  *
  * @param {string} selector
- * @param {number} sensitivity
+ * @param {Number} sensitivity
  * @return {Promise}
  */
 media.transition = function( selector, sensitivity ) {
@@ -1091,7 +1091,7 @@ Library = wp.media.controller.State.extend(/** @lends wp.media.controller.Librar
 	 * @since 4.4.1
 	 *
 	 * @param {wp.media.model.Attachment} attachment
-	 * @return {boolean}
+	 * @return {Boolean}
 	 */
 	isImageAttachment: function( attachment ) {
 		// If uploading, we know the filename but not the mime type.
@@ -1108,7 +1108,7 @@ Library = wp.media.controller.State.extend(/** @lends wp.media.controller.Librar
 	 * @since 3.6.0
 	 *
 	 * @param {wp.media.model.Attachment} attachment
-	 * @return {boolean}
+	 * @return {Boolean}
 	 */
 	canEmbed: function( attachment ) {
 		// If uploading, we know the filename but not the mime type.
@@ -4677,7 +4677,7 @@ var FocusManager = wp.media.View.extend(/** @lends wp.media.view.FocusManager.pr
 	 *
 	 * @since 5.3.0
 	 *
-	 * @return {Object} A jQuery collection of tabbable elements.
+	 * @return {object} A jQuery collection of tabbable elements.
 	 */
 	getTabbables: function() {
 		// Skip the file input added by Plupload.
@@ -5171,7 +5171,7 @@ EditorUploader = View.extend(/** @lends wp.media.view.EditorUploader.prototype *
 	/**
 	 * Check browser support for drag'n'drop.
 	 *
-	 * @return {boolean}
+	 * @return {Boolean}
 	 */
 	browserSupport: function() {
 		var supports = false, div = document.createElement('div');
@@ -6793,7 +6793,7 @@ Attachment = View.extend(/** @lends wp.media.view.Attachment.prototype */{
 		this[ this.selected() ? 'select' : 'deselect' ]();
 	},
 	/**
-	 * @return {unresolved|boolean}
+	 * @return {unresolved|Boolean}
 	 */
 	selected: function() {
 		var selection = this.options.selection;

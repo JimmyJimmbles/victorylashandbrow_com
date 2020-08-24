@@ -163,7 +163,7 @@ class Theme_Upgrader extends WP_Upgrader {
 		// Override them.
 		$this->skin->api = $api;
 
-		$this->strings['process_success_specific'] = $this->strings['parent_theme_install_success'];
+		$this->strings['process_success_specific'] = $this->strings['parent_theme_install_success']; //, $api->name, $api->version );
 
 		$this->skin->feedback( 'parent_theme_prepare_install', $api->name, $api->version );
 
@@ -249,7 +249,7 @@ class Theme_Upgrader extends WP_Upgrader {
 			array(
 				'package'           => $package,
 				'destination'       => get_theme_root(),
-				'clear_destination' => $parsed_args['overwrite_package'],
+				'clear_destination' => false, // Do not overwrite files.
 				'clear_working'     => true,
 				'hook_extra'        => array(
 					'type'   => 'theme',
@@ -675,7 +675,7 @@ class Theme_Upgrader extends WP_Upgrader {
 		}
 
 		// Ensure stylesheet name hasn't changed after the upgrade:
-		if ( get_stylesheet() === $theme && $theme !== $this->result['destination_name'] ) {
+		if ( get_stylesheet() === $theme && $theme != $this->result['destination_name'] ) {
 			wp_clean_themes_cache();
 			$stylesheet = $this->result['destination_name'];
 			switch_theme( $stylesheet );

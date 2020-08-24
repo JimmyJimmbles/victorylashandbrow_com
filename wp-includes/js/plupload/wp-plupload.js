@@ -535,7 +535,7 @@ window.wp = window.wp || {};
 
 				/*
 				 * If the browser node is not attached to the DOM,
-				 * use a temporary container to house it, as the browser button shims
+				 * use a temporary container to house it, as the browser button shims 
 				 * require the button to exist in the DOM at all times.
 				 */
 				if ( ! attached ) {

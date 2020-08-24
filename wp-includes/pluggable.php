@@ -211,15 +211,10 @@ if ( ! function_exists( 'wp_mail' ) ) :
 		global $phpmailer;
 
 		// (Re)create it, if it's gone missing.
-		if ( ! ( $phpmailer instanceof PHPMailer\PHPMailer\PHPMailer ) ) {
-			require_once ABSPATH . WPINC . '/PHPMailer/PHPMailer.php';
-			require_once ABSPATH . WPINC . '/PHPMailer/SMTP.php';
-			require_once ABSPATH . WPINC . '/PHPMailer/Exception.php';
-			$phpmailer = new PHPMailer\PHPMailer\PHPMailer( true );
-
-			$phpmailer::$validator = static function ( $email ) {
-				return (bool) is_email( $email );
-			};
+		if ( ! ( $phpmailer instanceof PHPMailer ) ) {
+			require_once ABSPATH . WPINC . '/class-phpmailer.php';
+			require_once ABSPATH . WPINC . '/class-smtp.php';
+			$phpmailer = new PHPMailer( true );
 		}
 
 		// Headers.
@@ -438,7 +433,7 @@ if ( ! function_exists( 'wp_mail' ) ) :
 		$phpmailer->ContentType = $content_type;
 
 		// Set whether it's plaintext, depending on $content_type.
-		if ( 'text/html' === $content_type ) {
+		if ( 'text/html' == $content_type ) {
 			$phpmailer->isHTML( true );
 		}
 
@@ -556,7 +551,7 @@ if ( ! function_exists( 'wp_authenticate' ) ) :
 
 		$ignore_codes = array( 'empty_username', 'empty_password' );
 
-		if ( is_wp_error( $user ) && ! in_array( $user->get_error_code(), $ignore_codes, true ) ) {
+		if ( is_wp_error( $user ) && ! in_array( $user->get_error_code(), $ignore_codes ) ) {
 			$error = $user;
 
 			/**
@@ -643,7 +638,7 @@ if ( ! function_exists( 'wp_validate_auth_cookie' ) ) :
 		$expiration = $cookie_elements['expiration'];
 
 		// Allow a grace period for POST and Ajax requests.
-		if ( wp_doing_ajax() || 'POST' === $_SERVER['REQUEST_METHOD'] ) {
+		if ( wp_doing_ajax() || 'POST' == $_SERVER['REQUEST_METHOD'] ) {
 			$expired += HOUR_IN_SECONDS;
 		}
 
@@ -1276,7 +1271,7 @@ if ( ! function_exists( 'wp_redirect' ) ) :
 
 		$location = wp_sanitize_redirect( $location );
 
-		if ( ! $is_IIS && 'cgi-fcgi' !== PHP_SAPI ) {
+		if ( ! $is_IIS && PHP_SAPI != 'cgi-fcgi' ) {
 			status_header( $status ); // This causes problems on IIS and some FastCGI setups.
 		}
 
@@ -1424,7 +1419,7 @@ if ( ! function_exists( 'wp_validate_redirect' ) ) :
 	function wp_validate_redirect( $location, $default = '' ) {
 		$location = wp_sanitize_redirect( trim( $location, " \t\n\r\0\x08\x0B" ) );
 		// Browsers will assume 'http' is your protocol, and will obey a redirect to a URL starting with '//'.
-		if ( '//' === substr( $location, 0, 2 ) ) {
+		if ( substr( $location, 0, 2 ) == '//' ) {
 			$location = 'http:' . $location;
 		}
 
@@ -1441,7 +1436,7 @@ if ( ! function_exists( 'wp_validate_redirect' ) ) :
 		}
 
 		// Allow only 'http' and 'https' schemes. No 'data:', etc.
-		if ( isset( $lp['scheme'] ) && ! ( 'http' === $lp['scheme'] || 'https' === $lp['scheme'] ) ) {
+		if ( isset( $lp['scheme'] ) && ! ( 'http' == $lp['scheme'] || 'https' == $lp['scheme'] ) ) {
 			return $default;
 		}
 
@@ -1479,7 +1474,7 @@ if ( ! function_exists( 'wp_validate_redirect' ) ) :
 		 */
 		$allowed_hosts = (array) apply_filters( 'allowed_redirect_hosts', array( $wpp['host'] ), isset( $lp['host'] ) ? $lp['host'] : '' );
 
-		if ( isset( $lp['host'] ) && ( ! in_array( $lp['host'], $allowed_hosts, true ) && strtolower( $wpp['host'] ) !== $lp['host'] ) ) {
+		if ( isset( $lp['host'] ) && ( ! in_array( $lp['host'], $allowed_hosts ) && strtolower( $wpp['host'] ) !== $lp['host'] ) ) {
 			$location = $default;
 		}
 

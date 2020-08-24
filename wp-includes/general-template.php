@@ -1378,7 +1378,7 @@ function wp_title( $sep = '&raquo;', $display = true, $seplocation = '' ) {
 	$title_array = apply_filters( 'wp_title_parts', explode( $t_sep, $title ) );
 
 	// Determines position of the separator and direction of the breadcrumb.
-	if ( 'right' === $seplocation ) { // Separator on right, so reverse the order.
+	if ( 'right' == $seplocation ) { // Separator on right, so reverse the order.
 		$title_array = array_reverse( $title_array );
 		$title       = implode( " $sep ", $title_array ) . $prefix;
 	} else {
@@ -2176,8 +2176,8 @@ function calendar_week_mod( $num ) {
  * @global WP_Locale $wp_locale WordPress date and time locale object.
  * @global array     $posts
  *
- * @param bool $initial Optional. Whether to use initial calendar names. Default true.
- * @param bool $echo    Optional. Whether to display the calendar output. Default true.
+ * @param bool $initial Optional, default is true. Use initial calendar names.
+ * @param bool $echo    Optional, default is true. Set to false for return.
  * @return void|string Void if `$echo` argument is true, calendar HTML if `$echo` is false.
  */
 function get_calendar( $initial = true, $echo = true ) {
@@ -2330,7 +2330,7 @@ function get_calendar( $initial = true, $echo = true ) {
 			$calendar_output .= '<td>';
 		}
 
-		if ( in_array( $day, $daywithpost, true ) ) {
+		if ( in_array( $day, $daywithpost ) ) {
 			// Any posts today?
 			$date_format = gmdate( _x( 'F j, Y', 'daily archives date format' ), strtotime( "{$thisyear}-{$thismonth}-{$day}" ) );
 			/* translators: Post calendar label. %s: Date. */
@@ -2356,7 +2356,6 @@ function get_calendar( $initial = true, $echo = true ) {
 	if ( 0 != $pad && 7 != $pad ) {
 		$calendar_output .= "\n\t\t" . '<td class="pad" colspan="' . esc_attr( $pad ) . '">&nbsp;</td>';
 	}
-
 	$calendar_output .= "\n\t</tr>\n\t</tbody>";
 
 	$calendar_output .= "\n\t</table>";
@@ -2511,8 +2510,8 @@ function the_date( $format = '', $before = '', $after = '', $echo = true ) {
  *
  * @since 3.0.0
  *
- * @param string      $format Optional. PHP date format defaults to the date_format option if not specified.
- * @param int|WP_Post $post   Optional. Post ID or WP_Post object. Default current post.
+ * @param  string      $format Optional. PHP date format defaults to the date_format option if not specified.
+ * @param  int|WP_Post $post   Optional. Post ID or WP_Post object. Default current post.
  * @return string|false Date the current post was written. False on failure.
  */
 function get_the_date( $format = '', $post = null ) {
@@ -2522,7 +2521,7 @@ function get_the_date( $format = '', $post = null ) {
 		return false;
 	}
 
-	if ( '' === $format ) {
+	if ( '' == $format ) {
 		$the_date = get_post_time( get_option( 'date_format' ), false, $post, true );
 	} else {
 		$the_date = get_post_time( $format, false, $post, true );
@@ -2651,7 +2650,7 @@ function get_the_time( $format = '', $post = null ) {
 		return false;
 	}
 
-	if ( '' === $format ) {
+	if ( '' == $format ) {
 		$the_time = get_post_time( get_option( 'time_format' ), false, $post, true );
 	} else {
 		$the_time = get_post_time( $format, false, $post, true );
@@ -3462,7 +3461,7 @@ function user_can_richedit() {
 	if ( ! isset( $wp_rich_edit ) ) {
 		$wp_rich_edit = false;
 
-		if ( 'true' === get_user_option( 'rich_editing' ) || ! is_user_logged_in() ) { // Default to 'true' for logged out users.
+		if ( get_user_option( 'rich_editing' ) == 'true' || ! is_user_logged_in() ) { // Default to 'true' for logged out users.
 			if ( $is_safari ) {
 				$wp_rich_edit = ! wp_is_mobile() || ( preg_match( '!AppleWebKit/(\d+)!', $_SERVER['HTTP_USER_AGENT'], $match ) && intval( $match[1] ) >= 534 );
 			} elseif ( $is_IE ) {
@@ -4428,6 +4427,11 @@ function register_admin_color_schemes() {
 			'current' => '#fff',
 		)
 	);
+
+	// Other color schemes are not available when running out of src.
+	if ( false !== strpos( get_bloginfo( 'version' ), '-src' ) ) {
+		return;
+	}
 
 	wp_admin_css_color(
 		'light',

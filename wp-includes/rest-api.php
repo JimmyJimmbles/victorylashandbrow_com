@@ -538,10 +538,10 @@ function rest_ensure_request( $request ) {
  *
  * @since 4.4.0
  *
- * @param WP_REST_Response|WP_Error|WP_HTTP_Response|mixed $response Response to check.
- * @return WP_REST_Response|WP_Error If response generated an error, WP_Error, if response
- *                                   is already an instance, WP_REST_Response, otherwise
- *                                   returns a new WP_REST_Response instance.
+ * @param WP_HTTP_Response|WP_Error|mixed $response Response to check.
+ * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
+ *                                is already an instance, WP_HTTP_Response, otherwise
+ *                                returns a new WP_REST_Response instance.
  */
 function rest_ensure_response( $response ) {
 	if ( is_wp_error( $response ) ) {
@@ -1171,9 +1171,9 @@ function rest_authorization_required_code() {
  *
  * @since 4.7.0
  *
- * @param mixed           $value
- * @param WP_REST_Request $request
- * @param string          $param
+ * @param  mixed            $value
+ * @param  WP_REST_Request  $request
+ * @param  string           $param
  * @return true|WP_Error
  */
 function rest_validate_request_arg( $value, $request, $param ) {
@@ -1320,10 +1320,9 @@ function rest_is_integer( $maybe_integer ) {
 /**
  * Determines if a given value is array-like.
  *
- * @since 5.5.0
- *
- * @param mixed $maybe_array The value being evaluated.
- * @return bool
+ * @param mixed $id_or_email The Gravatar to retrieve a URL for. Accepts a user_id, gravatar md5 hash,
+ *                           user email, WP_User object, WP_Post object, or WP_Comment object.
+ * @return array Avatar URLs keyed by size. Each value can be a URL string or boolean false.
  */
 function rest_is_array( $maybe_array ) {
 	if ( is_scalar( $maybe_array ) ) {
@@ -1359,183 +1358,21 @@ function rest_sanitize_array( $maybe_array ) {
  *
  * @since 5.5.0
  *
- * @param mixed $maybe_object The value being evaluated.
- * @return bool True if object like, otherwise false.
+ * @return int[] List of pixel sizes for avatars. Default `[ 24, 48, 96 ]`.
  */
-function rest_is_object( $maybe_object ) {
-	if ( '' === $maybe_object ) {
-		return true;
-	}
-
-	if ( $maybe_object instanceof stdClass ) {
-		return true;
-	}
-
-	if ( $maybe_object instanceof JsonSerializable ) {
-		$maybe_object = $maybe_object->jsonSerialize();
-	}
-
-	return is_array( $maybe_object );
-}
-
-/**
- * Converts an object-like value to an object.
- *
- * @since 5.5.0
- *
- * @param mixed $maybe_object The value being evaluated.
- * @return array Returns the object extracted from the value.
- */
-function rest_sanitize_object( $maybe_object ) {
-	if ( '' === $maybe_object ) {
-		return array();
-	}
-
-	if ( $maybe_object instanceof stdClass ) {
-		return (array) $maybe_object;
-	}
-
-	if ( $maybe_object instanceof JsonSerializable ) {
-		$maybe_object = $maybe_object->jsonSerialize();
-	}
-
-	if ( ! is_array( $maybe_object ) ) {
-		return array();
-	}
-
-	return $maybe_object;
-}
-
-/**
- * Gets the best type for a value.
- *
- * @since 5.5.0
- *
- * @param mixed $value The value to check.
- * @param array $types The list of possible types.
- * @return string The best matching type, an empty string if no types match.
- */
-function rest_get_best_type_for_value( $value, $types ) {
-	static $checks = array(
-		'array'   => 'rest_is_array',
-		'object'  => 'rest_is_object',
-		'integer' => 'rest_is_integer',
-		'number'  => 'is_numeric',
-		'boolean' => 'rest_is_boolean',
-		'string'  => 'is_string',
-		'null'    => 'is_null',
-	);
-
-	// Both arrays and objects allow empty strings to be converted to their types.
-	// But the best answer for this type is a string.
-	if ( '' === $value && in_array( 'string', $types, true ) ) {
-		return 'string';
-	}
-
-	foreach ( $types as $type ) {
-		if ( isset( $checks[ $type ] ) && $checks[ $type ]( $value ) ) {
-			return $type;
-		}
-	}
-
-	return '';
-}
-
-/**
- * Handles getting the best type for a multi-type schema.
- *
- * This is a wrapper for {@see rest_get_best_type_for_value()} that handles
- * backward compatibility for schemas that use invalid types.
- *
- * @since 5.5.0
- *
- * @param mixed  $value The value to check.
- * @param array  $args  The schema array to use.
- * @param string $param The parameter name, used in error messages.
- * @return string
- */
-function rest_handle_multi_type_schema( $value, $args, $param = '' ) {
-	$allowed_types = array( 'array', 'object', 'string', 'number', 'integer', 'boolean', 'null' );
-	$invalid_types = array_diff( $args['type'], $allowed_types );
-
-	if ( $invalid_types ) {
-		_doing_it_wrong(
-			__FUNCTION__,
-			/* translators: 1. Parameter. 2. List of allowed types. */
-			wp_sprintf( __( 'The "type" schema keyword for %1$s can only contain the built-in types: %2$l.' ), $param, $allowed_types ),
-			'5.5.0'
-		);
-	}
-
-	$best_type = rest_get_best_type_for_value( $value, $args['type'] );
-
-	if ( ! $best_type ) {
-		if ( ! $invalid_types ) {
-			return '';
-		}
-
-		// Backward compatibility for previous behavior which allowed the value if there was an invalid type used.
-		$best_type = reset( $invalid_types );
-	}
-
-	return $best_type;
-}
-
-/**
- * Checks if an array is made up of unique items.
- *
- * @since 5.5.0
- *
- * @param array $array The array to check.
- * @return bool True if the array contains unique items, false otherwise.
- */
-function rest_validate_array_contains_unique_items( $array ) {
-	$seen = array();
-
-	foreach ( $array as $item ) {
-		$stabilized = rest_stabilize_value( $item );
-		$key        = serialize( $stabilized );
-
-		if ( ! isset( $seen[ $key ] ) ) {
-			$seen[ $key ] = true;
-
-			continue;
-		}
-
-		return false;
-	}
-
-	return true;
-}
-
-/**
- * Stabilizes a value following JSON Schema semantics.
- *
- * For lists, order is preserved. For objects, properties are reordered alphabetically.
- *
- * @since 5.5.0
- *
- * @param mixed $value The value to stabilize. Must already be sanitized. Objects should have been converted to arrays.
- * @return mixed The stabilized value.
- */
-function rest_stabilize_value( $value ) {
-	if ( is_scalar( $value ) || is_null( $value ) ) {
-		return $value;
-	}
-
-	if ( is_object( $value ) ) {
-		_doing_it_wrong( __FUNCTION__, __( 'Cannot stabilize objects. Convert the object to an array first.' ), '5.5.0' );
-
-		return $value;
-	}
-
-	ksort( $value );
-
-	foreach ( $value as $k => $v ) {
-		$value[ $k ] = rest_stabilize_value( $v );
-	}
-
-	return $value;
+function rest_get_avatar_sizes() {
+	/**
+	 * Filters the REST avatar sizes.
+	 *
+	 * Use this filter to adjust the array of sizes returned by the
+	 * `rest_get_avatar_sizes` function.
+	 *
+	 * @since 4.4.0
+	 *
+	 * @param int[] $sizes An array of int values that are the pixel sizes for avatars.
+	 *                     Default `[ 24, 48, 96 ]`.
+	 */
+	return apply_filters( 'rest_avatar_sizes', array( 24, 48, 96 ) );
 }
 
 /**
@@ -1572,43 +1409,34 @@ function rest_validate_value_from_schema( $value, $args, $param = '' ) {
 			return new WP_Error( 'rest_invalid_param', sprintf( __( '%1$s is not of type %2$s.' ), $param, implode( ',', $args['type'] ) ) );
 		}
 
-		$args['type'] = $best_type;
-	}
-
-	if ( ! in_array( $args['type'], $allowed_types, true ) ) {
-		_doing_it_wrong(
-			__FUNCTION__,
-			/* translators: 1. Parameter 2. The list of allowed types. */
-			wp_sprintf( __( 'The "type" schema keyword for %1$s can only be one of the built-in types: %2$l.' ), $param, $allowed_types ),
-			'5.5.0'
-		);
+		/* translators: 1: Parameter, 2: List of types. */
+		return new WP_Error( 'rest_invalid_param', sprintf( __( '%1$s is not of type %2$s.' ), $param, implode( ',', $args['type'] ) ) );
 	}
 
 	if ( 'array' === $args['type'] ) {
-		if ( ! rest_is_array( $value ) ) {
+		if ( ! is_null( $value ) ) {
+			$value = wp_parse_list( $value );
+		}
+
+		if ( ! wp_is_numeric_array( $value ) ) {
 			/* translators: 1: Parameter, 2: Type name. */
 			return new WP_Error( 'rest_invalid_param', sprintf( __( '%1$s is not of type %2$s.' ), $param, 'array' ) );
 		}
 
-		$value = rest_sanitize_array( $value );
-
-		if ( isset( $args['items'] ) ) {
-			foreach ( $value as $index => $v ) {
-				$is_valid = rest_validate_value_from_schema( $v, $args['items'], $param . '[' . $index . ']' );
-				if ( is_wp_error( $is_valid ) ) {
-					return $is_valid;
-				}
+		foreach ( $value as $index => $v ) {
+			$is_valid = rest_validate_value_from_schema( $v, $args['items'], $param . '[' . $index . ']' );
+			if ( is_wp_error( $is_valid ) ) {
+				return $is_valid;
 			}
 		}
 
-		if ( isset( $args['minItems'] ) && count( $value ) < $args['minItems'] ) {
-			/* translators: 1: Parameter, 2: Number. */
-			return new WP_Error( 'rest_invalid_param', sprintf( __( '%1$s must contain at least %2$s items.' ), $param, number_format_i18n( $args['minItems'] ) ) );
+	if ( 'object' === $args['type'] ) {
+		if ( '' === $value ) {
+			$value = array();
 		}
 
-		if ( isset( $args['maxItems'] ) && count( $value ) > $args['maxItems'] ) {
-			/* translators: 1: Parameter, 2: Number. */
-			return new WP_Error( 'rest_invalid_param', sprintf( __( '%1$s must contain at most %2$s items.' ), $param, number_format_i18n( $args['maxItems'] ) ) );
+		if ( $value instanceof stdClass ) {
+			$value = (array) $value;
 		}
 
 		if ( ! empty( $args['uniqueItems'] ) && ! rest_validate_array_contains_unique_items( $value ) ) {
@@ -1827,8 +1655,11 @@ function rest_validate_value_from_schema( $value, $args, $param = '' ) {
  * @param string $param The parameter name, used in error messages.
  * @return mixed|WP_Error The sanitized value or a WP_Error instance if the value cannot be safely sanitized.
  */
-function rest_sanitize_value_from_schema( $value, $args, $param = '' ) {
-	$allowed_types = array( 'array', 'object', 'string', 'number', 'integer', 'boolean', 'null' );
+function rest_sanitize_value_from_schema( $value, $args ) {
+	if ( is_array( $args['type'] ) ) {
+		// Determine which type the value was validated against,
+		// and use that type when performing sanitization.
+		$validated_type = '';
 
 	if ( ! isset( $args['type'] ) ) {
 		/* translators: 1. Parameter */
@@ -1863,11 +1694,13 @@ function rest_sanitize_value_from_schema( $value, $args, $param = '' ) {
 			}
 		}
 
-		if ( ! empty( $args['uniqueItems'] ) && ! rest_validate_array_contains_unique_items( $value ) ) {
-			/* translators: 1: Parameter */
-			return new WP_Error( 'rest_invalid_param', sprintf( __( '%1$s has duplicate items.' ), $param ) );
+		$value = wp_parse_list( $value );
+		foreach ( $value as $index => $v ) {
+			$value[ $index ] = rest_sanitize_value_from_schema( $v, $args['items'] );
 		}
 
+		// Normalize to numeric array so nothing unexpected is in the keys.
+		$value = array_values( $value );
 		return $value;
 	}
 
@@ -2027,233 +1860,4 @@ function rest_parse_embed_param( $embed ) {
 	}
 
 	return $rels;
-}
-
-/**
- * Filters the response to remove any fields not available in the given context.
- *
- * @since 5.5.0
- *
- * @param array|object $data    The response data to modify.
- * @param array        $schema  The schema for the endpoint used to filter the response.
- * @param string       $context The requested context.
- * @return array|object The filtered response data.
- */
-function rest_filter_response_by_context( $data, $schema, $context ) {
-	if ( ! is_array( $data ) && ! is_object( $data ) ) {
-		return $data;
-	}
-
-	if ( isset( $schema['type'] ) ) {
-		$type = $schema['type'];
-	} elseif ( isset( $schema['properties'] ) ) {
-		$type = 'object'; // Back compat if a developer accidentally omitted the type.
-	} else {
-		return $data;
-	}
-
-	$is_array_type  = 'array' === $type || ( is_array( $type ) && in_array( 'array', $type, true ) );
-	$is_object_type = 'object' === $type || ( is_array( $type ) && in_array( 'object', $type, true ) );
-
-	if ( $is_array_type && $is_object_type ) {
-		if ( rest_is_array( $data ) ) {
-			$is_object_type = false;
-		} else {
-			$is_array_type = false;
-		}
-	}
-
-	$has_additional_properties = $is_object_type && isset( $schema['additionalProperties'] ) && is_array( $schema['additionalProperties'] );
-
-	foreach ( $data as $key => $value ) {
-		$check = array();
-
-		if ( $is_array_type ) {
-			$check = isset( $schema['items'] ) ? $schema['items'] : array();
-		} elseif ( $is_object_type ) {
-			if ( isset( $schema['properties'][ $key ] ) ) {
-				$check = $schema['properties'][ $key ];
-			} elseif ( $has_additional_properties ) {
-				$check = $schema['additionalProperties'];
-			}
-		}
-
-		if ( ! isset( $check['context'] ) ) {
-			continue;
-		}
-
-		if ( ! in_array( $context, $check['context'], true ) ) {
-			if ( $is_array_type ) {
-				// All array items share schema, so there's no need to check each one.
-				$data = array();
-				break;
-			}
-
-			if ( is_object( $data ) ) {
-				unset( $data->$key );
-			} else {
-				unset( $data[ $key ] );
-			}
-		} elseif ( is_array( $value ) || is_object( $value ) ) {
-			$new_value = rest_filter_response_by_context( $value, $check, $context );
-
-			if ( is_object( $data ) ) {
-				$data->$key = $new_value;
-			} else {
-				$data[ $key ] = $new_value;
-			}
-		}
-	}
-
-	return $data;
-}
-
-/**
- * Sets the "additionalProperties" to false by default for all object definitions in the schema.
- *
- * @since 5.5.0
- *
- * @param array $schema The schema to modify.
- * @return array The modified schema.
- */
-function rest_default_additional_properties_to_false( $schema ) {
-	$type = (array) $schema['type'];
-
-	if ( in_array( 'object', $type, true ) ) {
-		if ( isset( $schema['properties'] ) ) {
-			foreach ( $schema['properties'] as $key => $child_schema ) {
-				$schema['properties'][ $key ] = rest_default_additional_properties_to_false( $child_schema );
-			}
-		}
-
-		if ( ! isset( $schema['additionalProperties'] ) ) {
-			$schema['additionalProperties'] = false;
-		}
-	}
-
-	if ( in_array( 'array', $type, true ) ) {
-		if ( isset( $schema['items'] ) ) {
-			$schema['items'] = rest_default_additional_properties_to_false( $schema['items'] );
-		}
-	}
-
-	return $schema;
-}
-
-/**
- * Gets the REST API route for a post.
- *
- * @since 5.5.0
- *
- * @param int|WP_Post $post Post ID or post object.
- * @return string The route path with a leading slash for the given post, or an empty string if there is not a route.
- */
-function rest_get_route_for_post( $post ) {
-	$post = get_post( $post );
-
-	if ( ! $post instanceof WP_Post ) {
-		return '';
-	}
-
-	$post_type = get_post_type_object( $post->post_type );
-	if ( ! $post_type ) {
-		return '';
-	}
-
-	$controller = $post_type->get_rest_controller();
-	if ( ! $controller ) {
-		return '';
-	}
-
-	$route = '';
-
-	// The only two controllers that we can detect are the Attachments and Posts controllers.
-	if ( in_array( get_class( $controller ), array( 'WP_REST_Attachments_Controller', 'WP_REST_Posts_Controller' ), true ) ) {
-		$namespace = 'wp/v2';
-		$rest_base = ! empty( $post_type->rest_base ) ? $post_type->rest_base : $post_type->name;
-		$route     = sprintf( '/%s/%s/%d', $namespace, $rest_base, $post->ID );
-	}
-
-	/**
-	 * Filters the REST API route for a post.
-	 *
-	 * @since 5.5.0
-	 *
-	 * @param string  $route The route path.
-	 * @param WP_Post $post  The post object.
-	 */
-	return apply_filters( 'rest_route_for_post', $route, $post );
-}
-
-/**
- * Gets the REST API route for a term.
- *
- * @since 5.5.0
- *
- * @param int|WP_Term $term Term ID or term object.
- * @return string The route path with a leading slash for the given term, or an empty string if there is not a route.
- */
-function rest_get_route_for_term( $term ) {
-	$term = get_term( $term );
-
-	if ( ! $term instanceof WP_Term ) {
-		return '';
-	}
-
-	$taxonomy = get_taxonomy( $term->taxonomy );
-	if ( ! $taxonomy ) {
-		return '';
-	}
-
-	$controller = $taxonomy->get_rest_controller();
-	if ( ! $controller ) {
-		return '';
-	}
-
-	$route = '';
-
-	// The only controller that works is the Terms controller.
-	if ( 'WP_REST_Terms_Controller' === get_class( $controller ) ) {
-		$namespace = 'wp/v2';
-		$rest_base = ! empty( $taxonomy->rest_base ) ? $taxonomy->rest_base : $taxonomy->name;
-		$route     = sprintf( '/%s/%s/%d', $namespace, $rest_base, $term->term_id );
-	}
-
-	/**
-	 * Filters the REST API route for a term.
-	 *
-	 * @since 5.5.0
-	 *
-	 * @param string  $route The route path.
-	 * @param WP_Term $term  The term object.
-	 */
-	return apply_filters( 'rest_route_for_term', $route, $term );
-}
-
-/**
- * Gets the REST route for the currently queried object.
- *
- * @since 5.5.0
- *
- * @return string The REST route of the resource, or an empty string if no resource identified.
- */
-function rest_get_queried_resource_route() {
-	if ( is_singular() ) {
-		$route = rest_get_route_for_post( get_queried_object() );
-	} elseif ( is_category() || is_tag() || is_tax() ) {
-		$route = rest_get_route_for_term( get_queried_object() );
-	} elseif ( is_author() ) {
-		$route = '/wp/v2/users/' . get_queried_object_id();
-	} else {
-		$route = '';
-	}
-
-	/**
-	 * Filters the REST route for the currently queried object.
-	 *
-	 * @since 5.5.0
-	 *
-	 * @param string $link The route with a leading slash, or an empty string.
-	 */
-	return apply_filters( 'rest_queried_resource_route', $route );
 }

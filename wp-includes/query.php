@@ -174,7 +174,7 @@ function is_archive() {
  *
  * @param string|string[] $post_types Optional. Post type or array of posts types
  *                                    to check against. Default empty.
- * @return bool Whether the query is for an existing post type archive page.
+ * @return bool
  */
 function is_post_type_archive( $post_types = '' ) {
 	global $wp_query;
@@ -200,7 +200,7 @@ function is_post_type_archive( $post_types = '' ) {
  *
  * @param int|string|int[]|string[] $attachment Optional. Attachment ID, title, slug, or array of such
  *                                              to check against. Default empty.
- * @return bool Whether the query is for an existing attachment page.
+ * @return bool
  */
 function is_attachment( $attachment = '' ) {
 	global $wp_query;
@@ -229,7 +229,7 @@ function is_attachment( $attachment = '' ) {
  *
  * @param int|string|int[]|string[] $author Optional. User ID, nickname, nicename, or array of such
  *                                          to check against. Default empty.
- * @return bool Whether the query is for an existing author archive page.
+ * @return bool
  */
 function is_author( $author = '' ) {
 	global $wp_query;
@@ -258,7 +258,7 @@ function is_author( $author = '' ) {
  *
  * @param int|string|int[]|string[] $category Optional. Category ID, name, slug, or array of such
  *                                            to check against. Default empty.
- * @return bool Whether the query is for an existing category archive page.
+ * @return bool
  */
 function is_category( $category = '' ) {
 	global $wp_query;
@@ -287,7 +287,7 @@ function is_category( $category = '' ) {
  *
  * @param int|string|int[]|string[] $tag Optional. Tag ID, name, slug, or array of such
  *                                       to check against. Default empty.
- * @return bool Whether the query is for an existing tag archive page.
+ * @return bool
  */
 function is_tag( $tag = '' ) {
 	global $wp_query;
@@ -322,8 +322,7 @@ function is_tag( $tag = '' ) {
  *                                            Default empty.
  * @param int|string|int[]|string[] $term     Optional. Term ID, name, slug, or array of such
  *                                            to check against. Default empty.
- * @return bool Whether the query is for an existing custom taxonomy archive page.
- *              True for custom taxonomy archive pages, false for built-in taxonomies
+ * @return bool True for custom taxonomy archive pages, false for built-in taxonomies
  *              (category and tag archives).
  */
 function is_tax( $taxonomy = '', $term = '' ) {
@@ -400,7 +399,7 @@ function is_day() {
  *
  * @param string|string[] $feeds Optional. Feed type or array of feed types
  *                                         to check against. Default empty.
- * @return bool Whether the query is for a feed.
+ * @return bool
  */
 function is_feed( $feeds = '' ) {
 	global $wp_query;
@@ -660,7 +659,7 @@ function is_robots() {
  *
  * @global WP_Query $wp_query WordPress Query object.
  *
- * @return bool Whether the query is for the favicon.ico file.
+ * @return bool
  */
 function is_favicon() {
 	global $wp_query;

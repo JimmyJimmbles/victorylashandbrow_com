@@ -115,10 +115,10 @@ endif;
  *
  * @global wpdb $wpdb WordPress database abstraction object.
  *
- * @param string $table_name  Database table name.
- * @param string $column_name Table column name.
- * @param string $drop_ddl    SQL statement to drop column.
- * @return bool True on success or if the column doesn't exist. False on failure.
+ * @param string $table_name Table name
+ * @param string $column_name Column name
+ * @param string $drop_ddl SQL statement to drop column.
+ * @return bool True on success or if the column doesn't exist, false on failure.
  */
 function maybe_drop_column( $table_name, $column_name, $drop_ddl ) {
 	global $wpdb;
@@ -182,19 +182,19 @@ function check_column( $table_name, $col_name, $col_type, $is_null = null, $key 
 		if ( $row->Field === $col_name ) {
 
 			// Got our column, check the params.
-			if ( ( null !== $col_type ) && ( $row->Type !== $col_type ) ) {
+			if ( ( null != $col_type ) && ( $row->Type != $col_type ) ) {
 				++$diffs;
 			}
-			if ( ( null !== $is_null ) && ( $row->Null !== $is_null ) ) {
+			if ( ( null != $is_null ) && ( $row->Null != $is_null ) ) {
 				++$diffs;
 			}
-			if ( ( null !== $key ) && ( $row->Key !== $key ) ) {
+			if ( ( null != $key ) && ( $row->Key != $key ) ) {
 				++$diffs;
 			}
-			if ( ( null !== $default ) && ( $row->Default !== $default ) ) {
+			if ( ( null != $default ) && ( $row->Default != $default ) ) {
 				++$diffs;
 			}
-			if ( ( null !== $extra ) && ( $row->Extra !== $extra ) ) {
+			if ( ( null != $extra ) && ( $row->Extra != $extra ) ) {
 				++$diffs;
 			}
 

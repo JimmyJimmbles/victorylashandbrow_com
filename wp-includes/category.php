@@ -38,7 +38,7 @@ function get_categories( $args = '' ) {
 	$args['taxonomy'] = apply_filters( 'get_categories_taxonomy', $args['taxonomy'], $args );
 
 	// Back compat.
-	if ( isset( $args['type'] ) && 'link' === $args['type'] ) {
+	if ( isset( $args['type'] ) && 'link' == $args['type'] ) {
 		_deprecated_argument(
 			__FUNCTION__,
 			'3.0.0',
@@ -131,7 +131,7 @@ function get_category_by_path( $category_path, $full_match = true, $output = OBJ
 	$full_path      = '';
 
 	foreach ( (array) $category_paths as $pathdir ) {
-		$full_path .= ( '' !== $pathdir ? '/' : '' ) . sanitize_title( $pathdir );
+		$full_path .= ( '' != $pathdir ? '/' : '' ) . sanitize_title( $pathdir );
 	}
 
 	$categories = get_terms(
@@ -354,7 +354,7 @@ function clean_category_cache( $id ) {
 }
 
 /**
- * Updates category structure to old pre-2.3 from new taxonomy structure.
+ * Update category structure to old pre-2.3 from new taxonomy structure.
  *
  * This function was added for the taxonomy support to update the new category
  * structure with the old category one. This will maintain compatibility with

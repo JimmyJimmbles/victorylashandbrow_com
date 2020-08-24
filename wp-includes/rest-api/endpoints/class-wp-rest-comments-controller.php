@@ -870,7 +870,7 @@ class WP_REST_Comments_Controller extends WP_REST_Controller {
 
 			$updated = wp_update_comment( wp_slash( (array) $prepared_args ), true );
 
-			if ( is_wp_error( $updated ) ) {
+			if ( false === $updated ) {
 				return new WP_Error(
 					'rest_comment_failed_edit',
 					__( 'Updating comment failed.' ),

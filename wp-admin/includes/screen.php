@@ -116,7 +116,7 @@ function meta_box_prefs( $screen ) {
 					continue;
 				}
 				// Submit box cannot be hidden.
-				if ( 'submitdiv' === $box['id'] || 'linksubmitdiv' === $box['id'] ) {
+				if ( 'submitdiv' == $box['id'] || 'linksubmitdiv' == $box['id'] ) {
 					continue;
 				}
 

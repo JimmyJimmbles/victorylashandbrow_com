@@ -1819,10 +1819,10 @@
 				/*
 				 * If the menu item deleted is the only of its instance left,
 				 * remove the check icon of this menu item in the right panel.
-				 */
+				 */ 
 				_.each( addedItems, function( addedItem ) {
 					var menuItemId, menuItemControl, matches;
-
+						
 					// This is because menu item that's deleted is just hidden.
 					if ( ! $( addedItem ).is( ':visible' ) ) {
 						return;
@@ -2994,7 +2994,7 @@
 		/**
 		 * Add a new item to this menu.
 		 *
-		 * @param {Object} item - Value for the nav_menu_item setting to be created.
+		 * @param {object} item - Value for the nav_menu_item setting to be created.
 		 * @return {wp.customize.Menus.controlConstructor.nav_menu_item} The newly-created nav_menu_item control instance.
 		 */
 		addItemToMenu: function( item ) {

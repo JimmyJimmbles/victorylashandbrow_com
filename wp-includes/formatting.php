@@ -29,6 +29,23 @@
  *
  * @global array $wp_cockneyreplace Array of formatted entities for certain common phrases.
  * @global array $shortcode_tags
+ * @staticvar array  $static_characters
+ * @staticvar array  $static_replacements
+ * @staticvar array  $dynamic_characters
+ * @staticvar array  $dynamic_replacements
+ * @staticvar array  $default_no_texturize_tags
+ * @staticvar array  $default_no_texturize_shortcodes
+ * @staticvar bool   $run_texturize
+ * @staticvar string $apos
+ * @staticvar string $prime
+ * @staticvar string $double_prime
+ * @staticvar string $opening_quote
+ * @staticvar string $closing_quote
+ * @staticvar string $opening_single_quote
+ * @staticvar string $closing_single_quote
+ * @staticvar string $open_q_flag
+ * @staticvar string $open_sq_flag
+ * @staticvar string $apos_flag
  *
  * @param string $text  The text to be formatted.
  * @param bool   $reset Set to true for unit testing. Translated patterns will reset.
@@ -675,6 +692,8 @@ function get_html_split_regex() {
  * @ignore
  * @internal This function will be removed in 4.5.0 per Shortcode API Roadmap.
  * @since 4.4.0
+ *
+ * @staticvar string $html_regex
  *
  * @param string $shortcode_regex The result from _get_wptexturize_shortcode_regex(). Optional.
  * @return string The regular expression
@@ -1984,10 +2003,8 @@ function remove_accents( $string ) {
  * @return string The sanitized filename.
  */
 function sanitize_file_name( $filename ) {
-	$filename_raw = $filename;
-	$filename     = remove_accents( $filename );
-
-	$special_chars = array( '?', '[', ']', '/', '\\', '=', '<', '>', ':', ';', ',', "'", '"', '&', '$', '#', '*', '(', ')', '|', '~', '`', '!', '{', '}', '%', '+', '’', '«', '»', '”', '“', chr( 0 ) );
+	$filename_raw  = $filename;
+	$special_chars = array( '?', '[', ']', '/', '\\', '=', '<', '>', ':', ';', ',', "'", '"', '&', '$', '#', '*', '(', ')', '|', '~', '`', '!', '{', '}', '%', '+', chr( 0 ) );
 
 	// Check for support for utf8 in the installed PCRE library once and store the result in a static.
 	static $utf8_pcre = null;
@@ -2015,11 +2032,10 @@ function sanitize_file_name( $filename ) {
 	 * @param string   $filename_raw  The original filename to be sanitized.
 	 */
 	$special_chars = apply_filters( 'sanitize_file_name_chars', $special_chars, $filename_raw );
-
-	$filename = str_replace( $special_chars, '', $filename );
-	$filename = str_replace( array( '%20', '+' ), '-', $filename );
-	$filename = preg_replace( '/[\r\n\t -]+/', '-', $filename );
-	$filename = trim( $filename, '.-_' );
+	$filename      = str_replace( $special_chars, '', $filename );
+	$filename      = str_replace( array( '%20', '+' ), '-', $filename );
+	$filename      = preg_replace( '/[\r\n\t -]+/', '-', $filename );
+	$filename      = trim( $filename, '.-_' );
 
 	if ( false === strpos( $filename, '.' ) ) {
 		$mime_types = wp_get_mime_types();
@@ -2238,7 +2254,7 @@ function sanitize_title_with_dashes( $title, $raw_title = '', $context = 'displa
 
 	$title = strtolower( $title );
 
-	if ( 'save' === $context ) {
+	if ( 'save' == $context ) {
 		// Convert &nbsp, &ndash, and &mdash to hyphens.
 		$title = str_replace( array( '%c2%a0', '%e2%80%93', '%e2%80%94' ), '-', $title );
 		// Convert &nbsp, &ndash, and &mdash HTML entities to hyphens.
@@ -2268,8 +2284,6 @@ function sanitize_title_with_dashes( $title, $raw_title = '', $context = 'displa
 				'%e2%80%9b',
 				'%e2%80%9e',
 				'%e2%80%9f',
-				// Bullet.
-				'%e2%80%a2',
 				// &copy, &reg, &deg, &hellip, and &trade.
 				'%c2%a9',
 				'%c2%ae',
@@ -2830,7 +2844,7 @@ function antispambot( $email_address, $hex_encoding = 0 ) {
 function _make_url_clickable_cb( $matches ) {
 	$url = $matches[2];
 
-	if ( ')' === $matches[3] && strpos( $url, '(' ) ) {
+	if ( ')' == $matches[3] && strpos( $url, '(' ) ) {
 		// If the trailing character is a closing parethesis, and the URL has an opening parenthesis in it,
 		// add the closing parenthesis to the URL. Then we can let the parenthesis balancer do its thing below.
 		$url   .= $matches[3];
@@ -2887,9 +2901,8 @@ function _make_web_ftp_clickable_cb( $matches ) {
 	$dest = 'http://' . $dest;
 
 	// Removed trailing [.,;:)] from URL.
-	$last_char = substr( $dest, -1 );
-	if ( in_array( $last_char, array( '.', ',', ';', ':', ')' ), true ) === true ) {
-		$ret  = $last_char;
+	if ( in_array( substr( $dest, -1 ), array( '.', ',', ';', ':', ')' ) ) === true ) {
+		$ret  = substr( $dest, -1 );
 		$dest = substr( $dest, 0, strlen( $dest ) - 1 );
 	}
 
@@ -3364,17 +3377,17 @@ function convert_smilies( $text ) {
 			$content = $textarr[ $i ];
 
 			// If we're in an ignore block, wait until we find its closing tag.
-			if ( '' === $ignore_block_element && preg_match( '/^<(' . $tags_to_ignore . ')[^>]*>/', $content, $matches ) ) {
+			if ( '' == $ignore_block_element && preg_match( '/^<(' . $tags_to_ignore . ')[^>]*>/', $content, $matches ) ) {
 				$ignore_block_element = $matches[1];
 			}
 
 			// If it's not a tag and not in ignore block.
-			if ( '' === $ignore_block_element && strlen( $content ) > 0 && '<' !== $content[0] ) {
+			if ( '' == $ignore_block_element && strlen( $content ) > 0 && '<' != $content[0] ) {
 				$content = preg_replace_callback( $wp_smiliessearch, 'translate_smiley', $content );
 			}
 
 			// Did we exit ignore block?
-			if ( '' !== $ignore_block_element && '</' . $ignore_block_element . '>' === $content ) {
+			if ( '' != $ignore_block_element && '</' . $ignore_block_element . '>' == $content ) {
 				$ignore_block_element = '';
 			}
 
@@ -3511,7 +3524,7 @@ function _wp_iso_convert( $match ) {
 }
 
 /**
- * Given a date in the timezone of the site, returns that date in UTC.
+ * Given a date in the timezone of the site, returns that date in UTC timezone.
  *
  * Requires and returns a date in the Y-m-d H:i:s format.
  * Return format can be overridden using the $format parameter.
@@ -3520,7 +3533,7 @@ function _wp_iso_convert( $match ) {
  *
  * @param string $string The date to be converted, in the timezone of the site.
  * @param string $format The format string for the returned date. Default 'Y-m-d H:i:s'.
- * @return string Formatted version of the date, in UTC.
+ * @return string Formatted version of the date, in UTC timezone.
  */
 function get_gmt_from_date( $string, $format = 'Y-m-d H:i:s' ) {
 	$datetime = date_create( $string, wp_timezone() );
@@ -3533,14 +3546,14 @@ function get_gmt_from_date( $string, $format = 'Y-m-d H:i:s' ) {
 }
 
 /**
- * Given a date in UTC or GMT timezone, returns that date in the timezone of the site.
+ * Given a date in UTC timezone, returns that date in the timezone of the site.
  *
  * Requires and returns a date in the Y-m-d H:i:s format.
  * Return format can be overridden using the $format parameter.
  *
  * @since 1.2.0
  *
- * @param string $string The date to be converted, in UTC or GMT timezone.
+ * @param string $string The date to be converted, in UTC timezone.
  * @param string $format The format string for the returned date. Default 'Y-m-d H:i:s'.
  * @return string Formatted version of the date, in the site's timezone.
  */
@@ -4295,9 +4308,9 @@ function esc_sql( $data ) {
  *
  * @param string   $url       The URL to be cleaned.
  * @param string[] $protocols Optional. An array of acceptable protocols.
- *                            Defaults to return value of wp_allowed_protocols().
+ *                            Defaults to return value of wp_allowed_protocols()
  * @param string   $_context  Private. Use esc_url_raw() for database usage.
- * @return string The cleaned URL after the {@see 'clean_url'} filter is applied.
+ * @return string The cleaned $url after the {@see 'clean_url'} filter is applied.
  */
 function esc_url( $url, $protocols = null, $_context = 'display' ) {
 	$original_url = $url;
@@ -4403,8 +4416,7 @@ function esc_url( $url, $protocols = null, $_context = 'display' ) {
  * @since 2.8.0
  *
  * @param string   $url       The URL to be cleaned.
- * @param string[] $protocols Optional. An array of acceptable protocols.
- *                            Defaults to return value of wp_allowed_protocols().
+ * @param string[] $protocols An array of acceptable protocols.
  * @return string The cleaned URL.
  */
 function esc_url_raw( $url, $protocols = null ) {
@@ -4697,7 +4709,7 @@ function sanitize_option( $option, $value ) {
 		case 'default_ping_status':
 		case 'default_comment_status':
 			// Options that if not there have 0 value but need to be something like "closed".
-			if ( '0' == $value || '' === $value ) {
+			if ( '0' == $value || '' == $value ) {
 				$value = 'closed';
 			}
 			break;
@@ -5028,7 +5040,7 @@ function wp_sprintf( $pattern, ...$args ) {
 		}
 
 		// Literal %: append and continue.
-		if ( '%%' === substr( $pattern, $start, 2 ) ) {
+		if ( substr( $pattern, $start, 2 ) == '%%' ) {
 			$start  += 2;
 			$result .= '%';
 			continue;
@@ -5094,7 +5106,7 @@ function wp_sprintf( $pattern, ...$args ) {
  */
 function wp_sprintf_l( $pattern, $args ) {
 	// Not a match.
-	if ( '%l' !== substr( $pattern, 0, 2 ) ) {
+	if ( substr( $pattern, 0, 2 ) != '%l' ) {
 		return $pattern;
 	}
 
@@ -5757,7 +5769,8 @@ function _print_emoji_detection_script() {
 		?>
 		<script<?php echo $type_attr; ?>>
 			window._wpemojiSettings = <?php echo wp_json_encode( $settings ); ?>;
-			!function(e,a,t){var r,n,o,i,p=a.createElement("canvas"),s=p.getContext&&p.getContext("2d");function c(e,t){var a=String.fromCharCode;s.clearRect(0,0,p.width,p.height),s.fillText(a.apply(this,e),0,0);var r=p.toDataURL();return s.clearRect(0,0,p.width,p.height),s.fillText(a.apply(this,t),0,0),r===p.toDataURL()}function l(e){if(!s||!s.fillText)return!1;switch(s.textBaseline="top",s.font="600 32px Arial",e){case"flag":return!c([127987,65039,8205,9895,65039],[127987,65039,8203,9895,65039])&&(!c([55356,56826,55356,56819],[55356,56826,8203,55356,56819])&&!c([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]));case"emoji":return!c([55357,56424,8205,55356,57212],[55357,56424,8203,55356,57212])}return!1}function d(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(i=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},o=0;o<i.length;o++)t.supports[i[o]]=l(i[o]),t.supports.everything=t.supports.everything&&t.supports[i[o]],"flag"!==i[o]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[i[o]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(r=t.source||{}).concatemoji?d(r.concatemoji):r.wpemoji&&r.twemoji&&(d(r.twemoji),d(r.wpemoji)))}(window,document,window._wpemojiSettings);
+			/*! This file is auto-generated */
+			!function(e,a,t){var r,n,o,i,p=a.createElement("canvas"),s=p.getContext&&p.getContext("2d");function c(e,t){var a=String.fromCharCode;s.clearRect(0,0,p.width,p.height),s.fillText(a.apply(this,e),0,0);var r=p.toDataURL();return s.clearRect(0,0,p.width,p.height),s.fillText(a.apply(this,t),0,0),r===p.toDataURL()}function l(e){if(!s||!s.fillText)return!1;switch(s.textBaseline="top",s.font="600 32px Arial",e){case"flag":return!c([127987,65039,8205,9895,65039],[127987,65039,8203,9895,65039])&&(!c([55356,56826,55356,56819],[55356,56826,8203,55356,56819])&&!c([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]));case"emoji":return!c([55357,56424,55356,57342,8205,55358,56605,8205,55357,56424,55356,57340],[55357,56424,55356,57342,8203,55358,56605,8203,55357,56424,55356,57340])}return!1}function d(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(i=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},o=0;o<i.length;o++)t.supports[i[o]]=l(i[o]),t.supports.everything=t.supports.everything&&t.supports[i[o]],"flag"!==i[o]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[i[o]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(r=t.source||{}).concatemoji?d(r.concatemoji):r.wpemoji&&r.twemoji&&(d(r.twemoji),d(r.wpemoji)))}(window,document,window._wpemojiSettings);
 		</script>
 		<?php
 	}
@@ -5868,7 +5881,7 @@ function wp_staticize_emoji( $text ) {
 		}
 
 		// Did we exit ignore block?
-		if ( '' !== $ignore_block_element && '</' . $ignore_block_element . '>' === $content ) {
+		if ( '' != $ignore_block_element && '</' . $ignore_block_element . '>' == $content ) {
 			$ignore_block_element = '';
 		}
 

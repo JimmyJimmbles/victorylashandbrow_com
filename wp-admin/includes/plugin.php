@@ -662,9 +662,6 @@ function activate_plugin( $plugin, $redirect = '', $network_wide = false, $silen
 		if ( ! defined( 'WP_SANDBOX_SCRAPING' ) ) {
 			define( 'WP_SANDBOX_SCRAPING', true );
 		}
-
-		wp_register_plugin_realpath( WP_PLUGIN_DIR . '/' . $plugin );
-		$_wp_plugin_file = $plugin;
 		include_once WP_PLUGIN_DIR . '/' . $plugin;
 		$plugin = $_wp_plugin_file; // Avoid stomping of the $plugin variable in a plugin.
 
@@ -858,7 +855,7 @@ function deactivate_plugins( $plugins, $silent = false, $network_wide = null ) {
  * @param string          $redirect     Redirect to page after successful activation.
  * @param bool            $network_wide Whether to enable the plugin for all sites in the network.
  *                                      Default false.
- * @param bool            $silent       Prevent calling activation hooks. Default false.
+ * @param bool $silent                  Prevent calling activation hooks. Default false.
  * @return bool|WP_Error True when finished or WP_Error if there were errors during a plugin activation.
  */
 function activate_plugins( $plugins, $redirect = '', $network_wide = false, $silent = false ) {
@@ -1256,7 +1253,7 @@ function uninstall_plugin( $plugin ) {
 		define( 'WP_UNINSTALL_PLUGIN', $file );
 
 		wp_register_plugin_realpath( WP_PLUGIN_DIR . '/' . $file );
-		include_once WP_PLUGIN_DIR . '/' . dirname( $file ) . '/uninstall.php';
+		include WP_PLUGIN_DIR . '/' . dirname( $file ) . '/uninstall.php';
 
 		return true;
 	}
@@ -1268,7 +1265,7 @@ function uninstall_plugin( $plugin ) {
 		unset( $uninstallable_plugins );
 
 		wp_register_plugin_realpath( WP_PLUGIN_DIR . '/' . $file );
-		include_once WP_PLUGIN_DIR . '/' . $file;
+		include WP_PLUGIN_DIR . '/' . $file;
 
 		add_action( "uninstall_{$file}", $callable );
 
@@ -1858,8 +1855,6 @@ function menu_page_url( $menu_slug, $echo = true ) {
  * @global array  $_wp_menu_nopriv
  * @global array  $_wp_submenu_nopriv
  *
- * @param string $parent The slug name for the parent menu (or the file name of a standard
- *                       WordPress admin page). Default empty string.
  * @return string The parent file of the current admin page.
  */
 function get_admin_page_parent( $parent = '' ) {
@@ -2196,9 +2191,9 @@ function option_update_filter( $options ) {
  * @param string|array $options
  * @return array
  */
-function add_allowed_options( $new_options, $options = '' ) {
-	if ( '' === $options ) {
-		global $allowed_options;
+function add_option_whitelist( $new_options, $options = '' ) {
+	if ( '' == $options ) {
+		global $whitelist_options;
 	} else {
 		$allowed_options = $options;
 	}
@@ -2209,9 +2204,9 @@ function add_allowed_options( $new_options, $options = '' ) {
 				$allowed_options[ $page ]   = array();
 				$allowed_options[ $page ][] = $key;
 			} else {
-				$pos = array_search( $key, $allowed_options[ $page ], true );
+				$pos = array_search( $key, $whitelist_options[ $page ] );
 				if ( false === $pos ) {
-					$allowed_options[ $page ][] = $key;
+					$whitelist_options[ $page ][] = $key;
 				}
 			}
 		}
@@ -2231,19 +2226,19 @@ function add_allowed_options( $new_options, $options = '' ) {
  * @param string|array $options
  * @return array
  */
-function remove_allowed_options( $del_options, $options = '' ) {
-	if ( '' === $options ) {
-		global $allowed_options;
+function remove_option_whitelist( $del_options, $options = '' ) {
+	if ( '' == $options ) {
+		global $whitelist_options;
 	} else {
 		$allowed_options = $options;
 	}
 
 	foreach ( $del_options as $page => $keys ) {
 		foreach ( $keys as $key ) {
-			if ( isset( $allowed_options[ $page ] ) && is_array( $allowed_options[ $page ] ) ) {
-				$pos = array_search( $key, $allowed_options[ $page ], true );
+			if ( isset( $whitelist_options[ $page ] ) && is_array( $whitelist_options[ $page ] ) ) {
+				$pos = array_search( $key, $whitelist_options[ $page ] );
 				if ( false !== $pos ) {
-					unset( $allowed_options[ $page ][ $pos ] );
+					unset( $whitelist_options[ $page ][ $pos ] );
 				}
 			}
 		}

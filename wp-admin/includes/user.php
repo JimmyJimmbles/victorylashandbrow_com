@@ -142,7 +142,7 @@ function edit_user( $user_id = 0 ) {
 	$errors = new WP_Error();
 
 	/* checking that username has been typed */
-	if ( '' === $user->user_login ) {
+	if ( '' == $user->user_login ) {
 		$errors->add( 'user_login', __( '<strong>Error</strong>: Please enter a username.' ) );
 	}
 
@@ -174,7 +174,7 @@ function edit_user( $user_id = 0 ) {
 
 	// Checking the password has been typed twice the same.
 	if ( ( $update || ! empty( $pass1 ) ) && $pass1 != $pass2 ) {
-		$errors->add( 'pass', __( '<strong>Error</strong>: Passwords don&#8217;t match. Please enter the same password in both password fields.' ), array( 'form-field' => 'pass1' ) );
+		$errors->add( 'pass', __( '<strong>Error</strong>: Please enter the same password in both password fields.' ), array( 'form-field' => 'pass1' ) );
 	}
 
 	if ( ! empty( $pass1 ) ) {
@@ -204,7 +204,7 @@ function edit_user( $user_id = 0 ) {
 	} else {
 		$owner_id = email_exists( $user->user_email );
 		if ( $owner_id && ( ! $update || ( $owner_id != $user->ID ) ) ) {
-			$errors->add( 'email_exists', __( '<strong>Error</strong>: This email is already registered. Please choose another one.' ), array( 'form-field' => 'email' ) );
+			$errors->add( 'email_exists', __( '<strong>Error</strong>: This email is already registered, please choose another one.' ), array( 'form-field' => 'email' ) );
 		}
 	}
 
@@ -478,9 +478,7 @@ function default_password_nag_handler( $errors = false ) {
 	}
 
 	// get_user_setting() = JS-saved UI setting. Else no-js-fallback code.
-	if ( 'hide' === get_user_setting( 'default_password_nag' )
-		|| isset( $_GET['default_password_nag'] ) && '0' == $_GET['default_password_nag']
-	) {
+	if ( 'hide' == get_user_setting( 'default_password_nag' ) || isset( $_GET['default_password_nag'] ) && '0' == $_GET['default_password_nag'] ) {
 		delete_user_setting( 'default_password_nag' );
 		update_user_option( $user_ID, 'default_password_nag', false, true );
 	}

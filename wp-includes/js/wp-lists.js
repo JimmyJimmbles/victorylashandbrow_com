@@ -202,7 +202,7 @@ wpList = {
 	 * 6. 0 if none can be found.
 	 *
 	 * @param {jQuery} element  Element that triggered the request.
-	 * @param {Object} settings Settings for the Ajax request.
+	 * @param {object} settings Settings for the Ajax request.
 	 * @return {string|number} Nonce
 	 */
 	nonce: function( element, settings ) {
@@ -235,8 +235,8 @@ wpList = {
 	 * data[3] - 66cc66
 	 * data[4] - unspam=1
 	 *
-	 * @param {HTMLElement} element The DOM element.
-	 * @param {string}      type    The type of data to look for: 'list', 'add', 'delete', or 'dim'.
+	 * @param  {HTMLElement} element The DOM element.
+	 * @param  {string}      type    The type of data to look for: 'list', 'add', 'delete', or 'dim'.
 	 * @return {Array} Extracted list item data.
 	 */
 	parseData: function( element, type ) {
@@ -260,7 +260,7 @@ wpList = {
 	 * @param {HTMLElement} list     The DOM element.
 	 * @param {Object}      settings Settings for this list.
 	 * @param {string}      action   The type of action to perform: 'add', 'delete', or 'dim'.
-	 * @return {Object|boolean} Settings if confirmed, false if not.
+	 * @return {object|boolean} Settings if confirmed, false if not.
 	 */
 	pre: function( list, settings, action ) {
 		var $element, backgroundColor, confirmed;
@@ -297,7 +297,7 @@ wpList = {
 	 * Adds an item to the list via Ajax.
 	 *
 	 * @param {HTMLElement} element  The DOM element.
-	 * @param {Object}      settings Settings for this list.
+	 * @param {object}      settings Settings for this list.
 	 * @return {boolean} Whether the item was added.
 	 */
 	ajaxAdd: function( element, settings ) {
@@ -399,7 +399,7 @@ wpList = {
 	 * Delete an item in the list via Ajax.
 	 *
 	 * @param {HTMLElement} element  A DOM element containing item data.
-	 * @param {Object}      settings Settings for this list.
+	 * @param {object}      settings Settings for this list.
 	 * @return {boolean} Whether the item was deleted.
 	 */
 	ajaxDel: function( element, settings ) {
@@ -486,7 +486,7 @@ wpList = {
 	 * Dim an item in the list via Ajax.
 	 *
 	 * @param {HTMLElement} element  A DOM element containing item data.
-	 * @param {Object}      settings Settings for this list.
+	 * @param {object}      settings Settings for this list.
 	 * @return {boolean} Whether the item was dim'ed.
 	 */
 	ajaxDim: function( element, settings ) {
@@ -621,7 +621,7 @@ wpList = {
 	 * Adds something.
 	 *
 	 * @param {HTMLElement} element  A DOM element containing item data.
-	 * @param {Object}      settings Settings for this list.
+	 * @param {object}      settings Settings for this list.
 	 * @return {boolean} Whether the item was added.
 	 */
 	add: function( element, settings ) {

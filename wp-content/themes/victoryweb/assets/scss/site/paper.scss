@@ -1,0 +1,137 @@
+// --------------------------------------------------
+// base
+// --------------------------------------------------
+
+.paper {
+  background-color: color('white');
+  border-radius: $global-border-radius;
+  position: relative;
+  display: block;
+  padding: $padding-xs;
+  z-index: 1;
+}
+
+// --------------------------------------------------
+// header
+// --------------------------------------------------
+
+.paper__header {
+  position: relative;
+  display: flex;
+  justify-content: center;
+
+  @media #{$mq-min-lg} {
+    margin-right: rem(36);
+  }
+}
+
+// --------------------------------------------------
+// image
+// --------------------------------------------------
+
+.paper__image {
+  height: 0;
+  display: flex;
+  justify-content: center;
+  padding-top: 56.25%;
+  width: 90%;
+
+  &--border {
+    border: $global-border-primary;
+    border-radius: $global-border-radius;
+  }
+
+  @media #{$mq-min-lg} {
+    margin-right: rem(36);
+    width: 100%;
+  }
+
+  & > img {
+    position: absolute;
+    display: block;
+    border-radius: $global-border-radius;
+    bottom: rem(54);
+    right: 0;
+
+    @media #{$mq-min-lg} {
+      right: rem(72);
+    }
+  }
+}
+
+// --------------------------------------------------
+// body
+// --------------------------------------------------
+
+.paper__body {
+  padding: $padding-xxs 0;
+}
+
+// --------------------------------------------------
+// footer
+// --------------------------------------------------
+
+.paper__footer {
+  padding-top: $padding-xxs;
+}
+// --------------------------------------------------
+// counter
+// --------------------------------------------------
+
+.paper__counter {
+  background-color: color('primary');
+  border: $global-border-width $global-border-color-secondary
+    $global-border-style-primary;
+  border-radius: rem(100);
+  color: color('white');
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: rem(45);
+  height: rem(45);
+  margin-right: rem(15);
+}
+
+.paper--sm,
+.paper--md {
+  @media #{$mq-min-md} {
+    background: none;
+    padding: 0;
+    margin-bottom: rem(48);
+  }
+
+  &::before {
+    content: none;
+
+    @media #{$mq-min-md} {
+      content: '';
+      border-radius: $global-border-radius;
+      background-color: color('white');
+      position: absolute;
+      top: rem(48);
+      left: 50%;
+      width: 90%;
+      height: 100%;
+      z-index: -1;
+      transform: translateX(-50%);
+    }
+  }
+}
+
+.paper--sm {
+  &::before {
+    @media #{$mq-min-md} {
+      top: rem(50px);
+      height: 95%;
+    }
+  }
+}
+
+.paper--md {
+  &::before {
+    @media #{$mq-min-md} {
+      top: rem(48);
+      height: 100%;
+    }
+  }
+}

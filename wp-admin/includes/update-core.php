@@ -793,11 +793,6 @@ $_old_files = array(
 	// 5.4
 	'wp-admin/js/wp-fullscreen-stub.js',
 	'wp-admin/js/wp-fullscreen-stub.min.js',
-	// 5.5
-	'wp-admin/css/ie.css',
-	'wp-admin/css/ie.min.css',
-	'wp-admin/css/ie-rtl.css',
-	'wp-admin/css/ie-rtl.min.css',
 );
 
 /**
@@ -1211,8 +1206,6 @@ function update_core( $from, $to ) {
 			if ( $development_build || version_compare( $introduced_version, $old_wp_version, '>' ) ) {
 				$directory = ( '/' === $file[ strlen( $file ) - 1 ] );
 
-				list( $type, $filename ) = explode( '/', $file, 2 );
-
 				// Check to see if the bundled items exist before attempting to copy them.
 				if ( ! $wp_filesystem->exists( $from . $distro . 'wp-content/' . $file ) ) {
 					continue;
@@ -1220,7 +1213,7 @@ function update_core( $from, $to ) {
 
 				if ( 'plugins' === $type ) {
 					$dest = $wp_filesystem->wp_plugins_dir();
-				} elseif ( 'themes' === $type ) {
+				} elseif ( 'themes' == $type ) {
 					// Back-compat, ::wp_themes_dir() did not return trailingslash'd pre-3.2.
 					$dest = trailingslashit( $wp_filesystem->wp_themes_dir() );
 				} else {
@@ -1429,7 +1422,7 @@ function _redirect_to_about_wordpress( $new_version ) {
 	load_default_textdomain();
 
 	// See do_core_upgrade().
-	show_message( __( 'WordPress updated successfully.' ) );
+	show_message( __( 'WordPress updated successfully' ) );
 
 	// self_admin_url() won't exist when upgrading from <= 3.0, so relative URLs are intentional.
 	show_message(
@@ -1457,7 +1450,7 @@ window.location = 'about.php?updated';
 
 	// Include admin-footer.php and exit.
 	require_once ABSPATH . 'wp-admin/admin-footer.php';
-	exit;
+	exit();
 }
 
 /**

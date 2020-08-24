@@ -627,7 +627,7 @@
 				_wpnonce:     settings.post.nonce
 			}).done( function( html ) {
 				if ( '0' === html ) {
-					window.alert( wp.i18n.__( 'Could not set that as the thumbnail image. Try a different attachment.' ) );
+					window.alert( window.setPostThumbnailL10n.error );
 					return;
 				}
 				$( '.inside', '#postimagediv' ).html( html );

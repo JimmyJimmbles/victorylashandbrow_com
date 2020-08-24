@@ -145,7 +145,6 @@
 	 * Toggles the wait/load icon in the editor.
 	 *
 	 * @since 2.9.0
-	 * @since 5.5.0 Added the triggerUIReady parameter.
 	 *
 	 * @memberof imageEdit
 	 *
@@ -479,9 +478,9 @@
 		}
 
 		t.toggleEditor(postid, 1);
-		$.post( ajaxurl, data, function( response ) {
-			$( '#image-editor-' + postid ).empty().append( response.data.html );
-			t.toggleEditor( postid, 0, true );
+		$.post(ajaxurl, data, function(r) {
+			$('#image-editor-' + postid).empty().append(r);
+			t.toggleEditor(postid, 0);
 			// Refresh the attachment model so that changes propagate.
 			if ( t._view ) {
 				t._view.refresh();
@@ -777,7 +776,7 @@
 			 * @param {Object} img jQuery object representing the image.
 			 * @param {Object} c   The selection.
 			 *
-			 * @return {Object}
+			 * @return {object}
 			 */
 			onSelectEnd: function(img, c) {
 				imageEdit.setCropSelection(postid, c);
@@ -843,7 +842,7 @@
 	 * @param {number}  postid The post ID.
 	 * @param {boolean} warn   Warning message.
 	 *
-	 * @return {void|boolean} Returns false if there is a warning.
+	 * @return {void|bool} Returns false if there is a warning.
 	 */
 	close : function(postid, warn) {
 		warn = warn || false;

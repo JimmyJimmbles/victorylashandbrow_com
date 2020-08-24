@@ -33,7 +33,7 @@ function block_core_latest_posts_get_excerpt_length() {
  * @return string Returns the post content with latest posts added.
  */
 function render_block_core_latest_posts( $attributes ) {
-	global $post, $block_core_latest_posts_excerpt_length;
+	global $block_core_latest_posts_excerpt_length;
 
 	$args = array(
 		'posts_per_page'   => $attributes['postsToShow'],
@@ -58,7 +58,6 @@ function render_block_core_latest_posts( $attributes ) {
 	$list_items_markup = '';
 
 	foreach ( $recent_posts as $post ) {
-
 		$list_items_markup .= '<li>';
 
 		if ( $attributes['displayFeaturedImage'] && has_post_thumbnail( $post ) ) {
@@ -183,6 +182,74 @@ function register_block_core_latest_posts() {
 	register_block_type_from_metadata(
 		__DIR__ . '/latest-posts',
 		array(
+			'attributes'      => array(
+				'align'                   => array(
+					'type' => 'string',
+					'enum' => array( 'left', 'center', 'right', 'wide', 'full' ),
+				),
+				'className'               => array(
+					'type' => 'string',
+				),
+				'categories'              => array(
+					'type' => 'string',
+				),
+				'postsToShow'             => array(
+					'type'    => 'number',
+					'default' => 5,
+				),
+				'displayPostContent'      => array(
+					'type'    => 'boolean',
+					'default' => false,
+				),
+				'displayPostContentRadio' => array(
+					'type'    => 'string',
+					'default' => 'excerpt',
+				),
+				'excerptLength'           => array(
+					'type'    => 'number',
+					'default' => 55,
+				),
+				'displayPostDate'         => array(
+					'type'    => 'boolean',
+					'default' => false,
+				),
+				'postLayout'              => array(
+					'type'    => 'string',
+					'default' => 'list',
+				),
+				'columns'                 => array(
+					'type'    => 'number',
+					'default' => 3,
+				),
+				'order'                   => array(
+					'type'    => 'string',
+					'default' => 'desc',
+				),
+				'orderBy'                 => array(
+					'type'    => 'string',
+					'default' => 'date',
+				),
+				'displayFeaturedImage'    => array(
+					'type'    => 'boolean',
+					'default' => false,
+				),
+				'featuredImageAlign'      => array(
+					'type' => 'string',
+					'enum' => array( 'left', 'center', 'right' ),
+				),
+				'featuredImageSizeSlug'   => array(
+					'type'    => 'string',
+					'default' => 'thumbnail',
+				),
+				'featuredImageSizeWidth'  => array(
+					'type'    => 'number',
+					'default' => null,
+				),
+				'featuredImageSizeHeight' => array(
+					'type'    => 'number',
+					'default' => null,
+				),
+			),
 			'render_callback' => 'render_block_core_latest_posts',
 		)
 	);

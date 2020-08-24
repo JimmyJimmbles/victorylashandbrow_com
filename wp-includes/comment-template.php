@@ -193,7 +193,7 @@ function get_comment_author_email_link( $linktext = '', $before = '', $after = '
 	$email = apply_filters( 'comment_email', $comment->comment_author_email, $comment );
 
 	if ( ( ! empty( $email ) ) && ( '@' !== $email ) ) {
-		$display = ( '' !== $linktext ) ? $linktext : $email;
+		$display = ( '' != $linktext ) ? $linktext : $email;
 		$return  = $before;
 		$return .= sprintf( '<a href="%1$s">%2$s</a>', esc_url( 'mailto:' . $email ), esc_html( $display ) );
 		$return .= $after;
@@ -377,7 +377,7 @@ function comment_author_url( $comment_ID = 0 ) {
  */
 function get_comment_author_url_link( $linktext = '', $before = '', $after = '', $comment = 0 ) {
 	$url     = get_comment_author_url( $comment );
-	$display = ( '' !== $linktext ) ? $linktext : $url;
+	$display = ( '' != $linktext ) ? $linktext : $url;
 	$display = str_replace( 'http://www.', '', $display );
 	$display = str_replace( 'http://', '', $display );
 
@@ -544,15 +544,14 @@ function get_comment_class( $class = '', $comment_id = null, $post_id = null ) {
  * @since 1.5.0
  * @since 4.4.0 Added the ability for `$comment_ID` to also accept a WP_Comment object.
  *
- * @param string         $format     Optional. The format of the date. Default user's setting.
- * @param int|WP_Comment $comment_ID WP_Comment or ID of the comment for which to get the date.
- *                                   Default current comment.
+ * @param string          $format     Optional. The format of the date. Default user's setting.
+ * @param int|WP_Comment  $comment_ID WP_Comment or ID of the comment for which to get the date.
+ *                                    Default current comment.
  * @return string The comment's date.
  */
 function get_comment_date( $format = '', $comment_ID = 0 ) {
 	$comment = get_comment( $comment_ID );
-
-	if ( '' === $format ) {
+	if ( '' == $format ) {
 		$date = mysql2date( get_option( 'date_format' ), $comment->comment_date );
 	} else {
 		$date = mysql2date( $format, $comment->comment_date );
@@ -658,7 +657,7 @@ function comment_excerpt( $comment_ID = 0 ) {
 }
 
 /**
- * Retrieves the comment ID of the current comment.
+ * Retrieves the comment id of the current comment.
  *
  * @since 1.5.0
  *
@@ -680,7 +679,7 @@ function get_comment_ID() { // phpcs:ignore WordPress.NamingConventions.ValidFun
 }
 
 /**
- * Displays the comment ID of the current comment.
+ * Displays the comment id of the current comment.
  *
  * @since 0.71
  */
@@ -962,9 +961,9 @@ function get_comments_number_text( $zero = false, $one = false, $more = false, $
  *
  * @see Walker_Comment::comment()
  *
- * @param int|WP_Comment $comment_ID WP_Comment or ID of the comment for which to get the text.
- *                                   Default current comment.
- * @param array          $args       Optional. An array of arguments. Default empty array.
+ * @param int|WP_Comment  $comment_ID WP_Comment or ID of the comment for which to get the text.
+ *                                    Default current comment.
+ * @param array           $args       Optional. An array of arguments. Default empty array.
  * @return string The comment content.
  */
 function get_comment_text( $comment_ID = 0, $args = array() ) {
@@ -1008,9 +1007,9 @@ function get_comment_text( $comment_ID = 0, $args = array() ) {
  *
  * @see Walker_Comment::comment()
  *
- * @param int|WP_Comment $comment_ID WP_Comment or ID of the comment for which to print the text.
- *                                   Default current comment.
- * @param array          $args       Optional. An array of arguments. Default empty array.
+ * @param int|WP_Comment  $comment_ID WP_Comment or ID of the comment for which to print the text.
+ *                                    Default current comment.
+ * @param array           $args       Optional. An array of arguments. Default empty array.
  */
 function comment_text( $comment_ID = 0, $args = array() ) {
 	$comment = get_comment( $comment_ID );
@@ -1045,8 +1044,7 @@ function get_comment_time( $format = '', $gmt = false, $translate = true ) {
 	$comment = get_comment();
 
 	$comment_date = $gmt ? $comment->comment_date_gmt : $comment->comment_date;
-
-	if ( '' === $format ) {
+	if ( '' == $format ) {
 		$date = mysql2date( get_option( 'time_format' ), $comment_date, $translate );
 	} else {
 		$date = mysql2date( $format, $comment_date, $translate );
@@ -1937,11 +1935,6 @@ function get_comment_id_fields( $post_id = 0 ) {
 
 /**
  * Outputs hidden input HTML for replying to comments.
- *
- * Adds two hidden inputs to the comment form to identify the `comment_post_ID`
- * and `comment_parent` values for threaded comments.
- *
- * This tag must be within the `<form>` section of the `comments.php` template.
  *
  * @since 2.7.0
  *

@@ -183,7 +183,6 @@ if ( $action ) {
 				</form>
 				</div>
 				<?php
-
 				require_once ABSPATH . 'wp-admin/admin-footer.php';
 				exit;
 			} // End if verify-delete.

@@ -40,8 +40,8 @@ function _wp_privacy_resend_request( $request_id ) {
  * @since 4.9.6
  * @access private
  *
- * @param int $request_id Request ID.
- * @return int|WP_Error Request ID on success, or a WP_Error on failure.
+ * @param  int          $request_id Request ID.
+ * @return int|WP_Error $result     Request ID on success or WP_Error.
  */
 function _wp_privacy_completed_request( $request_id ) {
 	// Get the request.
@@ -233,9 +233,9 @@ function _wp_personal_data_cleanup_requests() {
  *         }
  *     }
  * }
- * @param string $group_id     The group identifier.
- * @param int    $groups_count The number of all groups
- * @return string The HTML for this group and its items.
+ * @param string  $group_id     The group identifier.
+ * @param int     $groups_count The number of all groups
+ * @return string $group_html   The HTML for this group and its items.
  */
 function wp_privacy_generate_personal_data_export_group_html( $group_data, $group_id = '', $groups_count = 1 ) {
 	$group_id_attr = sanitize_title_with_dashes( $group_data['group_label'] . '-' . $group_id );
@@ -277,9 +277,9 @@ function wp_privacy_generate_personal_data_export_group_html( $group_data, $grou
 		$group_html .= '</table>';
 	}
 
-	if ( $groups_count > 1 ) {
-		$group_html .= '<div class="return-to-top">';
-		$group_html .= '<a href="#top"><span aria-hidden="true">&uarr; </span> ' . esc_html__( 'Return to top' ) . '</a>';
+	if ( 1 < $groups_count ) {
+		$group_html .= '<div class="return_to_top">';
+		$group_html .= '<a href="#top">' . esc_html__( '&uarr; Return to top' ) . '</a>';
 		$group_html .= '</div>';
 	}
 
@@ -423,7 +423,7 @@ function wp_privacy_generate_personal_data_export_file( $request_id ) {
 	fwrite( $file, 'th { padding: 5px; text-align: left; width: 20%; }' );
 	fwrite( $file, 'td { padding: 5px; }' );
 	fwrite( $file, 'tr:nth-child(odd) { background-color: #fafafa; }' );
-	fwrite( $file, '.return-to-top { text-align: right; }' );
+	fwrite( $file, '.return_to_top { text-align:right; }' );
 	fwrite( $file, '</style>' );
 	fwrite( $file, '<title>' );
 	fwrite( $file, esc_html( $title ) );
@@ -433,7 +433,7 @@ function wp_privacy_generate_personal_data_export_file( $request_id ) {
 	fwrite( $file, '<h1 id="top">' . esc_html__( 'Personal Data Export' ) . '</h1>' );
 
 	// Create TOC.
-	if ( $groups_count > 1 ) {
+	if ( 1 < $groups_count ) {
 		fwrite( $file, '<div id="table_of_contents">' );
 		fwrite( $file, '<h2>' . esc_html__( 'Table of Contents' ) . '</h2>' );
 		fwrite( $file, '<ul>' );

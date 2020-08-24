@@ -1,0 +1,10 @@
+a,
+a.link {
+  color: color('secondary');
+  display: inline-block;
+  text-decoration: none;
+
+  &:hover {
+    color: color('secondary', 'hover');
+  }
+}

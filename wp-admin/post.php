@@ -57,7 +57,7 @@ $sendback = wp_get_referer();
 if ( ! $sendback ||
 	false !== strpos( $sendback, 'post.php' ) ||
 	false !== strpos( $sendback, 'post-new.php' ) ) {
-	if ( 'attachment' === $post_type ) {
+	if ( 'attachment' == $post_type ) {
 		$sendback = admin_url( 'upload.php' );
 	} else {
 		$sendback = admin_url( 'edit.php' );
@@ -356,7 +356,7 @@ switch ( $action ) {
 		do_action( "post_action_{$action}", $post_id );
 
 		wp_redirect( admin_url( 'edit.php' ) );
-		exit;
+		exit();
 } // End switch.
 
 require_once ABSPATH . 'wp-admin/admin-footer.php';

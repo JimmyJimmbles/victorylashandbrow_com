@@ -46,7 +46,7 @@ function wp_get_active_network_plugins() {
 
 	foreach ( $active_plugins as $plugin ) {
 		if ( ! validate_file( $plugin )                     // $plugin must validate as file.
-			&& '.php' === substr( $plugin, -4 )             // $plugin must end with '.php'.
+			&& '.php' == substr( $plugin, -4 )              // $plugin must end with '.php'.
 			&& file_exists( WP_PLUGIN_DIR . '/' . $plugin ) // $plugin must exist.
 			) {
 			$plugins[] = WP_PLUGIN_DIR . '/' . $plugin;

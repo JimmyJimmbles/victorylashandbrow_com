@@ -875,7 +875,7 @@ function confirm_delete_users( $users ) {
 	<?php
 	$allusers = (array) $_POST['allusers'];
 	foreach ( $allusers as $user_id ) {
-		if ( '' !== $user_id && '0' != $user_id ) {
+		if ( '' != $user_id && '0' != $user_id ) {
 			$delete_user = get_userdata( $user_id );
 
 			if ( ! current_user_can( 'delete_user', $delete_user->ID ) ) {
