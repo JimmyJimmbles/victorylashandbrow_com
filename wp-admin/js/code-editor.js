@@ -64,7 +64,7 @@ if ( 'undefined' === typeof window.wp.codeEditor ) {
 		/**
 		 * Get lint options.
 		 *
-		 * @return {Object} Lint options.
+		 * @return {object} Lint options.
 		 */
 		function getLintOptions() { // eslint-disable-line complexity
 			var options = editor.getOption( 'lint' );

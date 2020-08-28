@@ -55,7 +55,7 @@
 				} else if ( ! body || ! body.length ) {
 					// Catch "silent" iframe origin exceptions in WebKit
 					// after another page is loaded in the iframe.
-					wrap.addClass( 'fallback' );
+					wrap.addClass('fallback');
 					parent.css( 'max-height', '' );
 					form.remove();
 					noframe.focus();
@@ -97,7 +97,10 @@
 		var adminpage = window.adminpage,
 			wp        = window.wp;
 
-		$( window ).off( 'beforeunload.wp-auth-check' );
+		// When on the Edit Post screen, speed up heartbeat
+		// after the user logs in to quickly refresh nonces.
+		if ( typeof adminpage !== 'undefined' && ( adminpage === 'post-php' || adminpage === 'post-new-php' ) &&
+			typeof wp !== 'undefined' && wp.heartbeat ) {
 
 		// When on the Edit Post screen, speed up heartbeat
 		// after the user logs in to quickly refresh nonces.

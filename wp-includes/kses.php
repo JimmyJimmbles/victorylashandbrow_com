@@ -1080,7 +1080,7 @@ function wp_kses_split2( $string, $allowed_html, $allowed_protocols ) {
 		while ( ( $newstring = wp_kses( $string, $allowed_html, $allowed_protocols ) ) != $string ) {
 			$string = $newstring;
 		}
-		if ( '' === $string ) {
+		if ( '' == $string ) {
 			return '';
 		}
 		// Prevent multiple dashes in comments.
@@ -1109,7 +1109,7 @@ function wp_kses_split2( $string, $allowed_html, $allowed_protocols ) {
 	}
 
 	// No attributes are allowed for closing elements.
-	if ( '' !== $slash ) {
+	if ( '' != $slash ) {
 		return "</$elem>";
 	}
 
@@ -1197,7 +1197,7 @@ function wp_kses_attr_check( &$name, &$value, &$whole, $vless, $element, $allowe
 
 	$allowed_attr = $allowed_html[ $element_low ];
 
-	if ( ! isset( $allowed_attr[ $name_low ] ) || '' === $allowed_attr[ $name_low ] ) {
+	if ( ! isset( $allowed_attr[ $name_low ] ) || '' == $allowed_attr[ $name_low ] ) {
 		/*
 		 * Allow `data-*` attributes.
 		 *
@@ -1471,25 +1471,25 @@ function wp_kses_hair_parse( $attr ) {
 
 	// phpcs:disable Squiz.Strings.ConcatenationSpacing.PaddingFound -- don't remove regex indentation
 	$regex =
-		'(?:'
-		.     '[_a-zA-Z][-_a-zA-Z0-9:.]*' // Attribute name.
-		. '|'
-		.     '\[\[?[^\[\]]+\]\]?'        // Shortcode in the name position implies unfiltered_html.
-		. ')'
-		. '(?:'               // Attribute value.
-		.     '\s*=\s*'       // All values begin with '='.
-		.     '(?:'
-		.         '"[^"]*"'   // Double-quoted.
-		.     '|'
-		.         "'[^']*'"   // Single-quoted.
-		.     '|'
-		.         '[^\s"\']+' // Non-quoted.
-		.         '(?:\s|$)'  // Must have a space.
-		.     ')'
-		. '|'
-		.     '(?:\s|$)'      // If attribute has no value, space is required.
-		. ')'
-		. '\s*';              // Trailing space is optional except as mentioned above.
+	'(?:'
+	.     '[-a-zA-Z:]+'   // Attribute name.
+	. '|'
+	.     '\[\[?[^\[\]]+\]\]?' // Shortcode in the name position implies unfiltered_html.
+	. ')'
+	. '(?:'               // Attribute value.
+	.     '\s*=\s*'       // All values begin with '='.
+	.     '(?:'
+	.         '"[^"]*"'   // Double-quoted.
+	.     '|'
+	.         "'[^']*'"   // Single-quoted.
+	.     '|'
+	.         '[^\s"\']+' // Non-quoted.
+	.         '(?:\s|$)'  // Must have a space.
+	.     ')'
+	. '|'
+	.     '(?:\s|$)'      // If attribute has no value, space is required.
+	. ')'
+	. '\s*';              // Trailing space is optional except as mentioned above.
 	// phpcs:enable
 
 	// Although it is possible to reduce this procedure to a single regexp,
@@ -1794,12 +1794,8 @@ function wp_kses_normalize_entities( $string, $context = 'html' ) {
 	// Disarm all entities by converting & to &amp;
 	$string = str_replace( '&', '&amp;', $string );
 
-	// Change back the allowed entities in our list of allowed entities.
-	if ( 'xml' === $context ) {
-		$string = preg_replace_callback( '/&amp;([A-Za-z]{2,8}[0-9]{0,2});/', 'wp_kses_xml_named_entities', $string );
-	} else {
-		$string = preg_replace_callback( '/&amp;([A-Za-z]{2,8}[0-9]{0,2});/', 'wp_kses_named_entities', $string );
-	}
+	// Change back the allowed entities in our entity whitelist.
+	$string = preg_replace_callback( '/&amp;([A-Za-z]{2,8}[0-9]{0,2});/', 'wp_kses_named_entities', $string );
 	$string = preg_replace_callback( '/&amp;#(0*[0-9]{1,7});/', 'wp_kses_normalize_entities2', $string );
 	$string = preg_replace_callback( '/&amp;#[Xx](0*[0-9A-Fa-f]{1,6});/', 'wp_kses_normalize_entities3', $string );
 
@@ -2322,7 +2318,7 @@ function safecss_filter_attr( $css, $deprecated = '' ) {
 
 	$css = '';
 	foreach ( $css_array as $css_item ) {
-		if ( '' === $css_item ) {
+		if ( '' == $css_item ) {
 			continue;
 		}
 
@@ -2378,29 +2374,11 @@ function safecss_filter_attr( $css, $deprecated = '' ) {
 			}
 		}
 
-		if ( $found ) {
-			// Check for any CSS containing \ ( & } = or comments, except for url() usage checked above.
-			$allow_css = ! preg_match( '%[\\\(&=}]|/\*%', $css_test_string );
-
-			/**
-			 * Filters the check for unsafe CSS in `safecss_filter_attr`.
-			 *
-			 * Enables developers to determine whether a section of CSS should be allowed or discarded.
-			 * By default, the value will be false if the part contains \ ( & } = or comments.
-			 * Return true to allow the CSS part to be included in the output.
-			 *
-			 * @since 5.5.0
-			 *
-			 * @param bool   $allow_css       Whether the CSS in the test string is considered safe.
-			 * @param string $css_test_string The CSS string to test.
-			 */
-			$allow_css = apply_filters( 'safecss_filter_attr_allow_css', $allow_css, $css_test_string );
-
-			 // Only add the CSS part if it passes the regex check.
-			if ( $allow_css ) {
-				if ( '' !== $css ) {
-					$css .= ';';
-				}
+		// Remove any CSS containing containing \ ( & } = or comments, except for url() useage checked above.
+		if ( $found && ! preg_match( '%[\\\(&=}]|/\*%', $css_test_string ) ) {
+			if ( '' != $css ) {
+				$css .= ';';
+			}
 
 				$css .= $css_item;
 			}

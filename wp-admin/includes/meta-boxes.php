@@ -40,26 +40,9 @@ function post_submit_meta_box( $post, $args = array() ) {
 <div id="minor-publishing">
 
 	<?php // Hidden submit button early on so that the browser chooses the right button when form is submitted with Return key. ?>
-	<div style="display:none;">
-		<?php submit_button( __( 'Save' ), '', 'save' ); ?>
-	</div>
-
-	<div id="minor-publishing-actions">
-		<div id="save-action">
-			<?php
-			if ( ! in_array( $post->post_status, array( 'publish', 'future', 'pending' ), true ) ) {
-				$private_style = '';
-				if ( 'private' === $post->post_status ) {
-					$private_style = 'style="display:none"';
-				}
-				?>
-				<input <?php echo $private_style; ?> type="submit" name="save" id="save-post" value="<?php esc_attr_e( 'Save Draft' ); ?>" class="button" />
-				<span class="spinner"></span>
-			<?php } elseif ( 'pending' === $post->post_status && $can_publish ) { ?>
-				<input type="submit" name="save" id="save-post" value="<?php esc_attr_e( 'Save as Pending' ); ?>" class="button" />
-				<span class="spinner"></span>
-			<?php } ?>
-		</div>
+<div style="display:none;">
+	<?php submit_button( __( 'Save' ), '', 'save' ); ?>
+</div>
 
 		<?php
 		if ( is_post_type_viewable( $post_type_object ) ) :
@@ -95,8 +78,22 @@ function post_submit_meta_box( $post, $args = array() ) {
 		 */
 		do_action( 'post_submitbox_minor_actions', $post );
 		?>
-		<div class="clear"></div>
-	</div>
+<a class="preview button" href="<?php echo $preview_link; ?>" target="wp-preview-<?php echo (int) $post->ID; ?>" id="post-preview"><?php echo $preview_button; ?></a>
+<input type="hidden" name="wp-preview" id="wp-preview" value="" />
+</div>
+<?php endif; // is_post_type_viewable() ?>
+	<?php
+	/**
+	 * Fires before the post time/date setting in the Publish meta box.
+	 *
+	 * @since 4.4.0
+	 *
+	 * @param WP_Post $post WP_Post object for the current post.
+	 */
+	do_action( 'post_submitbox_minor_actions', $post );
+	?>
+<div class="clear"></div>
+</div><!-- #minor-publishing-actions -->
 
 	<div id="misc-publishing-actions">
 		<div class="misc-pub-section misc-pub-post-status">
@@ -159,28 +156,47 @@ function post_submit_meta_box( $post, $args = array() ) {
 			?>
 		</div>
 
-		<div class="misc-pub-section misc-pub-visibility" id="visibility">
-			<?php _e( 'Visibility:' ); ?>
-			<span id="post-visibility-display">
-				<?php
-				if ( 'private' === $post->post_status ) {
-					$post->post_password = '';
-					$visibility          = 'private';
-					$visibility_trans    = __( 'Private' );
-				} elseif ( ! empty( $post->post_password ) ) {
-					$visibility       = 'password';
-					$visibility_trans = __( 'Password protected' );
-				} elseif ( 'post' === $post_type && is_sticky( $post_id ) ) {
-					$visibility       = 'public';
-					$visibility_trans = __( 'Public, Sticky' );
-				} else {
-					$visibility       = 'public';
-					$visibility_trans = __( 'Public' );
-				}
+<?php } ?>
+</div><!-- .misc-pub-section -->
 
-				echo esc_html( $visibility_trans );
-				?>
-			</span>
+<div class="misc-pub-section misc-pub-visibility" id="visibility">
+	<?php _e( 'Visibility:' ); ?> <span id="post-visibility-display">
+							<?php
+
+							if ( 'private' === $post->post_status ) {
+								$post->post_password = '';
+								$visibility          = 'private';
+								$visibility_trans    = __( 'Private' );
+							} elseif ( ! empty( $post->post_password ) ) {
+								$visibility       = 'password';
+								$visibility_trans = __( 'Password protected' );
+							} elseif ( 'post' === $post_type && is_sticky( $post->ID ) ) {
+								$visibility       = 'public';
+								$visibility_trans = __( 'Public, Sticky' );
+							} else {
+								$visibility       = 'public';
+								$visibility_trans = __( 'Public' );
+							}
+
+							echo esc_html( $visibility_trans );
+							?>
+</span>
+	<?php if ( $can_publish ) { ?>
+<a href="#visibility" class="edit-visibility hide-if-no-js" role="button"><span aria-hidden="true"><?php _e( 'Edit' ); ?></span> <span class="screen-reader-text"><?php _e( 'Edit visibility' ); ?></span></a>
+
+<div id="post-visibility-select" class="hide-if-js">
+<input type="hidden" name="hidden_post_password" id="hidden-post-password" value="<?php echo esc_attr( $post->post_password ); ?>" />
+		<?php if ( 'post' === $post_type ) : ?>
+<input type="checkbox" style="display:none" name="hidden_post_sticky" id="hidden-post-sticky" value="sticky" <?php checked( is_sticky( $post->ID ) ); ?> />
+<?php endif; ?>
+<input type="hidden" name="hidden_post_visibility" id="hidden-post-visibility" value="<?php echo esc_attr( $visibility ); ?>" />
+<input type="radio" name="visibility" id="visibility-radio-public" value="public" <?php checked( $visibility, 'public' ); ?> /> <label for="visibility-radio-public" class="selectit"><?php _e( 'Public' ); ?></label><br />
+		<?php if ( 'post' === $post_type && current_user_can( 'edit_others_posts' ) ) : ?>
+<span id="sticky-span"><input id="sticky" name="sticky" type="checkbox" value="sticky" <?php checked( is_sticky( $post->ID ) ); ?> /> <label for="sticky" class="selectit"><?php _e( 'Stick this post to the front page' ); ?></label><br /></span>
+<?php endif; ?>
+<input type="radio" name="visibility" id="visibility-radio-password" value="password" <?php checked( $visibility, 'password' ); ?> /> <label for="visibility-radio-password" class="selectit"><?php _e( 'Password protected' ); ?></label><br />
+<span id="password-span"><label for="post_password"><?php _e( 'Password:' ); ?></label> <input type="text" name="post_password" id="post_password" value="<?php echo esc_attr( $post->post_password ); ?>"  maxlength="255" /><br /></span>
+<input type="radio" name="visibility" id="visibility-radio-private" value="private" <?php checked( $visibility, 'private' ); ?> /> <label for="visibility-radio-private" class="selectit"><?php _e( 'Private' ); ?></label><br />
 
 			<?php if ( $can_publish ) { ?>
 				<a href="#visibility" class="edit-visibility hide-if-no-js" role="button"><span aria-hidden="true"><?php _e( 'Edit' ); ?></span> <span class="screen-reader-text"><?php _e( 'Edit visibility' ); ?></span></a>
@@ -191,25 +207,43 @@ function post_submit_meta_box( $post, $args = array() ) {
 						<input type="checkbox" style="display:none" name="hidden_post_sticky" id="hidden-post-sticky" value="sticky" <?php checked( is_sticky( $post_id ) ); ?> />
 					<?php endif; ?>
 
-					<input type="hidden" name="hidden_post_visibility" id="hidden-post-visibility" value="<?php echo esc_attr( $visibility ); ?>" />
-					<input type="radio" name="visibility" id="visibility-radio-public" value="public" <?php checked( $visibility, 'public' ); ?> /> <label for="visibility-radio-public" class="selectit"><?php _e( 'Public' ); ?></label><br />
+	<?php
+	/* translators: Publish box date string. 1: Date, 2: Time. See https://www.php.net/date */
+	$date_string = __( '%1$s at %2$s' );
+	/* translators: Publish box date format, see https://www.php.net/date */
+	$date_format = _x( 'M j, Y', 'publish box date format' );
+	/* translators: Publish box time format, see https://www.php.net/date */
+	$time_format = _x( 'H:i', 'publish box time format' );
 
-					<?php if ( 'post' === $post_type && current_user_can( 'edit_others_posts' ) ) : ?>
-						<span id="sticky-span"><input id="sticky" name="sticky" type="checkbox" value="sticky" <?php checked( is_sticky( $post_id ) ); ?> /> <label for="sticky" class="selectit"><?php _e( 'Stick this post to the front page' ); ?></label><br /></span>
-					<?php endif; ?>
-
-					<input type="radio" name="visibility" id="visibility-radio-password" value="password" <?php checked( $visibility, 'password' ); ?> /> <label for="visibility-radio-password" class="selectit"><?php _e( 'Password protected' ); ?></label><br />
-					<span id="password-span"><label for="post_password"><?php _e( 'Password:' ); ?></label> <input type="text" name="post_password" id="post_password" value="<?php echo esc_attr( $post->post_password ); ?>"  maxlength="255" /><br /></span>
-
-					<input type="radio" name="visibility" id="visibility-radio-private" value="private" <?php checked( $visibility, 'private' ); ?> /> <label for="visibility-radio-private" class="selectit"><?php _e( 'Private' ); ?></label><br />
-
-					<p>
-						<a href="#visibility" class="save-post-visibility hide-if-no-js button"><?php _e( 'OK' ); ?></a>
-						<a href="#visibility" class="cancel-post-visibility hide-if-no-js button-cancel"><?php _e( 'Cancel' ); ?></a>
-					</p>
-				</div>
-			<?php } ?>
-		</div>
+	if ( 0 != $post->ID ) {
+		if ( 'future' == $post->post_status ) { // Scheduled for publishing at a future date.
+			/* translators: Post date information. %s: Date on which the post is currently scheduled to be published. */
+			$stamp = __( 'Scheduled for: %s' );
+		} elseif ( 'publish' == $post->post_status || 'private' == $post->post_status ) { // Already published.
+			/* translators: Post date information. %s: Date on which the post was published. */
+			$stamp = __( 'Published on: %s' );
+		} elseif ( '0000-00-00 00:00:00' == $post->post_date_gmt ) { // Draft, 1 or more saves, no date specified.
+			$stamp = __( 'Publish <b>immediately</b>' );
+		} elseif ( time() < strtotime( $post->post_date_gmt . ' +0000' ) ) { // Draft, 1 or more saves, future date specified.
+			/* translators: Post date information. %s: Date on which the post is to be published. */
+			$stamp = __( 'Schedule for: %s' );
+		} else { // Draft, 1 or more saves, date specified.
+			/* translators: Post date information. %s: Date on which the post is to be published. */
+			$stamp = __( 'Publish on: %s' );
+		}
+		$date = sprintf(
+			$date_string,
+			date_i18n( $date_format, strtotime( $post->post_date ) ),
+			date_i18n( $time_format, strtotime( $post->post_date ) )
+		);
+	} else { // Draft (no saves, and thus no date specified).
+		$stamp = __( 'Publish <b>immediately</b>' );
+		$date  = sprintf(
+			$date_string,
+			date_i18n( $date_format, strtotime( current_time( 'mysql' ) ) ),
+			date_i18n( $time_format, strtotime( current_time( 'mysql' ) ) )
+		);
+	}
 
 		<?php
 		/* translators: Publish box date string. 1: Date, 2: Time. See https://www.php.net/date */
@@ -249,17 +283,22 @@ function post_submit_meta_box( $post, $args = array() ) {
 			);
 		}
 
-		if ( ! empty( $args['args']['revisions_count'] ) ) :
-			?>
-			<div class="misc-pub-section misc-pub-revisions">
-				<?php
-				/* translators: Post revisions heading. %s: The number of available revisions. */
-				printf( __( 'Revisions: %s' ), '<b>' . number_format_i18n( $args['args']['revisions_count'] ) . '</b>' );
-				?>
-				<a class="hide-if-no-js" href="<?php echo esc_url( get_edit_post_link( $args['args']['revision_id'] ) ); ?>"><span aria-hidden="true"><?php _ex( 'Browse', 'revisions' ); ?></span> <span class="screen-reader-text"><?php _e( 'Browse revisions' ); ?></span></a>
-			</div>
-			<?php
-		endif;
+	if ( $can_publish ) : // Contributors don't get to choose the date of publish.
+		?>
+<div class="misc-pub-section curtime misc-pub-curtime">
+	<span id="timestamp">
+		<?php printf( $stamp, '<b>' . $date . '</b>' ); ?>
+	</span>
+	<a href="#edit_timestamp" class="edit-timestamp hide-if-no-js" role="button">
+		<span aria-hidden="true"><?php _e( 'Edit' ); ?></span>
+		<span class="screen-reader-text"><?php _e( 'Edit date and time' ); ?></span>
+	</a>
+	<fieldset id="timestampdiv" class="hide-if-js">
+		<legend class="screen-reader-text"><?php _e( 'Date and time' ); ?></legend>
+		<?php touch_time( ( 'edit' === $action ), 1 ); ?>
+	</fieldset>
+</div><?php // /misc-pub-section ?>
+<?php endif; ?>
 
 		if ( $can_publish ) : // Contributors don't get to choose the date of publish.
 			?>
@@ -441,7 +480,7 @@ function attachment_submit_meta_box( $post ) {
 			echo "<a class='submitdelete deletion' href='" . get_delete_post_link( $post->ID ) . "'>" . __( 'Move to Trash' ) . '</a>';
 		} else {
 			$delete_ays = ! MEDIA_TRASH ? " onclick='return showNotice.warn();'" : '';
-			echo "<a class='submitdelete deletion'$delete_ays href='" . get_delete_post_link( $post->ID, null, true ) . "'>" . __( 'Delete permanently' ) . '</a>';
+			echo "<a class='submitdelete deletion'$delete_ays href='" . get_delete_post_link( $post->ID, null, true ) . "'>" . __( 'Delete Permanently' ) . '</a>';
 		}
 	}
 	?>
@@ -485,7 +524,7 @@ function post_format_meta_box( $post, $box ) {
 				$post_format = '0';
 			}
 			// Add in the current one if it isn't there yet, in case the current theme doesn't support it.
-			if ( $post_format && ! in_array( $post_format, $post_formats[0], true ) ) {
+			if ( $post_format && ! in_array( $post_format, $post_formats[0] ) ) {
 				$post_formats[0][] = $post_format;
 			}
 			?>
@@ -1017,7 +1056,7 @@ function page_attributes_meta_box( $post ) {
 		 */
 		do_action( 'page_attributes_misc_attributes', $post );
 		?>
-		<?php if ( 'page' === $post->post_type && get_current_screen()->get_help_tabs() ) : ?>
+		<?php if ( 'page' == $post->post_type && get_current_screen()->get_help_tabs() ) : ?>
 <p class="post-attributes-help-text"><?php _e( 'Need help? Use the Help tab above the screen title.' ); ?></p>
 			<?php
 	endif;
@@ -1442,6 +1481,7 @@ function register_and_do_post_meta_boxes( $post ) {
 
 		// We should aim to show the revisions meta box only when there are revisions.
 		if ( count( $revisions ) > 1 ) {
+			reset( $revisions ); // Reset pointer for key().
 			$publish_callback_args = array(
 				'revisions_count'        => count( $revisions ),
 				'revision_id'            => reset( $revisions ),
@@ -1551,7 +1591,7 @@ function register_and_do_post_meta_boxes( $post ) {
 	}
 	$stati[] = 'private';
 
-	if ( in_array( get_post_status( $post ), $stati, true ) ) {
+	if ( in_array( get_post_status( $post ), $stati ) ) {
 		// If the post type support comments, or the post has comments,
 		// allow the Comments meta box.
 		if ( comments_open( $post ) || pings_open( $post ) || $post->comment_count > 0 || post_type_supports( $post_type, 'comments' ) ) {

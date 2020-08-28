@@ -392,10 +392,10 @@ switch ( $step ) {
 			// TODO: Poka-yoke.
 			display_setup_form( __( 'Please provide a valid username.' ) );
 			$error = true;
-		} elseif ( sanitize_user( $user_name, true ) !== $user_name ) {
+		} elseif ( sanitize_user( $user_name, true ) != $user_name ) {
 			display_setup_form( __( 'The username you provided has invalid characters.' ) );
 			$error = true;
-		} elseif ( $admin_password !== $admin_password_check ) {
+		} elseif ( $admin_password != $admin_password_check ) {
 			// TODO: Poka-yoke.
 			display_setup_form( __( 'Your passwords do not match. Please try again.' ) );
 			$error = true;

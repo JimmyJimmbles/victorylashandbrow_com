@@ -54,7 +54,7 @@ function map_meta_cap( $cap, $user_id, ...$args ) {
 		case 'edit_user':
 		case 'edit_users':
 			// Allow user to edit themselves.
-			if ( 'edit_user' === $cap && isset( $args[0] ) && $user_id == $args[0] ) {
+			if ( 'edit_user' == $cap && isset( $args[0] ) && $user_id == $args[0] ) {
 				break;
 			}
 
@@ -539,10 +539,7 @@ function map_meta_cap( $cap, $user_id, ...$args ) {
 				break;
 			}
 
-			if ( 'delete_term' === $cap
-				&& ( get_option( 'default_' . $term->taxonomy ) == $term->term_id
-					|| get_option( 'default_term_' . $term->taxonomy ) == $term->term_id )
-			) {
+			if ( 'delete_term' === $cap && ( get_option( 'default_' . $term->taxonomy ) == $term->term_id ) ) {
 				$caps[] = 'do_not_allow';
 				break;
 			}

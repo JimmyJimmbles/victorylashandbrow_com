@@ -30,6 +30,7 @@ function wp_version_check( $extra_stats = array(), $force_check = false ) {
 		return;
 	}
 
+	global $wpdb, $wp_local_package;
 	// Include an unmodified $wp_version.
 	require ABSPATH . WPINC . '/version.php';
 	$php_version = phpversion();
@@ -38,7 +39,7 @@ function wp_version_check( $extra_stats = array(), $force_check = false ) {
 	$translations = wp_get_installed_translations( 'core' );
 
 	// Invalidate the transient when $wp_version changes.
-	if ( is_object( $current ) && $wp_version !== $current->version_checked ) {
+	if ( is_object( $current ) && $wp_version != $current->version_checked ) {
 		$current = false;
 	}
 
@@ -261,7 +262,6 @@ function wp_version_check( $extra_stats = array(), $force_check = false ) {
  * if WordPress isn't installing.
  *
  * @since 2.3.0
- *
  * @global string $wp_version The WordPress version string.
  *
  * @param array $extra_stats Extra statistics to report to the WordPress.org API.
@@ -456,6 +456,7 @@ function wp_update_plugins( $extra_stats = array() ) {
  * if WordPress isn't installing.
  *
  * @since 2.7.0
+ * @global string $wp_version The WordPress version string.
  *
  * @global string $wp_version The WordPress version string.
  *

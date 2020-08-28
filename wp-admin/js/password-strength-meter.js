@@ -57,7 +57,7 @@ window.wp = window.wp || {};
 		 * @since 3.7.0
 		 * @deprecated 5.5.0 Use {@see 'userInputDisallowedList()'} instead.
 		 *
-		 * @return {string[]} The array of words to be disallowed.
+		 * @return {string[]} The array of words to be blacklisted.
 		 */
 		userInputBlacklist : function() {
 			window.console.log(

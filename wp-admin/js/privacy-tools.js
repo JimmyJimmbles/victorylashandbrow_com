@@ -89,7 +89,7 @@ jQuery( document ).ready( function( $ ) {
 				onExportFailure( __( 'No personal data export file was generated.' ) );
 			}
 
-			setTimeout( function() { $rowActions.removeClass( 'processing' ); }, 500 );
+			setTimeout( function(){ $rowActions.removeClass( 'processing' ); }, 500 );
 		}
 
 		function onExportFailure( errorMessage ) {
@@ -101,13 +101,12 @@ jQuery( document ).ready( function( $ ) {
 				appendResultsAfterRow( $requestRow, 'notice-error', summaryMessage, [ errorMessage ] );
 			}
 
-			setTimeout( function() { $rowActions.removeClass( 'processing' ); }, 500 );
+			setTimeout( function(){ $rowActions.removeClass( 'processing' ); }, 500 );
 		}
 
 		function setExportProgress( exporterIndex ) {
-			var progress       = ( exportersCount > 0 ? exporterIndex / exportersCount : 0 ),
-				progressString = Math.round( progress * 100 ).toString() + '%';
-
+			var progress       = ( exportersCount > 0 ? exporterIndex / exportersCount : 0 );
+			var progressString = Math.round( progress * 100 ).toString() + '%';
 			$progress.html( progressString );
 		}
 
@@ -130,7 +129,7 @@ jQuery( document ).ready( function( $ ) {
 
 				if ( ! response.success ) {
 					// e.g. invalid request ID.
-					setTimeout( function() { onExportFailure( response.data ); }, 500 );
+					setTimeout( function(){ onExportFailure( response.data ); }, 500 );
 					return;
 				}
 
@@ -141,12 +140,12 @@ jQuery( document ).ready( function( $ ) {
 					if ( exporterIndex < exportersCount ) {
 						setTimeout( doNextExport( exporterIndex + 1, 1 ) );
 					} else {
-						setTimeout( function() { onExportDoneSuccess( responseData.url ); }, 500 );
+						setTimeout( function(){ onExportDoneSuccess( responseData.url ); }, 500 );
 					}
 				}
 			}).fail( function( jqxhr, textStatus, error ) {
 				// e.g. Nonce failure.
-				setTimeout( function() { onExportFailure( error ); }, 500 );
+				setTimeout( function(){ onExportFailure( error ); }, 500 );
 			});
 		}
 
@@ -200,23 +199,21 @@ jQuery( document ).ready( function( $ ) {
 			}
 			appendResultsAfterRow( $requestRow, classes, summaryMessage, messages );
 
-			setTimeout( function() { $rowActions.removeClass( 'processing' ); }, 500 );
+			setTimeout( function(){ $rowActions.removeClass( 'processing' ); }, 500 );
 		}
 
 		function onErasureFailure() {
 			var summaryMessage = __( 'An error occurred while attempting to find and erase personal data.' );
 
 			setActionState( $action, 'remove-personal-data-failed' );
+			appendResultsAfterRow( $requestRow, 'notice-error', strings.removalError, [] );
 
-			appendResultsAfterRow( $requestRow, 'notice-error', summaryMessage, [] );
-
-			setTimeout( function() { $rowActions.removeClass( 'processing' ); }, 500 );
+			setTimeout( function(){ $rowActions.removeClass( 'processing' ); }, 500 );
 		}
 
 		function setErasureProgress( eraserIndex ) {
-			var progress       = ( erasersCount > 0 ? eraserIndex / erasersCount : 0 ),
-				progressString = Math.round( progress * 100 ).toString() + '%';
-
+			var progress       = ( erasersCount > 0 ? eraserIndex / erasersCount : 0 );
+			var progressString = Math.round( progress * 100 ).toString() + '%';
 			$progress.html( progressString );
 		}
 
@@ -235,7 +232,7 @@ jQuery( document ).ready( function( $ ) {
 				var responseData = response.data;
 
 				if ( ! response.success ) {
-					setTimeout( function() { onErasureFailure(); }, 500 );
+					setTimeout( function(){ onErasureFailure(); }, 500 );
 					return;
 				}
 				if ( responseData.items_removed ) {
@@ -254,11 +251,11 @@ jQuery( document ).ready( function( $ ) {
 					if ( eraserIndex < erasersCount ) {
 						setTimeout( doNextErasure( eraserIndex + 1, 1 ) );
 					} else {
-						setTimeout( function() { onErasureDoneSuccess(); }, 500 );
+						setTimeout( function(){ onErasureDoneSuccess(); }, 500 );
 					}
 				}
 			}).fail( function() {
-				setTimeout( function() { onErasureFailure(); }, 500 );
+				setTimeout( function(){ onErasureFailure(); }, 500 );
 			});
 		}
 
@@ -291,7 +288,6 @@ jQuery( document ).ready( function( $ ) {
 					var documentPosition = document.documentElement.scrollTop,
 						bodyPosition     = document.body.scrollTop;
 
-					// Setup copy.
 					window.getSelection().removeAllRanges();
 
 					// Hide tutorial content to remove from copied content.
@@ -307,21 +303,11 @@ jQuery( document ).ready( function( $ ) {
 					$container.removeClass( 'hide-privacy-policy-tutorial' );
 					window.getSelection().removeAllRanges();
 
-					// Return scroll position - see #49540.
 					if ( documentPosition > 0 && documentPosition !== document.documentElement.scrollTop ) {
 						document.documentElement.scrollTop = documentPosition;
 					} else if ( bodyPosition > 0 && bodyPosition !== document.body.scrollTop ) {
 						document.body.scrollTop = bodyPosition;
 					}
-
-					// Display and speak notice to indicate action complete.
-					copiedNotice.addClass( 'visible' );
-					wp.a11y.speak( __( 'The section has been copied to your clipboard.' ) );
-
-					// Delay notice dismissal.
-					copiedNoticeTimeout = setTimeout( function() {
-						copiedNotice.removeClass( 'visible' );
-					}, 3000 );
 				} catch ( er ) {}
 			}
 		}

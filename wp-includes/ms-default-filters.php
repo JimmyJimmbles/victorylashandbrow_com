@@ -125,5 +125,5 @@ add_action( 'update_option_home', 'clean_site_details_cache', 10, 0 );
 // If the network upgrade hasn't run yet, assume ms-files.php rewriting is used.
 add_filter( 'default_site_option_ms_files_rewriting', '__return_true' );
 
-// Allow multisite domains for HTTP requests.
+// Whitelist multisite domains for HTTP requests.
 add_filter( 'http_request_host_is_external', 'ms_allowed_http_request_hosts', 20, 2 );

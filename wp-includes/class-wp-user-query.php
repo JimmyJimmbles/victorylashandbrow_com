@@ -762,7 +762,7 @@ class WP_User_Query {
 			$_orderby = $orderby;
 		} elseif ( 'name' === $orderby || 'display_name' === $orderby ) {
 			$_orderby = 'display_name';
-		} elseif ( 'post_count' === $orderby ) {
+		} elseif ( 'post_count' == $orderby ) {
 			// @todo Avoid the JOIN.
 			$where             = get_posts_by_author_sql( 'post' );
 			$this->query_from .= " LEFT OUTER JOIN (

@@ -764,13 +764,6 @@ form#tags-filter {
 	margin-top: 6px;
 }
 
-#wpbody:target:before {
-	content: "";
-	display: block;
-	padding-top: 50px;
-	margin-top: -50px;
-}
-
 .hide-privacy-policy-tutorial {
 	background-color: #fff;
 }
@@ -1466,10 +1459,7 @@ table.links-table {
 	}
 }
 
-/*
- * The edit attachment screen auto-switches to one column layout when the
- * viewport is smaller than 1200 pixels.
- */
+/* one column on the attachment editor screen */
 @media only screen and (max-width: 1200px) {
 	.post-type-attachment #poststuff {
 		min-width: 0;
@@ -1486,7 +1476,7 @@ table.links-table {
 
 	.post-type-attachment #poststuff #postbox-container-1 .empty-container,
 	.post-type-attachment #poststuff #postbox-container-1 #side-sortables:empty {
-		outline: none;
+		border: 0 none;
 		height: 0;
 		min-height: 0;
 	}
@@ -1494,12 +1484,6 @@ table.links-table {
 	.post-type-attachment #poststuff #post-body.columns-2 #side-sortables {
 		min-height: 0;
 		width: auto;
-	}
-
-	.is-dragging-metaboxes.post-type-attachment #post-body .meta-box-sortables {
-		outline: none;
-		min-height: 0;
-		margin-bottom: 0;
 	}
 
 	/* hide the radio buttons for column prefs */

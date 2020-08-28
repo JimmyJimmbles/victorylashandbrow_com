@@ -126,8 +126,8 @@ function check_comment( $author, $email, $url, $comment, $user_ip, $user_agent, 
 	 * as well as whether there are any moderation keywords (if set) present in the author
 	 * email address. If both checks pass, return true. Otherwise, return false.
 	 */
-	if ( 1 == get_option( 'comment_previously_approved' ) ) {
-		if ( 'trackback' !== $comment_type && 'pingback' !== $comment_type && '' !== $author && '' !== $email ) {
+	if ( 1 == get_option( 'comment_whitelist' ) ) {
+		if ( 'trackback' !== $comment_type && 'pingback' !== $comment_type && '' != $author && '' != $email ) {
 			$comment_user = get_user_by( 'email', wp_unslash( $email ) );
 			if ( ! empty( $comment_user->ID ) ) {
 				$ok_to_comment = $wpdb->get_var( $wpdb->prepare( "SELECT comment_approved FROM $wpdb->comments WHERE user_id = %d AND comment_approved = '1' LIMIT 1", $comment_user->ID ) );
@@ -670,7 +670,7 @@ function sanitize_comment_cookies() {
  *                           returning a WP_Error object, rather than executing wp_die().
  *                           Default false.
  * @return int|string|WP_Error Allowed comments return the approval status (0|1|'spam'|'trash').
- *                             If `$wp_error` is true, disallowed comments return a WP_Error.
+ *                             If `$avoid_die` is true, disallowed comments return a WP_Error.
  */
 function wp_allow_comment( $commentdata, $wp_error = false ) {
 	global $wpdb;
@@ -837,7 +837,7 @@ function wp_allow_comment( $commentdata, $wp_error = false ) {
 	 * Filters a comment's approval status before it is set.
 	 *
 	 * @since 2.1.0
-	 * @since 4.9.0 Returning a WP_Error value from the filter will short-circuit comment insertion
+	 * @since 4.9.0 Returning a WP_Error value from the filter will shortcircuit comment insertion
 	 *              and allow skipping further processing.
 	 *
 	 * @param int|string|WP_Error $approved    The approval status. Accepts 1, 0, 'spam', 'trash',
@@ -1344,22 +1344,8 @@ function wp_check_comment_disallowed_list( $author, $email, $url, $comment, $use
 		__( 'Please consider writing more inclusive code.' )
 	);
 
-	/**
-	 * Fires before the comment is tested for disallowed characters or words.
-	 *
-	 * @since 5.5.0
-	 *
-	 * @param string $author     Comment author.
-	 * @param string $email      Comment author's email.
-	 * @param string $url        Comment author's URL.
-	 * @param string $comment    Comment content.
-	 * @param string $user_ip    Comment author's IP address.
-	 * @param string $user_agent Comment author's browser user agent.
-	 */
-	do_action( 'wp_check_comment_disallowed_list', $author, $email, $url, $comment, $user_ip, $user_agent );
-
-	$mod_keys = trim( get_option( 'disallowed_keys' ) );
-	if ( '' === $mod_keys ) {
+	$mod_keys = trim( get_option( 'blacklist_keys' ) );
+	if ( '' == $mod_keys ) {
 		return false; // If moderation keys are empty.
 	}
 
@@ -1463,7 +1449,7 @@ function wp_count_comments( $post_id = 0 ) {
  * @global wpdb $wpdb WordPress database abstraction object.
  *
  * @param int|WP_Comment $comment_id   Comment ID or WP_Comment object.
- * @param bool           $force_delete Whether to bypass Trash and force deletion. Default false.
+ * @param bool           $force_delete Whether to bypass Trash and force deletion. Default is false.
  * @return bool True on success, false on failure.
  */
 function wp_delete_comment( $comment_id, $force_delete = false ) {
@@ -1757,9 +1743,9 @@ function wp_get_comment_status( $comment_id ) {
 		return 'approved';
 	} elseif ( '0' == $approved ) {
 		return 'unapproved';
-	} elseif ( 'spam' === $approved ) {
+	} elseif ( 'spam' == $approved ) {
 		return 'spam';
-	} elseif ( 'trash' === $approved ) {
+	} elseif ( 'trash' == $approved ) {
 		return 'trash';
 	} else {
 		return false;
@@ -2430,9 +2416,7 @@ function wp_set_comment_status( $comment_id, $comment_status, $wp_error = false 
  * @global wpdb $wpdb WordPress database abstraction object.
  *
  * @param array $commentarr Contains information on the comment.
- * @param bool  $wp_error   Optional. Whether to return a WP_Error on failure. Default false.
- * @return int|false|WP_Error The value 1 if the comment was updated, 0 if not updated.
- *                            False or a WP_Error object on failure.
+ * @return int The value 1 if the comment was updated, 0 if not updated.
  */
 function wp_update_comment( $commentarr, $wp_error = false ) {
 	global $wpdb;
@@ -2712,8 +2696,8 @@ function wp_update_comment_count_now( $post_id ) {
  *
  * @since 1.5.0
  *
- * @param string $url        URL to ping.
- * @param int    $deprecated Not Used.
+ * @param string $url URL to ping.
+ * @param int $deprecated Not Used.
  * @return string|false String containing URI on success, false on failure.
  */
 function discover_pingback_server_uri( $url, $deprecated = '' ) {
@@ -2758,7 +2742,7 @@ function discover_pingback_server_uri( $url, $deprecated = '' ) {
 		return false;
 	}
 
-	// Now do a GET since we're going to look in the HTML headers (and we're sure it's not a binary file).
+	// Now do a GET since we're going to look in the html headers (and we're sure it's not a binary file).
 	$response = wp_safe_remote_get(
 		$url,
 		array(
@@ -2981,11 +2965,10 @@ function pingback( $content, $post_id ) {
 	 */
 	foreach ( (array) $post_links_temp as $link_test ) {
 		// If we haven't pung it already and it isn't a link to itself.
-		if ( ! in_array( $link_test, $pung, true ) && ( url_to_postid( $link_test ) != $post->ID )
-			// Also, let's never ping local attachments.
-			&& ! is_local_attachment( $link_test )
-		) {
-			$test = parse_url( $link_test );
+		if ( ! in_array( $link_test, $pung ) && ( url_to_postid( $link_test ) != $post->ID )
+				// Also, let's never ping local attachments.
+				&& ! is_local_attachment( $link_test ) ) {
+			$test = @parse_url( $link_test );
 			if ( $test ) {
 				if ( isset( $test['query'] ) ) {
 					$post_links[] = $link_test;
@@ -3113,7 +3096,7 @@ function weblog_ping( $server = '', $path = '' ) {
 	include_once ABSPATH . WPINC . '/class-wp-http-ixr-client.php';
 
 	// Using a timeout of 3 seconds should be enough to cover slow servers.
-	$client             = new WP_HTTP_IXR_Client( $server, ( ( ! strlen( trim( $path ) ) || ( '/' === $path ) ) ? false : $path ) );
+	$client             = new WP_HTTP_IXR_Client( $server, ( ( ! strlen( trim( $path ) ) || ( '/' == $path ) ) ? false : $path ) );
 	$client->timeout    = 3;
 	$client->useragent .= ' -- WordPress/' . get_bloginfo( 'version' );
 
@@ -3527,7 +3510,7 @@ function wp_handle_comment_submission( $comment_data ) {
 	 */
 	$allow_empty_comment = apply_filters( 'allow_empty_comment', false, $commentdata );
 	if ( '' === $comment_content && ! $allow_empty_comment ) {
-		return new WP_Error( 'require_valid_comment', __( '<strong>Error</strong>: Please type your comment text.' ), 200 );
+		return new WP_Error( 'require_valid_comment', __( '<strong>Error</strong>: Please type a comment.' ), 200 );
 	}
 
 	$check_max_lengths = wp_check_comment_data_max_lengths( $commentdata );
@@ -3662,7 +3645,7 @@ function wp_comments_personal_data_exporter( $email_address, $page = 1 ) {
  *
  * @since 4.9.6
  *
- * @param array $erasers An array of personal data erasers.
+ * @param  array $erasers An array of personal data erasers.
  * @return array An array of personal data erasers.
  */
 function wp_register_comment_personal_data_eraser( $erasers ) {

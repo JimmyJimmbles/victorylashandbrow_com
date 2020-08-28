@@ -810,20 +810,10 @@ class WP_Comments_List_Table extends WP_List_Table {
 		foreach ( $actions as $action => $link ) {
 			++$i;
 
-			if ( ( ( 'approve' === $action || 'unapprove' === $action ) && 2 === $i )
-				|| 1 === $i
-			) {
-				$sep = '';
-			} else {
-				$sep = ' | ';
-			}
-
-			// Reply and quickedit need a hide-if-no-js span when not added with Ajax.
+			// Reply and quickedit need a hide-if-no-js span when not added with ajax.
 			if ( ( 'reply' === $action || 'quickedit' === $action ) && ! wp_doing_ajax() ) {
 				$action .= ' hide-if-no-js';
-			} elseif ( ( 'untrash' === $action && 'trash' === $the_comment_status )
-				|| ( 'unspam' === $action && 'spam' === $the_comment_status )
-			) {
+			} elseif ( ( 'untrash' === $action && 'trash' === $the_comment_status ) || ( 'unspam' === $action && 'spam' === $the_comment_status ) ) {
 				if ( '1' == get_comment_meta( $comment->comment_ID, '_wp_trash_meta_status', true ) ) {
 					$action .= ' approve';
 				} else {

@@ -34,8 +34,8 @@ window.wp = window.wp || {};
 		 *
 		 * @memberof commentsBox
 		 *
-		 * @param {number} total Total number of comments for this post.
-		 * @param {number} num   Optional. Number of comments to fetch, defaults to 20.
+		 * @param {int} total Total number of comments for this post.
+		 * @param {int} num   Optional. Number of comments to fetch, defaults to 20.
 		 * @return {boolean} Always returns false.
 		 */
 		get : function(total, num) {
@@ -94,7 +94,7 @@ window.wp = window.wp || {};
 		 *
 		 * @memberof commentsBox
 		 *
-		 * @param {number} total Total number of comments to load.
+		 * @param {int} total Total number of comments to load.
 		 */
 		load: function(total){
 			this.st = jQuery('#the-comment-list tr.comment:visible').length;
@@ -851,8 +851,6 @@ jQuery(document).ready( function($) {
 
 		// Set the selected visibility as current.
 		$postVisibilitySelect.find('.save-post-visibility').click( function( event ) { // Crazyhorse - multiple OK cancels.
-			var visibilityLabel = '', selectedVisibility = $postVisibilitySelect.find('input:radio:checked').val();
-
 			$postVisibilitySelect.slideUp('fast');
 			$('#visibility .edit-visibility').show().focus();
 			updateText();

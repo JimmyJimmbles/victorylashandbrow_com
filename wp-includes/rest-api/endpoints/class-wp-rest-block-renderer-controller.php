@@ -157,11 +157,9 @@ class WP_REST_Block_Renderer_Controller extends WP_REST_Controller {
 			// Set up postdata since this will be needed if post_id was set.
 			setup_postdata( $post );
 		}
+		$registry = WP_Block_Type_Registry::get_instance();
 
-		$registry   = WP_Block_Type_Registry::get_instance();
-		$registered = $registry->get_registered( $request['name'] );
-
-		if ( null === $registered || ! $registered->is_dynamic() ) {
+		if ( null === $registry->get_registered( $request['name'] ) ) {
 			return new WP_Error(
 				'block_invalid',
 				__( 'Invalid block.' ),

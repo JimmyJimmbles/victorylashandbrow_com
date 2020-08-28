@@ -122,18 +122,27 @@ class WP_Widget_Archives extends WP_Widget {
 /* ]]> */
 </script>
 			<?php
-		} else {
-			$format = current_theme_supports( 'html5', 'navigation-widgets' ) ? 'html5' : 'xhtml';
-
-			/** This filter is documented in wp-includes/widgets/class-wp-nav-menu-widget.php */
-			$format = apply_filters( 'navigation_widgets_format', $format );
-
-			if ( 'html5' === $format ) {
-				// The title may be filtered: Strip out HTML and make sure the aria-label is never empty.
-				$title      = trim( strip_tags( $title ) );
-				$aria_label = $title ? $title : $default_title;
-				echo '<nav role="navigation" aria-label="' . esc_attr( $aria_label ) . '">';
-			}
+			wp_get_archives(
+				/**
+				 * Filters the arguments for the Archives widget.
+				 *
+				 * @since 2.8.0
+				 * @since 4.9.0 Added the `$instance` parameter.
+				 *
+				 * @see wp_get_archives()
+				 *
+				 * @param array $args     An array of Archives option arguments.
+				 * @param array $instance Array of settings for the current widget.
+				 */
+				apply_filters(
+					'widget_archives_args',
+					array(
+						'type'            => 'monthly',
+						'show_post_count' => $count,
+					),
+					$instance
+				)
+			);
 			?>
 
 			<ul>

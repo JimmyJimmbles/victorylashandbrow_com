@@ -1132,8 +1132,8 @@ window.wp = window.wp || {};
 		 *
 		 * @memberof switchEditors
 		 *
-		 * @param {string} html The content from the visual editor.
-		 * @return {string} the filtered content.
+		 * @param {String} html The content from the visual editor.
+		 * @return {String} the filtered content.
 		 */
 		function pre_wpautop( html ) {
 			var obj = { o: exports, data: html, unfiltered: html };
@@ -1158,8 +1158,8 @@ window.wp = window.wp || {};
 		 *
 		 * @memberof switchEditors
 		 *
-		 * @param {string} text The content from the text editor.
-		 * @return {string} filtered content.
+		 * @param {String} text The content from the text editor.
+		 * @return {String} filtered content.
 		 */
 		function wpautop( text ) {
 			var obj = { o: exports, data: text, unfiltered: text };

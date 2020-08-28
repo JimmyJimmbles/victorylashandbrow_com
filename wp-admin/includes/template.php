@@ -536,7 +536,7 @@ function wp_comment_trashnotice() {
 <div class="hidden" id="trash-undo-holder">
 	<div class="trash-undo-inside">
 		<?php
-		/* translators: %s: Comment author, filled by Ajax. */
+		/* translators: %s: Comment author, filled by AJAX. */
 		printf( __( 'Comment by %s moved to the Trash.' ), '<strong></strong>' );
 		?>
 		<span class="undo untrash"><a href="#"><?php _e( 'Undo' ); ?></a></span>
@@ -937,7 +937,7 @@ function wp_dropdown_roles( $selected = '' ) {
 	foreach ( $editable_roles as $role => $details ) {
 		$name = translate_user_role( $details['name'] );
 		// Preselect specified role.
-		if ( $selected === $role ) {
+		if ( $selected == $role ) {
 			$r .= "\n\t<option selected='selected' value='" . esc_attr( $role ) . "'>$name</option>";
 		} else {
 			$r .= "\n\t<option value='" . esc_attr( $role ) . "'>$name</option>";
@@ -1061,12 +1061,12 @@ function add_meta_box( $id, $title, $callback, $screen = null, $context = 'advan
 				continue;
 			}
 
-			// If a core box was previously removed, don't add.
-			if ( ( 'core' === $priority || 'sorted' === $priority )
-				&& false === $wp_meta_boxes[ $page ][ $a_context ][ $a_priority ][ $id ]
-			) {
-				return;
-			}
+			// If a core box was previously added or removed by a plugin, don't add.
+			if ( 'core' == $priority ) {
+				// If core box previously deleted, don't add.
+				if ( false === $wp_meta_boxes[ $page ][ $a_context ][ $a_priority ][ $id ] ) {
+					return;
+				}
 
 			// If a core box was previously added by a plugin, don't add.
 			if ( 'core' === $priority ) {
@@ -1080,7 +1080,6 @@ function add_meta_box( $id, $title, $callback, $screen = null, $context = 'advan
 				}
 				return;
 			}
-
 			// If no priority given and ID already present, use existing priority.
 			if ( empty( $priority ) ) {
 				$priority = $a_priority;
@@ -1093,9 +1092,8 @@ function add_meta_box( $id, $title, $callback, $screen = null, $context = 'advan
 				$callback      = $wp_meta_boxes[ $page ][ $a_context ][ $a_priority ][ $id ]['callback'];
 				$callback_args = $wp_meta_boxes[ $page ][ $a_context ][ $a_priority ][ $id ]['args'];
 			}
-
 			// An ID can be in only one priority and one context.
-			if ( $priority !== $a_priority || $context !== $a_context ) {
+			if ( $priority != $a_priority || $context != $a_context ) {
 				unset( $wp_meta_boxes[ $page ][ $a_context ][ $a_priority ][ $id ] );
 			}
 		}
@@ -2273,11 +2271,11 @@ function _media_states( $post ) {
 		}
 	}
 
-	if ( (int) get_option( 'site_icon' ) === $post->ID ) {
+	if ( get_option( 'site_icon' ) == $post->ID ) {
 		$media_states[] = __( 'Site Icon' );
 	}
 
-	if ( (int) get_theme_mod( 'custom_logo' ) === $post->ID ) {
+	if ( get_theme_mod( 'custom_logo' ) == $post->ID ) {
 		$media_states[] = __( 'Logo' );
 	}
 

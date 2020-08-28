@@ -82,7 +82,7 @@ this["wp"] = this["wp"] || {}; this["wp"]["compose"] =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 445);
+/******/ 	return __webpack_require__(__webpack_require__.s = 431);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -94,32 +94,205 @@ this["wp"] = this["wp"] || {}; this["wp"]["compose"] =
 
 /***/ }),
 
-/***/ 12:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _assertThisInitialized; });
-function _assertThisInitialized(self) {
-  if (self === void 0) {
-    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-  }
-
-  return self;
-}
-
-/***/ }),
-
-/***/ 13:
+/***/ 105:
 /***/ (function(module, exports) {
 
-(function() { module.exports = this["React"]; }());
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
 
 /***/ }),
 
-/***/ 14:
+/***/ 112:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return useMediaQuery; });
+/* harmony import */ var _babel_runtime_helpers_esm_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(20);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(0);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, "a", function() { return /* binding */ _slicedToArray; });
@@ -127,32 +300,34 @@ __webpack_require__.d(__webpack_exports__, "a", function() { return /* binding *
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/arrayWithHoles.js
 var arrayWithHoles = __webpack_require__(38);
 
-// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/iterableToArrayLimit.js
-function _iterableToArrayLimit(arr, i) {
-  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
-  var _arr = [];
-  var _n = true;
-  var _d = false;
-  var _e = undefined;
+/**
+ * Runs a media query and returns its value when it changes.
+ *
+ * @param {string} [query] Media Query.
+ * @return {boolean} return value of the media query.
+ */
 
   try {
     for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
       _arr.push(_s.value);
 
-      if (i && _arr.length === i) break;
+  Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
+    if (!query) {
+      return;
     }
-  } catch (err) {
-    _d = true;
-    _e = err;
-  } finally {
-    try {
-      if (!_n && _i["return"] != null) _i["return"]();
-    } finally {
-      if (_d) throw _e;
-    }
-  }
 
-  return _arr;
+    var updateMatch = function updateMatch() {
+      return setMatch(window.matchMedia(query).matches);
+    };
+
+    updateMatch();
+    var list = window.matchMedia(query);
+    list.addListener(updateMatch);
+    return function () {
+      list.removeListener(updateMatch);
+    };
+  }, [query]);
+  return query && match;
 }
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js
 var unsupportedIterableToArray = __webpack_require__(29);
@@ -163,18 +338,71 @@ var nonIterableRest = __webpack_require__(39);
 // CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/slicedToArray.js
 
 
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _extends; });
+function _extends() {
+  _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
 
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
 
-function _slicedToArray(arr, i) {
-  return Object(arrayWithHoles["a" /* default */])(arr) || _iterableToArrayLimit(arr, i) || Object(unsupportedIterableToArray["a" /* default */])(arr, i) || Object(nonIterableRest["a" /* default */])();
+    return target;
+  };
+
+  return _extends.apply(this, arguments);
 }
 
 /***/ }),
 
-/***/ 149:
-/***/ (function(module, exports, __webpack_require__) {
+/***/ 13:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-var e=__webpack_require__(13),n={display:"block",opacity:0,position:"absolute",top:0,left:0,height:"100%",width:"100%",overflow:"hidden",pointerEvents:"none",zIndex:-1},t=function(t){var r=t.onResize,u=e.useRef();return function(n,t){var r=function(){return n.current&&n.current.contentDocument&&n.current.contentDocument.defaultView};function u(){t();var e=r();e&&e.addEventListener("resize",t)}e.useEffect((function(){return r()?u():n.current&&n.current.addEventListener&&n.current.addEventListener("load",u),function(){var e=r();e&&"function"==typeof e.removeEventListener&&e.removeEventListener("resize",t)}}),[])}(u,(function(){return r(u)})),e.createElement("iframe",{style:n,src:"about:blank",ref:u,"aria-hidden":!0,tabIndex:-1,frameBorder:0})},r=function(e){return{width:null!=e?e.offsetWidth:null,height:null!=e?e.offsetHeight:null}};module.exports=function(n){void 0===n&&(n=r);var u=e.useState(n(null)),o=u[0],i=u[1],c=e.useCallback((function(e){return i(n(e.current))}),[n]);return[e.useMemo((function(){return e.createElement(t,{onResize:c})}),[c]),o]};
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _createClass; });
+function _defineProperties(target, props) {
+  for (var i = 0; i < props.length; i++) {
+    var descriptor = props[i];
+    descriptor.enumerable = descriptor.enumerable || false;
+    descriptor.configurable = true;
+    if ("value" in descriptor) descriptor.writable = true;
+    Object.defineProperty(target, descriptor.key, descriptor);
+  }
+}
+
+function _createClass(Constructor, protoProps, staticProps) {
+  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+  if (staticProps) _defineProperties(Constructor, staticProps);
+  return Constructor;
+}
+
+/***/ }),
+
+/***/ 14:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _classCallCheck; });
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+
+/***/ }),
+
+/***/ 15:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _possibleConstructorReturn; });
+/* harmony import */ var _helpers_esm_typeof__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(34);
+/* harmony import */ var _assertThisInitialized__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
 
 
 /***/ }),
@@ -200,7 +428,7 @@ function _getPrototypeOf(o) {
 
 /***/ }),
 
-/***/ 18:
+/***/ 17:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -237,29 +465,6 @@ function _toConsumableArray(arr) {
 
 /***/ }),
 
-/***/ 19:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _createClass; });
-function _defineProperties(target, props) {
-  for (var i = 0; i < props.length; i++) {
-    var descriptor = props[i];
-    descriptor.enumerable = descriptor.enumerable || false;
-    descriptor.configurable = true;
-    if ("value" in descriptor) descriptor.writable = true;
-    Object.defineProperty(target, descriptor.key, descriptor);
-  }
-}
-
-function _createClass(Constructor, protoProps, staticProps) {
-  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
-  if (staticProps) _defineProperties(Constructor, staticProps);
-  return Constructor;
-}
-
-/***/ }),
-
 /***/ 2:
 /***/ (function(module, exports) {
 
@@ -271,71 +476,56 @@ function _createClass(Constructor, protoProps, staticProps) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _classCallCheck; });
-function _classCallCheck(instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-}
 
-/***/ }),
+// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/arrayWithHoles.js
+var arrayWithHoles = __webpack_require__(38);
 
-/***/ 22:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/iterableToArrayLimit.js
+function _iterableToArrayLimit(arr, i) {
+  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+  var _e = undefined;
 
-"use strict";
+  try {
+    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
 
-// EXPORTS
-__webpack_require__.d(__webpack_exports__, "a", function() { return /* binding */ _inherits; });
-
-// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js
-function _setPrototypeOf(o, p) {
-  _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
-    o.__proto__ = p;
-    return o;
-  };
-
-  return _setPrototypeOf(o, p);
-}
-// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/inherits.js
-
-function _inherits(subClass, superClass) {
-  if (typeof superClass !== "function" && superClass !== null) {
-    throw new TypeError("Super expression must either be null or a function");
-  }
-
-  subClass.prototype = Object.create(superClass && superClass.prototype, {
-    constructor: {
-      value: subClass,
-      writable: true,
-      configurable: true
+      if (i && _arr.length === i) break;
     }
-  });
-  if (superClass) _setPrototypeOf(subClass, superClass);
-}
-
-/***/ }),
-
-/***/ 23:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _possibleConstructorReturn; });
-/* harmony import */ var _helpers_esm_typeof__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(40);
-/* harmony import */ var _assertThisInitialized__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(12);
-
-
-function _possibleConstructorReturn(self, call) {
-  if (call && (Object(_helpers_esm_typeof__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])(call) === "object" || typeof call === "function")) {
-    return call;
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
   }
 
-  return Object(_assertThisInitialized__WEBPACK_IMPORTED_MODULE_1__[/* default */ "a"])(self);
+  return _arr;
+}
+// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js
+var unsupportedIterableToArray = __webpack_require__(27);
+
+// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/nonIterableRest.js
+var nonIterableRest = __webpack_require__(39);
+
+// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/slicedToArray.js
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _slicedToArray; });
+
+
+
+
+function _slicedToArray(arr, i) {
+  return Object(arrayWithHoles["a" /* default */])(arr) || _iterableToArrayLimit(arr, i) || Object(unsupportedIterableToArray["a" /* default */])(arr, i) || Object(nonIterableRest["a" /* default */])();
 }
 
 /***/ }),
 
-/***/ 26:
+/***/ 25:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -352,981 +542,58 @@ function _arrayLikeToArray(arr, len) {
 
 /***/ }),
 
-/***/ 272:
-/***/ (function(module, exports, __webpack_require__) {
-
-/*!
- * clipboard.js v2.0.6
- * https://clipboardjs.com/
- * 
- * Licensed MIT © Zeno Rocha
- */
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(true)
-		module.exports = factory();
-	else {}
-})(this, function() {
-return /******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */
-/***/ (function(module, exports) {
-
-function select(element) {
-    var selectedText;
-
-    if (element.nodeName === 'SELECT') {
-        element.focus();
-
-        selectedText = element.value;
-    }
-    else if (element.nodeName === 'INPUT' || element.nodeName === 'TEXTAREA') {
-        var isReadOnly = element.hasAttribute('readonly');
-
-        if (!isReadOnly) {
-            element.setAttribute('readonly', '');
-        }
-
-        element.select();
-        element.setSelectionRange(0, element.value.length);
-
-        if (!isReadOnly) {
-            element.removeAttribute('readonly');
-        }
-
-        selectedText = element.value;
-    }
-    else {
-        if (element.hasAttribute('contenteditable')) {
-            element.focus();
-        }
-
-        var selection = window.getSelection();
-        var range = document.createRange();
-
-        range.selectNodeContents(element);
-        selection.removeAllRanges();
-        selection.addRange(range);
-
-        selectedText = selection.toString();
-    }
-
-    return selectedText;
-}
-
-module.exports = select;
-
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-function E () {
-  // Keep this empty so it's easier to inherit from
-  // (via https://github.com/lipsmack from https://github.com/scottcorgan/tiny-emitter/issues/3)
-}
-
-E.prototype = {
-  on: function (name, callback, ctx) {
-    var e = this.e || (this.e = {});
-
-    (e[name] || (e[name] = [])).push({
-      fn: callback,
-      ctx: ctx
-    });
-
-    return this;
-  },
-
-  once: function (name, callback, ctx) {
-    var self = this;
-    function listener () {
-      self.off(name, listener);
-      callback.apply(ctx, arguments);
-    };
-
-    listener._ = callback
-    return this.on(name, listener, ctx);
-  },
-
-  emit: function (name) {
-    var data = [].slice.call(arguments, 1);
-    var evtArr = ((this.e || (this.e = {}))[name] || []).slice();
-    var i = 0;
-    var len = evtArr.length;
-
-    for (i; i < len; i++) {
-      evtArr[i].fn.apply(evtArr[i].ctx, data);
-    }
-
-    return this;
-  },
-
-  off: function (name, callback) {
-    var e = this.e || (this.e = {});
-    var evts = e[name];
-    var liveEvents = [];
-
-    if (evts && callback) {
-      for (var i = 0, len = evts.length; i < len; i++) {
-        if (evts[i].fn !== callback && evts[i].fn._ !== callback)
-          liveEvents.push(evts[i]);
-      }
-    }
-
-    // Remove event from queue to prevent memory leak
-    // Suggested by https://github.com/lazd
-    // Ref: https://github.com/scottcorgan/tiny-emitter/commit/c6ebfaa9bc973b33d110a84a307742b7cf94c953#commitcomment-5024910
-
-    (liveEvents.length)
-      ? e[name] = liveEvents
-      : delete e[name];
-
-    return this;
-  }
-};
-
-module.exports = E;
-module.exports.TinyEmitter = E;
-
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var is = __webpack_require__(3);
-var delegate = __webpack_require__(4);
-
-/**
- * Validates all params and calls the right
- * listener function based on its target type.
- *
- * @param {String|HTMLElement|HTMLCollection|NodeList} target
- * @param {String} type
- * @param {Function} callback
- * @return {Object}
- */
-function listen(target, type, callback) {
-    if (!target && !type && !callback) {
-        throw new Error('Missing required arguments');
-    }
-
-    if (!is.string(type)) {
-        throw new TypeError('Second argument must be a String');
-    }
-
-    if (!is.fn(callback)) {
-        throw new TypeError('Third argument must be a Function');
-    }
-
-    if (is.node(target)) {
-        return listenNode(target, type, callback);
-    }
-    else if (is.nodeList(target)) {
-        return listenNodeList(target, type, callback);
-    }
-    else if (is.string(target)) {
-        return listenSelector(target, type, callback);
-    }
-    else {
-        throw new TypeError('First argument must be a String, HTMLElement, HTMLCollection, or NodeList');
-    }
-}
-
-/**
- * Adds an event listener to a HTML element
- * and returns a remove listener function.
- *
- * @param {HTMLElement} node
- * @param {String} type
- * @param {Function} callback
- * @return {Object}
- */
-function listenNode(node, type, callback) {
-    node.addEventListener(type, callback);
-
-    return {
-        destroy: function() {
-            node.removeEventListener(type, callback);
-        }
-    }
-}
-
-/**
- * Add an event listener to a list of HTML elements
- * and returns a remove listener function.
- *
- * @param {NodeList|HTMLCollection} nodeList
- * @param {String} type
- * @param {Function} callback
- * @return {Object}
- */
-function listenNodeList(nodeList, type, callback) {
-    Array.prototype.forEach.call(nodeList, function(node) {
-        node.addEventListener(type, callback);
-    });
-
-    return {
-        destroy: function() {
-            Array.prototype.forEach.call(nodeList, function(node) {
-                node.removeEventListener(type, callback);
-            });
-        }
-    }
-}
-
-/**
- * Add an event listener to a selector
- * and returns a remove listener function.
- *
- * @param {String} selector
- * @param {String} type
- * @param {Function} callback
- * @return {Object}
- */
-function listenSelector(selector, type, callback) {
-    return delegate(document.body, selector, type, callback);
-}
-
-module.exports = listen;
-
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports) {
-
-/**
- * Check if argument is a HTML element.
- *
- * @param {Object} value
- * @return {Boolean}
- */
-exports.node = function(value) {
-    return value !== undefined
-        && value instanceof HTMLElement
-        && value.nodeType === 1;
-};
-
-/**
- * Check if argument is a list of HTML elements.
- *
- * @param {Object} value
- * @return {Boolean}
- */
-exports.nodeList = function(value) {
-    var type = Object.prototype.toString.call(value);
-
-    return value !== undefined
-        && (type === '[object NodeList]' || type === '[object HTMLCollection]')
-        && ('length' in value)
-        && (value.length === 0 || exports.node(value[0]));
-};
-
-/**
- * Check if argument is a string.
- *
- * @param {Object} value
- * @return {Boolean}
- */
-exports.string = function(value) {
-    return typeof value === 'string'
-        || value instanceof String;
-};
-
-/**
- * Check if argument is a function.
- *
- * @param {Object} value
- * @return {Boolean}
- */
-exports.fn = function(value) {
-    var type = Object.prototype.toString.call(value);
-
-    return type === '[object Function]';
-};
-
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var closest = __webpack_require__(5);
-
-/**
- * Delegates event to a selector.
- *
- * @param {Element} element
- * @param {String} selector
- * @param {String} type
- * @param {Function} callback
- * @param {Boolean} useCapture
- * @return {Object}
- */
-function _delegate(element, selector, type, callback, useCapture) {
-    var listenerFn = listener.apply(this, arguments);
-
-    element.addEventListener(type, listenerFn, useCapture);
-
-    return {
-        destroy: function() {
-            element.removeEventListener(type, listenerFn, useCapture);
-        }
-    }
-}
-
-/**
- * Delegates event to a selector.
- *
- * @param {Element|String|Array} [elements]
- * @param {String} selector
- * @param {String} type
- * @param {Function} callback
- * @param {Boolean} useCapture
- * @return {Object}
- */
-function delegate(elements, selector, type, callback, useCapture) {
-    // Handle the regular Element usage
-    if (typeof elements.addEventListener === 'function') {
-        return _delegate.apply(null, arguments);
-    }
-
-    // Handle Element-less usage, it defaults to global delegation
-    if (typeof type === 'function') {
-        // Use `document` as the first parameter, then apply arguments
-        // This is a short way to .unshift `arguments` without running into deoptimizations
-        return _delegate.bind(null, document).apply(null, arguments);
-    }
-
-    // Handle Selector-based usage
-    if (typeof elements === 'string') {
-        elements = document.querySelectorAll(elements);
-    }
-
-    // Handle Array-like based usage
-    return Array.prototype.map.call(elements, function (element) {
-        return _delegate(element, selector, type, callback, useCapture);
-    });
-}
-
-/**
- * Finds closest match and invokes callback.
- *
- * @param {Element} element
- * @param {String} selector
- * @param {String} type
- * @param {Function} callback
- * @return {Function}
- */
-function listener(element, selector, type, callback) {
-    return function(e) {
-        e.delegateTarget = closest(e.target, selector);
-
-        if (e.delegateTarget) {
-            callback.call(element, e);
-        }
-    }
-}
-
-module.exports = delegate;
-
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports) {
-
-var DOCUMENT_NODE_TYPE = 9;
-
-/**
- * A polyfill for Element.matches()
- */
-if (typeof Element !== 'undefined' && !Element.prototype.matches) {
-    var proto = Element.prototype;
-
-    proto.matches = proto.matchesSelector ||
-                    proto.mozMatchesSelector ||
-                    proto.msMatchesSelector ||
-                    proto.oMatchesSelector ||
-                    proto.webkitMatchesSelector;
-}
-
-/**
- * Finds the closest parent that matches a selector.
- *
- * @param {Element} element
- * @param {String} selector
- * @return {Function}
- */
-function closest (element, selector) {
-    while (element && element.nodeType !== DOCUMENT_NODE_TYPE) {
-        if (typeof element.matches === 'function' &&
-            element.matches(selector)) {
-          return element;
-        }
-        element = element.parentNode;
-    }
-}
-
-module.exports = closest;
-
-
-/***/ }),
-/* 6 */
+/***/ 252:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-
-// EXTERNAL MODULE: ./node_modules/select/src/select.js
-var src_select = __webpack_require__(0);
-var select_default = /*#__PURE__*/__webpack_require__.n(src_select);
-
-// CONCATENATED MODULE: ./src/clipboard-action.js
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-
-
+/* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var _use_media_query__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(112);
 /**
- * Inner class which performs selection from either `text` or `target`
- * properties and then executes copy or cut operations.
+ * Internal dependencies
  */
 
-var clipboard_action_ClipboardAction = function () {
-    /**
-     * @param {Object} options
-     */
-    function ClipboardAction(options) {
-        _classCallCheck(this, ClipboardAction);
-
-        this.resolveOptions(options);
-        this.initSelection();
-    }
-
-    /**
-     * Defines base properties passed from constructor.
-     * @param {Object} options
-     */
-
-
-    _createClass(ClipboardAction, [{
-        key: 'resolveOptions',
-        value: function resolveOptions() {
-            var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-            this.action = options.action;
-            this.container = options.container;
-            this.emitter = options.emitter;
-            this.target = options.target;
-            this.text = options.text;
-            this.trigger = options.trigger;
-
-            this.selectedText = '';
-        }
-
-        /**
-         * Decides which selection strategy is going to be applied based
-         * on the existence of `text` and `target` properties.
-         */
-
-    }, {
-        key: 'initSelection',
-        value: function initSelection() {
-            if (this.text) {
-                this.selectFake();
-            } else if (this.target) {
-                this.selectTarget();
-            }
-        }
-
-        /**
-         * Creates a fake textarea element, sets its value from `text` property,
-         * and makes a selection on it.
-         */
-
-    }, {
-        key: 'selectFake',
-        value: function selectFake() {
-            var _this = this;
-
-            var isRTL = document.documentElement.getAttribute('dir') == 'rtl';
-
-            this.removeFake();
-
-            this.fakeHandlerCallback = function () {
-                return _this.removeFake();
-            };
-            this.fakeHandler = this.container.addEventListener('click', this.fakeHandlerCallback) || true;
-
-            this.fakeElem = document.createElement('textarea');
-            // Prevent zooming on iOS
-            this.fakeElem.style.fontSize = '12pt';
-            // Reset box model
-            this.fakeElem.style.border = '0';
-            this.fakeElem.style.padding = '0';
-            this.fakeElem.style.margin = '0';
-            // Move element out of screen horizontally
-            this.fakeElem.style.position = 'absolute';
-            this.fakeElem.style[isRTL ? 'right' : 'left'] = '-9999px';
-            // Move element to the same position vertically
-            var yPosition = window.pageYOffset || document.documentElement.scrollTop;
-            this.fakeElem.style.top = yPosition + 'px';
-
-            this.fakeElem.setAttribute('readonly', '');
-            this.fakeElem.value = this.text;
-
-            this.container.appendChild(this.fakeElem);
-
-            this.selectedText = select_default()(this.fakeElem);
-            this.copyText();
-        }
-
-        /**
-         * Only removes the fake element after another click event, that way
-         * a user can hit `Ctrl+C` to copy because selection still exists.
-         */
-
-    }, {
-        key: 'removeFake',
-        value: function removeFake() {
-            if (this.fakeHandler) {
-                this.container.removeEventListener('click', this.fakeHandlerCallback);
-                this.fakeHandler = null;
-                this.fakeHandlerCallback = null;
-            }
-
-            if (this.fakeElem) {
-                this.container.removeChild(this.fakeElem);
-                this.fakeElem = null;
-            }
-        }
-
-        /**
-         * Selects the content from element passed on `target` property.
-         */
-
-    }, {
-        key: 'selectTarget',
-        value: function selectTarget() {
-            this.selectedText = select_default()(this.target);
-            this.copyText();
-        }
-
-        /**
-         * Executes the copy operation based on the current selection.
-         */
-
-    }, {
-        key: 'copyText',
-        value: function copyText() {
-            var succeeded = void 0;
-
-            try {
-                succeeded = document.execCommand(this.action);
-            } catch (err) {
-                succeeded = false;
-            }
-
-            this.handleResult(succeeded);
-        }
-
-        /**
-         * Fires an event based on the copy operation result.
-         * @param {Boolean} succeeded
-         */
-
-    }, {
-        key: 'handleResult',
-        value: function handleResult(succeeded) {
-            this.emitter.emit(succeeded ? 'success' : 'error', {
-                action: this.action,
-                text: this.selectedText,
-                trigger: this.trigger,
-                clearSelection: this.clearSelection.bind(this)
-            });
-        }
-
-        /**
-         * Moves focus away from `target` and back to the trigger, removes current selection.
-         */
-
-    }, {
-        key: 'clearSelection',
-        value: function clearSelection() {
-            if (this.trigger) {
-                this.trigger.focus();
-            }
-            document.activeElement.blur();
-            window.getSelection().removeAllRanges();
-        }
-
-        /**
-         * Sets the `action` to be performed which can be either 'copy' or 'cut'.
-         * @param {String} action
-         */
-
-    }, {
-        key: 'destroy',
-
-
-        /**
-         * Destroy lifecycle.
-         */
-        value: function destroy() {
-            this.removeFake();
-        }
-    }, {
-        key: 'action',
-        set: function set() {
-            var action = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'copy';
-
-            this._action = action;
-
-            if (this._action !== 'copy' && this._action !== 'cut') {
-                throw new Error('Invalid "action" value, use either "copy" or "cut"');
-            }
-        }
-
-        /**
-         * Gets the `action` property.
-         * @return {String}
-         */
-        ,
-        get: function get() {
-            return this._action;
-        }
-
-        /**
-         * Sets the `target` property using an element
-         * that will be have its content copied.
-         * @param {Element} target
-         */
-
-    }, {
-        key: 'target',
-        set: function set(target) {
-            if (target !== undefined) {
-                if (target && (typeof target === 'undefined' ? 'undefined' : _typeof(target)) === 'object' && target.nodeType === 1) {
-                    if (this.action === 'copy' && target.hasAttribute('disabled')) {
-                        throw new Error('Invalid "target" attribute. Please use "readonly" instead of "disabled" attribute');
-                    }
-
-                    if (this.action === 'cut' && (target.hasAttribute('readonly') || target.hasAttribute('disabled'))) {
-                        throw new Error('Invalid "target" attribute. You can\'t cut text from elements with "readonly" or "disabled" attributes');
-                    }
-
-                    this._target = target;
-                } else {
-                    throw new Error('Invalid "target" value, use a valid Element');
-                }
-            }
-        }
-
-        /**
-         * Gets the `target` property.
-         * @return {String|HTMLElement}
-         */
-        ,
-        get: function get() {
-            return this._target;
-        }
-    }]);
-
-    return ClipboardAction;
-}();
-
-/* harmony default export */ var clipboard_action = (clipboard_action_ClipboardAction);
-// EXTERNAL MODULE: ./node_modules/tiny-emitter/index.js
-var tiny_emitter = __webpack_require__(1);
-var tiny_emitter_default = /*#__PURE__*/__webpack_require__.n(tiny_emitter);
-
-// EXTERNAL MODULE: ./node_modules/good-listener/src/listen.js
-var listen = __webpack_require__(2);
-var listen_default = /*#__PURE__*/__webpack_require__.n(listen);
-
-// CONCATENATED MODULE: ./src/clipboard.js
-var clipboard_typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var clipboard_createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function clipboard_classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-
-
-
-
 /**
- * Base class which takes one or more elements, adds event listeners to them,
- * and instantiates a new `ClipboardAction` on each click.
+ * Whether or not the user agent is Internet Explorer.
+ *
+ * @type {boolean}
  */
 
-var clipboard_Clipboard = function (_Emitter) {
-    _inherits(Clipboard, _Emitter);
-
-    /**
-     * @param {String|HTMLElement|HTMLCollection|NodeList} trigger
-     * @param {Object} options
-     */
-    function Clipboard(trigger, options) {
-        clipboard_classCallCheck(this, Clipboard);
-
-        var _this = _possibleConstructorReturn(this, (Clipboard.__proto__ || Object.getPrototypeOf(Clipboard)).call(this));
-
-        _this.resolveOptions(options);
-        _this.listenClick(trigger);
-        return _this;
-    }
-
-    /**
-     * Defines if attributes would be resolved using internal setter functions
-     * or custom functions that were passed in the constructor.
-     * @param {Object} options
-     */
-
-
-    clipboard_createClass(Clipboard, [{
-        key: 'resolveOptions',
-        value: function resolveOptions() {
-            var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-            this.action = typeof options.action === 'function' ? options.action : this.defaultAction;
-            this.target = typeof options.target === 'function' ? options.target : this.defaultTarget;
-            this.text = typeof options.text === 'function' ? options.text : this.defaultText;
-            this.container = clipboard_typeof(options.container) === 'object' ? options.container : document.body;
-        }
-
-        /**
-         * Adds a click event listener to the passed trigger.
-         * @param {String|HTMLElement|HTMLCollection|NodeList} trigger
-         */
-
-    }, {
-        key: 'listenClick',
-        value: function listenClick(trigger) {
-            var _this2 = this;
-
-            this.listener = listen_default()(trigger, 'click', function (e) {
-                return _this2.onClick(e);
-            });
-        }
-
-        /**
-         * Defines a new `ClipboardAction` on each click event.
-         * @param {Event} e
-         */
-
-    }, {
-        key: 'onClick',
-        value: function onClick(e) {
-            var trigger = e.delegateTarget || e.currentTarget;
-
-            if (this.clipboardAction) {
-                this.clipboardAction = null;
-            }
-
-            this.clipboardAction = new clipboard_action({
-                action: this.action(trigger),
-                target: this.target(trigger),
-                text: this.text(trigger),
-                container: this.container,
-                trigger: trigger,
-                emitter: this
-            });
-        }
-
-        /**
-         * Default `action` lookup function.
-         * @param {Element} trigger
-         */
-
-    }, {
-        key: 'defaultAction',
-        value: function defaultAction(trigger) {
-            return getAttributeValue('action', trigger);
-        }
-
-        /**
-         * Default `target` lookup function.
-         * @param {Element} trigger
-         */
-
-    }, {
-        key: 'defaultTarget',
-        value: function defaultTarget(trigger) {
-            var selector = getAttributeValue('target', trigger);
-
-            if (selector) {
-                return document.querySelector(selector);
-            }
-        }
-
-        /**
-         * Returns the support of the given action, or all actions if no action is
-         * given.
-         * @param {String} [action]
-         */
-
-    }, {
-        key: 'defaultText',
-
-
-        /**
-         * Default `text` lookup function.
-         * @param {Element} trigger
-         */
-        value: function defaultText(trigger) {
-            return getAttributeValue('text', trigger);
-        }
-
-        /**
-         * Destroy lifecycle.
-         */
-
-    }, {
-        key: 'destroy',
-        value: function destroy() {
-            this.listener.destroy();
-
-            if (this.clipboardAction) {
-                this.clipboardAction.destroy();
-                this.clipboardAction = null;
-            }
-        }
-    }], [{
-        key: 'isSupported',
-        value: function isSupported() {
-            var action = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : ['copy', 'cut'];
-
-            var actions = typeof action === 'string' ? [action] : action;
-            var support = !!document.queryCommandSupported;
-
-            actions.forEach(function (action) {
-                support = support && !!document.queryCommandSupported(action);
-            });
-
-            return support;
-        }
-    }]);
-
-    return Clipboard;
-}(tiny_emitter_default.a);
-
+var IS_IE = typeof window !== 'undefined' && window.navigator.userAgent.indexOf('Trident') >= 0;
 /**
- * Helper function to retrieve attribute value.
- * @param {String} suffix
- * @param {Element} element
+ * Hook returning whether the user has a preference for reduced motion.
+ *
+ * @return {boolean} Reduced motion preference value.
  */
 
+var useReducedMotion = process.env.FORCE_REDUCED_MOTION || IS_IE ? function () {
+  return true;
+} : function () {
+  return Object(_use_media_query__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])('(prefers-reduced-motion: reduce)');
+};
+/* harmony default export */ __webpack_exports__["a"] = (useReducedMotion);
 
-function getAttributeValue(suffix, element) {
-    var attribute = 'data-clipboard-' + suffix;
-
-    if (!element.hasAttribute(attribute)) {
-        return;
-    }
-
-    return element.getAttribute(attribute);
-}
-
-/* harmony default export */ var clipboard = __webpack_exports__["default"] = (clipboard_Clipboard);
-
-/***/ })
-/******/ ])["default"];
-});
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(105)))
 
 /***/ }),
 
-/***/ 273:
+/***/ 27:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _unsupportedIterableToArray; });
+/* harmony import */ var _arrayLikeToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(25);
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return Object(_arrayLikeToArray__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(n);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return Object(_arrayLikeToArray__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])(o, minLen);
+}
+
+/***/ }),
+
+/***/ 271:
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/*global define:false */
@@ -1685,6 +952,26 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/*global define:false */
 
         return action;
     }
+}
+
+module.exports = closest;
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+
+// EXTERNAL MODULE: ./node_modules/select/src/select.js
+var src_select = __webpack_require__(0);
+var select_default = /*#__PURE__*/__webpack_require__.n(src_select);
+
+// CONCATENATED MODULE: ./src/clipboard-action.js
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
     /**
      * Converts from a string key combination to an array
@@ -2392,31 +1679,25 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/*global define:false */
 
 /***/ }),
 
-/***/ 29:
+/***/ 34:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _unsupportedIterableToArray; });
-/* harmony import */ var _arrayLikeToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(26);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _typeof; });
+function _typeof(obj) {
+  "@babel/helpers - typeof";
 
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return Object(_arrayLikeToArray__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return Object(_arrayLikeToArray__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])(o, minLen);
-}
+  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    _typeof = function _typeof(obj) {
+      return typeof obj;
+    };
+  } else {
+    _typeof = function _typeof(obj) {
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    };
+  }
 
-/***/ }),
-
-/***/ 35:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _iterableToArray; });
-function _iterableToArray(iter) {
-  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+  return _typeof(obj);
 }
 
 /***/ }),
@@ -2443,30 +1724,7 @@ function _nonIterableRest() {
 
 /***/ }),
 
-/***/ 40:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _typeof; });
-function _typeof(obj) {
-  "@babel/helpers - typeof";
-
-  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-    _typeof = function _typeof(obj) {
-      return typeof obj;
-    };
-  } else {
-    _typeof = function _typeof(obj) {
-      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-    };
-  }
-
-  return _typeof(obj);
-}
-
-/***/ }),
-
-/***/ 411:
+/***/ 396:
 /***/ (function(module, exports) {
 
 /**
@@ -2519,33 +1777,12 @@ function _typeof(obj) {
 
 /***/ }),
 
-/***/ 445:
+/***/ 431:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 // ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
-
-// EXPORTS
-__webpack_require__.d(__webpack_exports__, "createHigherOrderComponent", function() { return /* reexport */ create_higher_order_component; });
-__webpack_require__.d(__webpack_exports__, "compose", function() { return /* reexport */ compose; });
-__webpack_require__.d(__webpack_exports__, "ifCondition", function() { return /* reexport */ if_condition; });
-__webpack_require__.d(__webpack_exports__, "pure", function() { return /* reexport */ higher_order_pure; });
-__webpack_require__.d(__webpack_exports__, "withGlobalEvents", function() { return /* reexport */ with_global_events; });
-__webpack_require__.d(__webpack_exports__, "withInstanceId", function() { return /* reexport */ with_instance_id; });
-__webpack_require__.d(__webpack_exports__, "withSafeTimeout", function() { return /* reexport */ with_safe_timeout; });
-__webpack_require__.d(__webpack_exports__, "withState", function() { return /* reexport */ withState; });
-__webpack_require__.d(__webpack_exports__, "useCopyOnClick", function() { return /* reexport */ useCopyOnClick; });
-__webpack_require__.d(__webpack_exports__, "__experimentalUseDragging", function() { return /* reexport */ useDragging; });
-__webpack_require__.d(__webpack_exports__, "useInstanceId", function() { return /* reexport */ useInstanceId; });
-__webpack_require__.d(__webpack_exports__, "useKeyboardShortcut", function() { return /* reexport */ use_keyboard_shortcut; });
-__webpack_require__.d(__webpack_exports__, "useMediaQuery", function() { return /* reexport */ useMediaQuery; });
-__webpack_require__.d(__webpack_exports__, "usePrevious", function() { return /* reexport */ usePrevious; });
-__webpack_require__.d(__webpack_exports__, "useReducedMotion", function() { return /* reexport */ use_reduced_motion; });
-__webpack_require__.d(__webpack_exports__, "useViewportMatch", function() { return /* reexport */ use_viewport_match; });
-__webpack_require__.d(__webpack_exports__, "useResizeObserver", function() { return /* reexport */ use_resize_observer; });
-__webpack_require__.d(__webpack_exports__, "useAsyncList", function() { return /* reexport */ use_async_list; });
-__webpack_require__.d(__webpack_exports__, "useWarnOnChange", function() { return /* reexport */ use_warn_on_change; });
 
 // EXTERNAL MODULE: external {"this":"lodash"}
 var external_this_lodash_ = __webpack_require__(2);
@@ -2629,22 +1866,22 @@ var if_condition_ifCondition = function ifCondition(predicate) {
 /* harmony default export */ var if_condition = (if_condition_ifCondition);
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/classCallCheck.js
-var classCallCheck = __webpack_require__(20);
+var classCallCheck = __webpack_require__(14);
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/createClass.js
-var createClass = __webpack_require__(19);
+var createClass = __webpack_require__(13);
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js
-var possibleConstructorReturn = __webpack_require__(23);
+var possibleConstructorReturn = __webpack_require__(15);
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js
 var getPrototypeOf = __webpack_require__(16);
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/inherits.js + 1 modules
-var inherits = __webpack_require__(22);
+var inherits = __webpack_require__(17);
 
 // EXTERNAL MODULE: external {"this":["wp","isShallowEqual"]}
-var external_this_wp_isShallowEqual_ = __webpack_require__(64);
+var external_this_wp_isShallowEqual_ = __webpack_require__(51);
 var external_this_wp_isShallowEqual_default = /*#__PURE__*/__webpack_require__.n(external_this_wp_isShallowEqual_);
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/compose/build-module/higher-order/pure/index.js
@@ -2734,10 +1971,10 @@ var pure = create_higher_order_component(function (Wrapped) {
 /* harmony default export */ var higher_order_pure = (pure);
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/extends.js
-var esm_extends = __webpack_require__(8);
+var esm_extends = __webpack_require__(12);
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js
-var assertThisInitialized = __webpack_require__(12);
+var assertThisInitialized = __webpack_require__(7);
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/compose/build-module/higher-order/with-global-events/listener.js
 
@@ -3284,54 +2521,41 @@ function useDragging(_ref) {
       (_eventsRef$current2 = eventsRef.current).onDragEnd.apply(_eventsRef$current2, arguments);
     }
 
-    document.removeEventListener('mousemove', onMouseMove);
-    document.removeEventListener('mouseup', endDrag);
-    setIsDragging(false);
-  }, []);
-  var startDrag = Object(external_this_wp_element_["useCallback"])(function () {
-    if (eventsRef.current.onDragStart) {
-      var _eventsRef$current3;
+// CONCATENATED MODULE: ./node_modules/@wordpress/compose/build-module/hooks/use-instance-id/index.js
+/**
+ * WordPress dependencies
+ */
 
-      (_eventsRef$current3 = eventsRef.current).onDragStart.apply(_eventsRef$current3, arguments);
-    }
+var instanceMap = new WeakMap();
+/**
+ * Creates a new id for a given object.
+ *
+ * @param {Object} object Object reference to create an id for.
+ */
 
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', endDrag);
-    setIsDragging(true);
-  }, []); // Remove the global events when unmounting if needed.
-
-  Object(external_this_wp_element_["useEffect"])(function () {
-    return function () {
-      if (isDragging) {
-        document.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('mouseup', endDrag);
-      }
-    };
-  }, [isDragging]);
-  return {
-    startDrag: startDrag,
-    endDrag: endDrag,
-    isDragging: isDragging
-  };
+function createId(object) {
+  var instances = instanceMap.get(object) || 0;
+  instanceMap.set(object, instances + 1);
+  return instances;
 }
-
-// EXTERNAL MODULE: ./node_modules/mousetrap/mousetrap.js
-var mousetrap_mousetrap = __webpack_require__(273);
-var mousetrap_default = /*#__PURE__*/__webpack_require__.n(mousetrap_mousetrap);
+/**
+ * Provides a unique instance ID.
+ *
+ * @param {Object} object Object reference to create an id for.
+ */
 
 // EXTERNAL MODULE: ./node_modules/mousetrap/plugins/global-bind/mousetrap-global-bind.js
 var mousetrap_global_bind = __webpack_require__(411);
 
-// CONCATENATED MODULE: ./node_modules/@wordpress/compose/build-module/hooks/use-keyboard-shortcut/index.js
-/**
- * External dependencies
- */
+function useInstanceId(object) {
+  return Object(external_this_wp_element_["useMemo"])(function () {
+    return createId(object);
+  }, [object]);
+}
+
+// CONCATENATED MODULE: ./node_modules/@wordpress/compose/build-module/higher-order/with-instance-id/index.js
 
 
-
-/**
- * WordPress dependencies
- */
 
 
 /**
@@ -3348,56 +2572,19 @@ var mousetrap_global_bind = __webpack_require__(411);
 /**
  * Return true if platform is MacOS.
  *
- * @param {Object} _window   window object by default; used for DI testing.
+ * @param {WPComponent} WrappedComponent The wrapped component.
  *
- * @return {boolean} True if MacOS; false otherwise.
+ * @return {WPComponent} Component with an instanceId prop.
  */
 
-function isAppleOS() {
-  var _window = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : window;
-
-  var platform = _window.navigator.platform;
-  return platform.indexOf('Mac') !== -1 || Object(external_this_lodash_["includes"])(['iPad', 'iPhone'], platform);
-}
-/**
- * Attach a keyboard shortcut handler.
- *
- * @param {string[]|string}         shortcuts  Keyboard Shortcuts.
- * @param {Function}                callback   Shortcut callback.
- * @param {WPKeyboardShortcutConfig} options    Shortcut options.
- */
-
-
-function useKeyboardShortcut(shortcuts, callback) {
-  var _ref = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
-      _ref$bindGlobal = _ref.bindGlobal,
-      bindGlobal = _ref$bindGlobal === void 0 ? false : _ref$bindGlobal,
-      _ref$eventName = _ref.eventName,
-      eventName = _ref$eventName === void 0 ? 'keydown' : _ref$eventName,
-      _ref$isDisabled = _ref.isDisabled,
-      isDisabled = _ref$isDisabled === void 0 ? false : _ref$isDisabled,
-      target = _ref.target;
-
-  var currentCallback = Object(external_this_wp_element_["useRef"])(callback);
-  Object(external_this_wp_element_["useEffect"])(function () {
-    currentCallback.current = callback;
-  }, [callback]);
-  Object(external_this_wp_element_["useEffect"])(function () {
-    if (isDisabled) {
-      return;
-    }
-
-    var mousetrap = new mousetrap_default.a(target ? target.current : document);
-    Object(external_this_lodash_["castArray"])(shortcuts).forEach(function (shortcut) {
-      var keys = shortcut.split('+'); // Determines whether a key is a modifier by the length of the string.
-      // E.g. if I add a pass a shortcut Shift+Cmd+M, it'll determine that
-      // the modifiers are Shift and Cmd because they're not a single character.
-
-      var modifiers = new Set(keys.filter(function (value) {
-        return value.length > 1;
-      }));
-      var hasAlt = modifiers.has('alt');
-      var hasShift = modifiers.has('shift'); // This should be better moved to the shortcut registration instead.
+/* harmony default export */ var with_instance_id = (create_higher_order_component(function (WrappedComponent) {
+  return function (props) {
+    var instanceId = useInstanceId(WrappedComponent);
+    return Object(external_this_wp_element_["createElement"])(WrappedComponent, Object(esm_extends["a" /* default */])({}, props, {
+      instanceId: instanceId
+    }));
+  };
+}, 'withInstanceId'));
 
       if (isAppleOS() && (modifiers.size === 1 && hasAlt || modifiers.size === 2 && hasAlt && hasShift)) {
         throw new Error("Cannot bind ".concat(shortcut, ". Alt and Shift+Alt modifiers are reserved for character input."));
@@ -3499,14 +2686,9 @@ function usePrevious(value) {
 /**
  * Whether or not the user agent is Internet Explorer.
  *
- * @type {boolean}
- */
-
-var IS_IE = typeof window !== 'undefined' && window.navigator.userAgent.indexOf('Trident') >= 0;
-/**
- * Hook returning whether the user has a preference for reduced motion.
+ * @param {WPComponent} OriginalComponent Component requiring setTimeout
  *
- * @return {boolean} Reduced motion preference value.
+ * @return {WPComponent} Wrapped component.
  */
 
 var useReducedMotion = undefined || IS_IE ? function () {
@@ -3597,9 +2779,20 @@ var use_viewport_match_useViewportMatch = function useViewportMatch(breakpoint) 
   var mediaQuery = !simulatedWidth && "(".concat(CONDITIONS[operator], ": ").concat(BREAKPOINTS[breakpoint], "px)");
   var mediaQueryResult = useMediaQuery(mediaQuery);
 
-  if (simulatedWidth) {
-    return OPERATOR_EVALUATORS[operator](BREAKPOINTS[breakpoint], simulatedWidth);
-  }
+          return clearTimeout;
+        }(function (id) {
+          clearTimeout(id);
+          this.timeouts = Object(external_this_lodash_["without"])(this.timeouts, id);
+        })
+      }, {
+        key: "render",
+        value: function render() {
+          return Object(external_this_wp_element_["createElement"])(OriginalComponent, Object(esm_extends["a" /* default */])({}, this.props, {
+            setTimeout: this.setTimeout,
+            clearTimeout: this.clearTimeout
+          }));
+        }
+      }]);
 
   return mediaQueryResult;
 };
@@ -3685,27 +2878,7 @@ function getFirstItemsPresentInState(list, state) {
  * @param {Array}  state  Current state
  * @param {Object} action Action
  *
- * @return {Array} update state.
- */
-
-
-function listReducer(state, action) {
-  if (action.type === 'reset') {
-    return action.list;
-  }
-
-  if (action.type === 'append') {
-    return [].concat(Object(toConsumableArray["a" /* default */])(state), [action.item]);
-  }
-
-  return state;
-}
-/**
- * React hook returns an array which items get asynchronously appended from a source array.
- * This behavior is useful if we want to render a list of items asynchronously for performance reasons.
- *
- * @param {Array} list Source array.
- * @return {Array} Async array.
+ * @return {WPComponent} Wrapped component.
  */
 
 
@@ -3746,33 +2919,289 @@ function useAsyncList(list) {
   return current;
 }
 
-/* harmony default export */ var use_async_list = (useAsyncList);
+// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/slicedToArray.js + 1 modules
+var slicedToArray = __webpack_require__(20);
 
-// CONCATENATED MODULE: ./node_modules/@wordpress/compose/build-module/hooks/use-warn-on-change/index.js
+// CONCATENATED MODULE: ./node_modules/@wordpress/compose/build-module/hooks/use-dragging/index.js
 
+
+/**
+ * WordPress dependencies
+ */
+
+var useIsomorphicLayoutEffect = typeof window !== 'undefined' ? external_this_wp_element_["useLayoutEffect"] : external_this_wp_element_["useEffect"];
+function useDragging(_ref) {
+  var onDragStart = _ref.onDragStart,
+      onDragMove = _ref.onDragMove,
+      onDragEnd = _ref.onDragEnd;
+
+  var _useState = Object(external_this_wp_element_["useState"])(false),
+      _useState2 = Object(slicedToArray["a" /* default */])(_useState, 2),
+      isDragging = _useState2[0],
+      setIsDragging = _useState2[1];
+
+  var eventsRef = Object(external_this_wp_element_["useRef"])({
+    onDragStart: onDragStart,
+    onDragMove: onDragMove,
+    onDragEnd: onDragEnd
+  });
+  useIsomorphicLayoutEffect(function () {
+    eventsRef.current.onDragStart = onDragStart;
+    eventsRef.current.onDragMove = onDragMove;
+    eventsRef.current.onDragEnd = onDragEnd;
+  }, [onDragStart, onDragMove, onDragEnd]);
+  var onMouseMove = Object(external_this_wp_element_["useCallback"])(function () {
+    var _eventsRef$current;
+
+    return eventsRef.current.onDragMove && (_eventsRef$current = eventsRef.current).onDragMove.apply(_eventsRef$current, arguments);
+  }, []);
+  var endDrag = Object(external_this_wp_element_["useCallback"])(function () {
+    if (eventsRef.current.onDragEnd) {
+      var _eventsRef$current2;
+
+      (_eventsRef$current2 = eventsRef.current).onDragEnd.apply(_eventsRef$current2, arguments);
+    }
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', endDrag);
+    setIsDragging(false);
+  }, []);
+  var startDrag = Object(external_this_wp_element_["useCallback"])(function () {
+    if (eventsRef.current.onDragStart) {
+      var _eventsRef$current3;
+
+      (_eventsRef$current3 = eventsRef.current).onDragStart.apply(_eventsRef$current3, arguments);
+    }
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', endDrag);
+    setIsDragging(true);
+  }, []); // Remove the global events when unmounting if needed.
+
+  Object(external_this_wp_element_["useEffect"])(function () {
+    return function () {
+      if (isDragging) {
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', endDrag);
+      }
+    };
+  }, [isDragging]);
+  return {
+    startDrag: startDrag,
+    endDrag: endDrag,
+    isDragging: isDragging
+  };
+}
+
+// EXTERNAL MODULE: ./node_modules/mousetrap/mousetrap.js
+var mousetrap_mousetrap = __webpack_require__(271);
+var mousetrap_default = /*#__PURE__*/__webpack_require__.n(mousetrap_mousetrap);
+
+// EXTERNAL MODULE: ./node_modules/mousetrap/plugins/global-bind/mousetrap-global-bind.js
+var mousetrap_global_bind = __webpack_require__(396);
+
+// CONCATENATED MODULE: ./node_modules/@wordpress/compose/build-module/hooks/use-keyboard-shortcut/index.js
+/**
+ * External dependencies
+ */
+
+
+
+/**
+ * WordPress dependencies
+ */
+
+
+/**
+ * A block selection object.
+ *
+ * @typedef {Object} WPKeyboardShortcutConfig
+ *
+ * @property {boolean} [bindGlobal]  Handle keyboard events anywhere including inside textarea/input fields.
+ * @property {string}  [eventName]   Event name used to trigger the handler, defaults to keydown.
+ * @property {boolean} [isDisabled]  Disables the keyboard handler if the value is true.
+ * @property {Object}  [target]      React reference to the DOM element used to catch the keyboard event.
+ */
+
+/**
+ * Return true if platform is MacOS.
+ *
+ * @param {Object} _window   window object by default; used for DI testing.
+ *
+ * @return {boolean} True if MacOS; false otherwise.
+ */
+
+function isAppleOS() {
+  var _window = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : window;
+
+  var platform = _window.navigator.platform;
+  return platform.indexOf('Mac') !== -1 || Object(external_this_lodash_["includes"])(['iPad', 'iPhone'], platform);
+}
+/**
+ * Attach a keyboard shortcut handler.
+ *
+ * @param {string[]|string}         shortcuts  Keyboard Shortcuts.
+ * @param {Function}                callback   Shortcut callback.
+ * @param {WPKeyboardShortcutConfig} options    Shortcut options.
+ */
+
+
+function useKeyboardShortcut(shortcuts, callback) {
+  var _ref = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
+      _ref$bindGlobal = _ref.bindGlobal,
+      bindGlobal = _ref$bindGlobal === void 0 ? false : _ref$bindGlobal,
+      _ref$eventName = _ref.eventName,
+      eventName = _ref$eventName === void 0 ? 'keydown' : _ref$eventName,
+      _ref$isDisabled = _ref.isDisabled,
+      isDisabled = _ref$isDisabled === void 0 ? false : _ref$isDisabled,
+      target = _ref.target;
+
+  Object(external_this_wp_element_["useEffect"])(function () {
+    if (isDisabled) {
+      return;
+    }
+
+    var mousetrap = new mousetrap_default.a(target ? target.current : document);
+    Object(external_this_lodash_["castArray"])(shortcuts).forEach(function (shortcut) {
+      var keys = shortcut.split('+'); // Determines whether a key is a modifier by the length of the string.
+      // E.g. if I add a pass a shortcut Shift+Cmd+M, it'll determine that
+      // the modifiers are Shift and Cmd because they're not a single character.
+
+      var modifiers = new Set(keys.filter(function (value) {
+        return value.length > 1;
+      }));
+      var hasAlt = modifiers.has('alt');
+      var hasShift = modifiers.has('shift'); // This should be better moved to the shortcut registration instead.
+
+      if (isAppleOS() && (modifiers.size === 1 && hasAlt || modifiers.size === 2 && hasAlt && hasShift)) {
+        throw new Error("Cannot bind ".concat(shortcut, ". Alt and Shift+Alt modifiers are reserved for character input."));
+      }
+
+      var bindFn = bindGlobal ? 'bindGlobal' : 'bind';
+      mousetrap[bindFn](shortcut, callback, eventName);
+    });
+    return function () {
+      mousetrap.reset();
+    };
+  }, [shortcuts, bindGlobal, eventName, callback, target, isDisabled]);
+}
+
+/* harmony default export */ var use_keyboard_shortcut = (useKeyboardShortcut);
+
+// EXTERNAL MODULE: ./node_modules/@wordpress/compose/build-module/hooks/use-media-query/index.js
+var use_media_query = __webpack_require__(112);
+
+// EXTERNAL MODULE: ./node_modules/@wordpress/compose/build-module/hooks/use-reduced-motion/index.js
+var use_reduced_motion = __webpack_require__(252);
+
+// CONCATENATED MODULE: ./node_modules/@wordpress/compose/build-module/hooks/use-viewport-match/index.js
+/**
+ * WordPress dependencies
+ */
 
 /**
  * Internal dependencies
  */
 
+
 /**
- * Hook that performs a shallow comparison between the preview value of an object
- * and the new one, if there's a difference, it prints it to the console.
- * this is useful in performance related work, to check why a component re-renders.
+ * @typedef {"huge"|"wide"|"large"|"medium"|"small"|"mobile"} WPBreakpoint
+ */
+
+/**
+ * Hash of breakpoint names with pixel width at which it becomes effective.
  *
- *  @example
+ * @see _breakpoints.scss
  *
- * ```jsx
- * function MyComponent(props) {
- *    useWarnOnChange(props);
+ * @type {Object<WPBreakpoint,number>}
+ */
+
+var BREAKPOINTS = {
+  huge: 1440,
+  wide: 1280,
+  large: 960,
+  medium: 782,
+  small: 600,
+  mobile: 480
+};
+/**
+ * @typedef {">="|"<"} WPViewportOperator
+ */
+
+/**
+ * Object mapping media query operators to the condition to be used.
  *
- *    return "Something";
- * }
+ * @type {Object<WPViewportOperator,string>}
+ */
+
+var CONDITIONS = {
+  '>=': 'min-width',
+  '<': 'max-width'
+};
+/**
+ * Object mapping media query operators to a function that given a breakpointValue and a width evaluates if the operator matches the values.
+ *
+ * @type {Object<WPViewportOperator,Function>}
+ */
+
+var OPERATOR_EVALUATORS = {
+  '>=': function _(breakpointValue, width) {
+    return width >= breakpointValue;
+  },
+  '<': function _(breakpointValue, width) {
+    return width < breakpointValue;
+  }
+};
+var ViewportMatchWidthContext = Object(external_this_wp_element_["createContext"])(null);
+/**
+ * Returns true if the viewport matches the given query, or false otherwise.
+ *
+ * @param {WPBreakpoint}       breakpoint      Breakpoint size name.
+ * @param {WPViewportOperator} [operator=">="] Viewport operator.
+ *
+ * @example
+ *
+ * ```js
+ * useViewportMatch( 'huge', <' );
+ * useViewportMatch( 'medium' );
  * ```
  *
- * @param {Object} object Object which changes to compare.
- * @param {string} prefix Just a prefix to show when console logging.
+ * @return {boolean} Whether viewport matches query.
  */
+
+var use_viewport_match_useViewportMatch = function useViewportMatch(breakpoint) {
+  var operator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '>=';
+  var simulatedWidth = Object(external_this_wp_element_["useContext"])(ViewportMatchWidthContext);
+  var mediaQuery = !simulatedWidth && "(".concat(CONDITIONS[operator], ": ").concat(BREAKPOINTS[breakpoint], "px)");
+  var mediaQueryResult = Object(use_media_query["a" /* default */])(mediaQuery);
+
+  if (simulatedWidth) {
+    return OPERATOR_EVALUATORS[operator](BREAKPOINTS[breakpoint], simulatedWidth);
+  }
+
+  return mediaQueryResult;
+};
+
+use_viewport_match_useViewportMatch.__experimentalWidthProvider = ViewportMatchWidthContext.Provider;
+/* harmony default export */ var use_viewport_match = (use_viewport_match_useViewportMatch);
+
+// CONCATENATED MODULE: ./node_modules/@wordpress/compose/build-module/index.js
+/* concated harmony reexport createHigherOrderComponent */__webpack_require__.d(__webpack_exports__, "createHigherOrderComponent", function() { return create_higher_order_component; });
+/* concated harmony reexport compose */__webpack_require__.d(__webpack_exports__, "compose", function() { return compose; });
+/* concated harmony reexport ifCondition */__webpack_require__.d(__webpack_exports__, "ifCondition", function() { return if_condition; });
+/* concated harmony reexport pure */__webpack_require__.d(__webpack_exports__, "pure", function() { return higher_order_pure; });
+/* concated harmony reexport withGlobalEvents */__webpack_require__.d(__webpack_exports__, "withGlobalEvents", function() { return with_global_events; });
+/* concated harmony reexport withInstanceId */__webpack_require__.d(__webpack_exports__, "withInstanceId", function() { return with_instance_id; });
+/* concated harmony reexport withSafeTimeout */__webpack_require__.d(__webpack_exports__, "withSafeTimeout", function() { return with_safe_timeout; });
+/* concated harmony reexport withState */__webpack_require__.d(__webpack_exports__, "withState", function() { return withState; });
+/* concated harmony reexport __experimentalUseDragging */__webpack_require__.d(__webpack_exports__, "__experimentalUseDragging", function() { return useDragging; });
+/* concated harmony reexport useInstanceId */__webpack_require__.d(__webpack_exports__, "useInstanceId", function() { return useInstanceId; });
+/* concated harmony reexport useKeyboardShortcut */__webpack_require__.d(__webpack_exports__, "useKeyboardShortcut", function() { return use_keyboard_shortcut; });
+/* concated harmony reexport useMediaQuery */__webpack_require__.d(__webpack_exports__, "useMediaQuery", function() { return use_media_query["a" /* default */]; });
+/* concated harmony reexport useReducedMotion */__webpack_require__.d(__webpack_exports__, "useReducedMotion", function() { return use_reduced_motion["a" /* default */]; });
+/* concated harmony reexport useViewportMatch */__webpack_require__.d(__webpack_exports__, "useViewportMatch", function() { return use_viewport_match; });
+// Utils
+ // Compose helper (aliased flowRight from Lodash)
 
 function useWarnOnChange(object) {
   var prefix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'Change detection';
@@ -3812,21 +3241,16 @@ function useWarnOnChange(object) {
 
 
 
-
-
-
-
-
 /***/ }),
 
-/***/ 64:
+/***/ 51:
 /***/ (function(module, exports) {
 
 (function() { module.exports = this["wp"]["isShallowEqual"]; }());
 
 /***/ }),
 
-/***/ 8:
+/***/ 7:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

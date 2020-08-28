@@ -1007,7 +1007,7 @@ function media_sideload_image( $file, $post_id = 0, $desc = null, $return = 'htm
 		// Store the original attachment source in meta.
 		add_post_meta( $id, '_source_url', $file );
 
-		// If attachment ID was requested, return it.
+		// If attachment id was requested, return it.
 		if ( 'id' === $return ) {
 			return $id;
 		}
@@ -1770,7 +1770,7 @@ function get_media_item( $attachment_id, $args = null ) {
 		if ( ! empty( $field[ $field['input'] ] ) ) {
 			$item .= $field[ $field['input'] ];
 		} elseif ( 'textarea' === $field['input'] ) {
-			if ( 'post_content' === $id && user_can_richedit() ) {
+			if ( 'post_content' == $id && user_can_richedit() ) {
 				// Sanitize_post() skips the post_content when user_can_richedit.
 				$field['value'] = htmlspecialchars( $field['value'], ENT_QUOTES );
 			}
@@ -1963,7 +1963,7 @@ function get_compat_media_markup( $attachment_id, $args = null ) {
 		if ( ! empty( $field[ $field['input'] ] ) ) {
 			$item .= $field[ $field['input'] ];
 		} elseif ( 'textarea' === $field['input'] ) {
-			if ( 'post_content' === $id && user_can_richedit() ) {
+			if ( 'post_content' == $id && user_can_richedit() ) {
 				// sanitize_post() skips the post_content when user_can_richedit.
 				$field['value'] = htmlspecialchars( $field['value'], ENT_QUOTES );
 			}

@@ -619,9 +619,9 @@ function maybe_serialize( $data ) {
  * @param string $data Data that might be unserialized.
  * @return mixed Unserialized data can be any type.
  */
-function maybe_unserialize( $data ) {
-	if ( is_serialized( $data ) ) { // Don't attempt to unserialize data that wasn't serialized going in.
-		return @unserialize( trim( $data ) );
+function maybe_unserialize( $original ) {
+	if ( is_serialized( $original ) ) { // Don't attempt to unserialize data that wasn't serialized going in.
+		return @unserialize( $original );
 	}
 
 	return $data;
@@ -724,6 +724,31 @@ function is_serialized_string( $data ) {
 	} else {
 		return true;
 	}
+}
+
+/**
+ * Serialize data, if needed.
+ *
+ * @since 2.0.5
+ *
+ * @param string|array|object $data Data that might be serialized.
+ * @return mixed A scalar data
+ */
+function maybe_serialize( $data ) {
+	if ( is_array( $data ) || is_object( $data ) ) {
+		return serialize( $data );
+	}
+
+	/*
+	 * Double serialization is required for backward compatibility.
+	 * See https://core.trac.wordpress.org/ticket/12930
+	 * Also the world will end. See WP 3.6.1.
+	 */
+	if ( is_serialized( $data, false ) ) {
+		return serialize( $data );
+	}
+
+	return $data;
 }
 
 /**
@@ -906,8 +931,8 @@ function do_enclose( $content = null, $post ) {
 				$allowed_types = array( 'video', 'audio' );
 
 				// Check to see if we can figure out the mime type from the extension.
-				$url_parts = parse_url( $url );
-				if ( false !== $url_parts && ! empty( $url_parts['path'] ) ) {
+				$url_parts = @parse_url( $url );
+				if ( false !== $url_parts ) {
 					$extension = pathinfo( $url_parts['path'], PATHINFO_EXTENSION );
 					if ( ! empty( $extension ) ) {
 						foreach ( wp_get_mime_types() as $exts => $mime ) {
@@ -1001,6 +1026,14 @@ function build_query( $data ) {
  * @access private
  *
  * @see https://www.php.net/manual/en/function.http-build-query.php
+ *
+ * @param array|object  $data       An array or object of data. Converted to array.
+ * @param string        $prefix     Optional. Numeric index. If set, start parameter numbering with it.
+ *                                  Default null.
+ * @param string        $sep        Optional. Argument separator; defaults to 'arg_separator.output'.
+ *                                  Default null.
+ * @param string        $key        Optional. Used to prefix key name. Default empty.
+ * @param bool          $urlencode  Optional. Whether to use urlencode() in the result. Default true.
  *
  * @param array|object $data      An array or object of data. Converted to array.
  * @param string       $prefix    Optional. Numeric index. If set, start parameter numbering with it.
@@ -1550,7 +1583,7 @@ function do_feed() {
 	// Remove the pad, if present.
 	$feed = preg_replace( '/^_+/', '', $feed );
 
-	if ( '' === $feed || 'feed' === $feed ) {
+	if ( '' == $feed || 'feed' === $feed ) {
 		$feed = get_default_feed();
 	}
 
@@ -2641,18 +2674,11 @@ function _wp_check_existing_file_names( $filename, $files ) {
  *
  * @since 2.0.0
  *
- * @param string      $name       Filename.
- * @param null|string $deprecated Never used. Set to null.
- * @param string      $bits       File content
- * @param string      $time       Optional. Time formatted in 'yyyy/mm'. Default null.
- * @return array {
- *     Information about the newly-uploaded file.
- *
- *     @type string       $file  Filename of the newly-uploaded file.
- *     @type string       $url   URL of the uploaded file.
- *     @type string       $type  File type.
- *     @type string|false $error Error message, if there has been an error.
- * }
+ * @param string       $name       Filename.
+ * @param null|string  $deprecated Never used. Set to null.
+ * @param string       $bits       File content
+ * @param string       $time       Optional. Time formatted in 'yyyy/mm'. Default null.
+ * @return array
  */
 function wp_upload_bits( $name, $deprecated, $bits, $time = null ) {
 	if ( ! empty( $deprecated ) ) {
@@ -2677,8 +2703,8 @@ function wp_upload_bits( $name, $deprecated, $bits, $time = null ) {
 	/**
 	 * Filters whether to treat the upload bits as an error.
 	 *
-	 * Returning a non-array from the filter will effectively short-circuit preparing the upload bits
-	 * and return that value instead. An error message should be returned as a string.
+	 * Returning a non-array from the filter will effectively short-circuit preparing the upload
+	 * bits, returning that value instead. An error message should be returned as a string.
 	 *
 	 * @since 3.0.0
 	 *
@@ -4380,7 +4406,7 @@ function smilies_init() {
 
 		// New subpattern?
 		if ( $firstchar != $subchar ) {
-			if ( '' !== $subchar ) {
+			if ( '' != $subchar ) {
 				$wp_smiliessearch .= ')(?=' . $spaces . '|$)';  // End previous "subpattern".
 				$wp_smiliessearch .= '|(?<=' . $spaces . '|^)'; // Begin another "subpattern".
 			}
@@ -4446,7 +4472,7 @@ function wp_parse_list( $list ) {
  *
  * @since 3.0.0
  *
- * @param array|string $list List of IDs.
+ * @param array|string $list List of ids.
  * @return int[] Sanitized array of IDs.
  */
 function wp_parse_id_list( $list ) {
@@ -4460,7 +4486,7 @@ function wp_parse_id_list( $list ) {
  *
  * @since 4.7.0
  *
- * @param array|string $list List of slugs.
+ * @param  array|string $list List of slugs.
  * @return string[] Sanitized array of slugs.
  */
 function wp_parse_slug_list( $list ) {
@@ -4761,7 +4787,7 @@ function _deprecated_function( $function, $version, $replacement = '' ) {
 	 */
 	if ( WP_DEBUG && apply_filters( 'deprecated_function_trigger_error', true ) ) {
 		if ( function_exists( '__' ) ) {
-			if ( $replacement ) {
+			if ( ! is_null( $replacement ) ) {
 				trigger_error(
 					sprintf(
 						/* translators: 1: PHP function name, 2: Version number, 3: Alternative function name. */
@@ -4784,7 +4810,7 @@ function _deprecated_function( $function, $version, $replacement = '' ) {
 				);
 			}
 		} else {
-			if ( $replacement ) {
+			if ( ! is_null( $replacement ) ) {
 				trigger_error(
 					sprintf(
 						'%1$s is <strong>deprecated</strong> since version %2$s! Use %3$s instead.',
@@ -4951,7 +4977,7 @@ function _deprecated_file( $file, $version, $replacement = '', $message = '' ) {
 		$message = empty( $message ) ? '' : ' ' . $message;
 
 		if ( function_exists( '__' ) ) {
-			if ( $replacement ) {
+			if ( ! is_null( $replacement ) ) {
 				trigger_error(
 					sprintf(
 						/* translators: 1: PHP file name, 2: Version number, 3: Alternative file name. */
@@ -4974,7 +5000,7 @@ function _deprecated_file( $file, $version, $replacement = '', $message = '' ) {
 				);
 			}
 		} else {
-			if ( $replacement ) {
+			if ( ! is_null( $replacement ) ) {
 				trigger_error(
 					sprintf(
 						'%1$s is <strong>deprecated</strong> since version %2$s! Use %3$s instead.',
@@ -5045,7 +5071,7 @@ function _deprecated_argument( $function, $version, $message = '' ) {
 	 */
 	if ( WP_DEBUG && apply_filters( 'deprecated_argument_trigger_error', true ) ) {
 		if ( function_exists( '__' ) ) {
-			if ( $message ) {
+			if ( ! is_null( $message ) ) {
 				trigger_error(
 					sprintf(
 						/* translators: 1: PHP function name, 2: Version number, 3: Optional message regarding the change. */
@@ -5068,7 +5094,7 @@ function _deprecated_argument( $function, $version, $message = '' ) {
 				);
 			}
 		} else {
-			if ( $message ) {
+			if ( ! is_null( $message ) ) {
 				trigger_error(
 					sprintf(
 						'%1$s was called with an argument that is <strong>deprecated</strong> since version %2$s! %3$s',
@@ -5109,8 +5135,8 @@ function _deprecated_argument( $function, $version, $message = '' ) {
  *
  * @param string $hook        The hook that was used.
  * @param string $version     The version of WordPress that deprecated the hook.
- * @param string $replacement Optional. The hook that should have been used. Default empty.
- * @param string $message     Optional. A message regarding the change. Default empty.
+ * @param string $replacement Optional. The hook that should have been used. Default null.
+ * @param string $message     Optional. A message regarding the change. Default null.
  */
 function _deprecated_hook( $hook, $version, $replacement = '', $message = '' ) {
 	/**
@@ -5136,7 +5162,7 @@ function _deprecated_hook( $hook, $version, $replacement = '', $message = '' ) {
 	if ( WP_DEBUG && apply_filters( 'deprecated_hook_trigger_error', true ) ) {
 		$message = empty( $message ) ? '' : ' ' . $message;
 
-		if ( $replacement ) {
+		if ( ! is_null( $replacement ) ) {
 			trigger_error(
 				sprintf(
 					/* translators: 1: WordPress hook name, 2: Version number, 3: Alternative hook name. */
@@ -5216,7 +5242,7 @@ function _doing_it_wrong( $function, $message, $version ) {
 
 			trigger_error(
 				sprintf(
-					/* translators: Developer debugging message. 1: PHP function name, 2: Explanatory message, 3: WordPress version number. */
+					/* translators: Developer debugging message. 1: PHP function name, 2: Explanatory message, 3: Version information message. */
 					__( '%1$s was called <strong>incorrectly</strong>. %2$s %3$s' ),
 					$function,
 					$message,
@@ -5257,8 +5283,7 @@ function _doing_it_wrong( $function, $message, $version ) {
 function is_lighttpd_before_150() {
 	$server_parts    = explode( '/', isset( $_SERVER['SERVER_SOFTWARE'] ) ? $_SERVER['SERVER_SOFTWARE'] : '' );
 	$server_parts[1] = isset( $server_parts[1] ) ? $server_parts[1] : '';
-
-	return ( 'lighttpd' === $server_parts[0] && -1 == version_compare( $server_parts[1], '1.5.0' ) );
+	return 'lighttpd' == $server_parts[0] && -1 == version_compare( $server_parts[1], '1.5.0' );
 }
 
 /**
@@ -5418,7 +5443,7 @@ function wp_guess_url() {
 			$path = preg_replace( '#/(wp-admin/.*|wp-login.php)#i', '', $_SERVER['REQUEST_URI'] );
 
 			// The request is for a file in ABSPATH.
-		} elseif ( $script_filename_dir . '/' === $abspath_fix ) {
+		} elseif ( $script_filename_dir . '/' == $abspath_fix ) {
 			// Strip off any file/query params in the path.
 			$path = preg_replace( '#/[^/]*$#i', '', $_SERVER['PHP_SELF'] );
 

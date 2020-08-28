@@ -134,7 +134,6 @@ class WP_Filesystem_Direct extends WP_Filesystem_Base {
 		if ( ! $this->is_dir( $file ) ) {
 			return chgrp( $file, $group );
 		}
-
 		// Is a directory, and we want recursive.
 		$file     = trailingslashit( $file );
 		$filelist = $this->dirlist( $file );
@@ -172,7 +171,6 @@ class WP_Filesystem_Direct extends WP_Filesystem_Base {
 		if ( ! $recursive || ! $this->is_dir( $file ) ) {
 			return chmod( $file, $mode );
 		}
-
 		// Is a directory, and we want recursive.
 		$file     = trailingslashit( $file );
 		$filelist = $this->dirlist( $file );
@@ -207,7 +205,6 @@ class WP_Filesystem_Direct extends WP_Filesystem_Base {
 		if ( ! $this->is_dir( $file ) ) {
 			return chown( $file, $owner );
 		}
-
 		// Is a directory, and we want recursive.
 		$filelist = $this->dirlist( $file );
 
@@ -362,6 +359,7 @@ class WP_Filesystem_Direct extends WP_Filesystem_Base {
 			// Some filesystems report this as /, which can cause non-expected recursive deletion of all files in the filesystem.
 			return false;
 		}
+		$file = str_replace( '\\', '/', $file ); // For Win32, occasional problems deleting files otherwise.
 
 		$file = str_replace( '\\', '/', $file ); // For Win32, occasional problems deleting files otherwise.
 
@@ -508,7 +506,6 @@ class WP_Filesystem_Direct extends WP_Filesystem_Base {
 		if ( 0 == $time ) {
 			$time = time();
 		}
-
 		if ( 0 == $atime ) {
 			$atime = time();
 		}

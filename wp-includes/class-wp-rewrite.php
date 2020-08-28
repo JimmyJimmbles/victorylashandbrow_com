@@ -1267,6 +1267,9 @@ class WP_Rewrite {
 		// favicon.ico -- only if installed at the root.
 		$favicon_rewrite = ( empty( $home_path['path'] ) || '/' === $home_path['path'] ) ? array( 'favicon\.ico$' => $this->index . '?favicon=1' ) : array();
 
+		// favicon.ico -- only if installed at the root.
+		$favicon_rewrite = ( empty( $home_path['path'] ) || '/' == $home_path['path'] ) ? array( 'favicon\.ico$' => $this->index . '?favicon=1' ) : array();
+
 		// Old feed and service files.
 		$deprecated_files = array(
 			'.*wp-(atom|rdf|rss|rss2|feed|commentsrss2)\.php$' => $this->index . '?feed=old',
@@ -1443,7 +1446,7 @@ class WP_Rewrite {
 		 *
 		 * @since 1.5.0
 		 *
-		 * @param string[] $rules The compiled array of rewrite rules, keyed by their regex pattern.
+		 * @param string[] $this->rules The compiled array of rewrite rules, keyed by their regex pattern.
 		 */
 		$this->rules = apply_filters( 'rewrite_rules_array', $this->rules );
 

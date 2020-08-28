@@ -456,7 +456,7 @@ function has_excerpt( $post = 0 ) {
  */
 function post_class( $class = '', $post_id = null ) {
 	// Separates classes with a single space, collates classes for post DIV.
-	echo 'class="' . esc_attr( join( ' ', get_post_class( $class, $post_id ) ) ) . '"';
+	echo 'class="' . join( ' ', get_post_class( $class, $post_id ) ) . '"';
 }
 
 /**
@@ -592,7 +592,7 @@ function get_post_class( $class = '', $post_id = null ) {
  */
 function body_class( $class = '' ) {
 	// Separates class names with a single space, collates class names for body element.
-	echo 'class="' . esc_attr( join( ' ', get_body_class( $class ) ) ) . '"';
+	echo 'class="' . join( ' ', get_body_class( $class ) ) . '"';
 }
 
 /**
@@ -1397,7 +1397,7 @@ function wp_page_menu( $args = array() ) {
 	);
 	$args     = wp_parse_args( $args, $defaults );
 
-	if ( ! in_array( $args['item_spacing'], array( 'preserve', 'discard' ), true ) ) {
+	if ( ! in_array( $args['item_spacing'], array( 'preserve', 'discard' ) ) ) {
 		// Invalid value, fall back to default.
 		$args['item_spacing'] = $defaults['item_spacing'];
 	}
@@ -1438,7 +1438,7 @@ function wp_page_menu( $args = array() ) {
 		}
 		$menu .= '<li ' . $class . '><a href="' . home_url( '/' ) . '">' . $args['link_before'] . $text . $args['link_after'] . '</a></li>';
 		// If the front page is a page, add it to the exclude list.
-		if ( 'page' === get_option( 'show_on_front' ) ) {
+		if ( get_option( 'show_on_front' ) == 'page' ) {
 			if ( ! empty( $list_args['exclude'] ) ) {
 				$list_args['exclude'] .= ',';
 			} else {

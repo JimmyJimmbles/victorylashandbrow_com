@@ -82,26 +82,19 @@ this["wp"] = this["wp"] || {}; this["wp"]["a11y"] =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 459);
+/******/ 	return __webpack_require__(__webpack_require__.s = 446);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 1:
-/***/ (function(module, exports) {
-
-(function() { module.exports = this["wp"]["i18n"]; }());
-
-/***/ }),
-
-/***/ 261:
+/***/ 260:
 /***/ (function(module, exports) {
 
 (function() { module.exports = this["wp"]["domReady"]; }());
 
 /***/ }),
 
-/***/ 459:
+/***/ 446:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -113,7 +106,7 @@ __webpack_require__.d(__webpack_exports__, "setup", function() { return /* bindi
 __webpack_require__.d(__webpack_exports__, "speak", function() { return /* binding */ speak; });
 
 // EXTERNAL MODULE: external {"this":["wp","domReady"]}
-var external_this_wp_domReady_ = __webpack_require__(261);
+var external_this_wp_domReady_ = __webpack_require__(260);
 var external_this_wp_domReady_default = /*#__PURE__*/__webpack_require__.n(external_this_wp_domReady_);
 
 // EXTERNAL MODULE: external {"this":["wp","i18n"]}
@@ -167,12 +160,14 @@ function addContainer() {
   container.setAttribute('aria-live', ariaLive);
   container.setAttribute('aria-relevant', 'additions text');
   container.setAttribute('aria-atomic', 'true');
-  var _document = document,
-      body = _document.body;
+  var body = document.querySelector('body');
 
   if (body) {
     body.appendChild(container);
   }
+
+  return container;
+};
 
   return container;
 }
@@ -249,12 +244,12 @@ function setup() {
   var containerAssertive = document.getElementById('a11y-speak-assertive');
   var containerPolite = document.getElementById('a11y-speak-polite');
 
-  if (introText === null) {
-    addIntroText();
+  if (containerPolite === null) {
+    build_module_addContainer('polite');
   }
 
   if (containerAssertive === null) {
-    addContainer('assertive');
+    build_module_addContainer('assertive');
   }
 
   if (containerPolite === null) {

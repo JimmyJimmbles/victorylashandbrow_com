@@ -82,7 +82,7 @@ this["wp"] = this["wp"] || {}; this["wp"]["annotations"] =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 448);
+/******/ 	return __webpack_require__(__webpack_require__.s = 435);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -94,31 +94,75 @@ this["wp"] = this["wp"] || {}; this["wp"]["annotations"] =
 
 /***/ }),
 
-/***/ 15:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ 116:
+/***/ (function(module, exports) {
 
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _objectWithoutProperties; });
-/* harmony import */ var _objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(41);
+// Unique ID creation requires a high quality random # generator.  In the
+// browser this is a little complicated due to unknown quality of Math.random()
+// and inconsistent support for the `crypto` API.  We do the best we can via
+// feature-detection
 
-function _objectWithoutProperties(source, excluded) {
-  if (source == null) return {};
-  var target = Object(_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])(source, excluded);
-  var key, i;
+// getRandomValues needs to be invoked in a context where "this" is a Crypto
+// implementation. Also, find the complete implementation of crypto on IE11.
+var getRandomValues = (typeof(crypto) != 'undefined' && crypto.getRandomValues && crypto.getRandomValues.bind(crypto)) ||
+                      (typeof(msCrypto) != 'undefined' && typeof window.msCrypto.getRandomValues == 'function' && msCrypto.getRandomValues.bind(msCrypto));
 
-  if (Object.getOwnPropertySymbols) {
-    var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
+if (getRandomValues) {
+  // WHATWG crypto RNG - http://wiki.whatwg.org/wiki/Crypto
+  var rnds8 = new Uint8Array(16); // eslint-disable-line no-undef
 
-    for (i = 0; i < sourceSymbolKeys.length; i++) {
-      key = sourceSymbolKeys[i];
-      if (excluded.indexOf(key) >= 0) continue;
-      if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
-      target[key] = source[key];
+  module.exports = function whatwgRNG() {
+    getRandomValues(rnds8);
+    return rnds8;
+  };
+} else {
+  // Math.random()-based (RNG)
+  //
+  // If all else fails, use Math.random().  It's fast, but is of unspecified
+  // quality.
+  var rnds = new Array(16);
+
+  module.exports = function mathRNG() {
+    for (var i = 0, r; i < 16; i++) {
+      if ((i & 0x03) === 0) r = Math.random() * 0x100000000;
+      rnds[i] = r >>> ((i & 0x03) << 3) & 0xff;
     }
-  }
 
-  return target;
+    return rnds;
+  };
 }
+
+
+/***/ }),
+
+/***/ 117:
+/***/ (function(module, exports) {
+
+/**
+ * Convert array of 16 byte values to UUID string format of the form:
+ * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+ */
+var byteToHex = [];
+for (var i = 0; i < 256; ++i) {
+  byteToHex[i] = (i + 0x100).toString(16).substr(1);
+}
+
+function bytesToUuid(buf, offset) {
+  var i = offset || 0;
+  var bth = byteToHex;
+  // join used to fix memory issue caused by concatenation: https://bugs.chromium.org/p/v8/issues/detail?id=3175#c4
+  return ([bth[buf[i++]], bth[buf[i++]], 
+	bth[buf[i++]], bth[buf[i++]], '-',
+	bth[buf[i++]], bth[buf[i++]], '-',
+	bth[buf[i++]], bth[buf[i++]], '-',
+	bth[buf[i++]], bth[buf[i++]], '-',
+	bth[buf[i++]], bth[buf[i++]],
+	bth[buf[i++]], bth[buf[i++]],
+	bth[buf[i++]], bth[buf[i++]]]).join('');
+}
+
+module.exports = bytesToUuid;
+
 
 /***/ }),
 
@@ -127,11 +171,8 @@ function _objectWithoutProperties(source, excluded) {
 
 "use strict";
 
-// EXPORTS
-__webpack_require__.d(__webpack_exports__, "a", function() { return /* binding */ _toConsumableArray; });
-
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js
-var arrayLikeToArray = __webpack_require__(26);
+var arrayLikeToArray = __webpack_require__(25);
 
 // CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/arrayWithoutHoles.js
 
@@ -142,7 +183,7 @@ function _arrayWithoutHoles(arr) {
 var iterableToArray = __webpack_require__(35);
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js
-var unsupportedIterableToArray = __webpack_require__(29);
+var unsupportedIterableToArray = __webpack_require__(27);
 
 // CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/nonIterableSpread.js
 function _nonIterableSpread() {
@@ -153,8 +194,35 @@ function _nonIterableSpread() {
 
 
 
+
 function _toConsumableArray(arr) {
   return _arrayWithoutHoles(arr) || Object(iterableToArray["a" /* default */])(arr) || Object(unsupportedIterableToArray["a" /* default */])(arr) || _nonIterableSpread();
+}
+
+/***/ }),
+
+/***/ 19:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _objectWithoutProperties; });
+/* harmony import */ var _objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(43);
+
+function _objectWithoutProperties(source, excluded) {
+  if (source == null) return {};
+  var target = Object(_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])(source, excluded);
+  var key, i;
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _arrayLikeToArray; });
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
+  }
+
+  return arr2;
 }
 
 /***/ }),
@@ -166,14 +234,14 @@ function _toConsumableArray(arr) {
 
 /***/ }),
 
-/***/ 25:
+/***/ 24:
 /***/ (function(module, exports) {
 
 (function() { module.exports = this["wp"]["richText"]; }());
 
 /***/ }),
 
-/***/ 26:
+/***/ 25:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -190,19 +258,19 @@ function _arrayLikeToArray(arr, len) {
 
 /***/ }),
 
-/***/ 29:
+/***/ 27:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _unsupportedIterableToArray; });
-/* harmony import */ var _arrayLikeToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(26);
+/* harmony import */ var _arrayLikeToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(25);
 
 function _unsupportedIterableToArray(o, minLen) {
   if (!o) return;
   if (typeof o === "string") return Object(_arrayLikeToArray__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])(o, minLen);
   var n = Object.prototype.toString.call(o).slice(8, -1);
   if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Map" || n === "Set") return Array.from(n);
   if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return Object(_arrayLikeToArray__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])(o, minLen);
 }
 
@@ -233,33 +301,12 @@ function _iterableToArray(iter) {
 
 /***/ }),
 
-/***/ 41:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _objectWithoutPropertiesLoose; });
-function _objectWithoutPropertiesLoose(source, excluded) {
-  if (source == null) return {};
-  var target = {};
-  var sourceKeys = Object.keys(source);
-  var key, i;
-
-  for (i = 0; i < sourceKeys.length; i++) {
-    key = sourceKeys[i];
-    if (excluded.indexOf(key) >= 0) continue;
-    target[key] = source[key];
-  }
-
-  return target;
-}
-
-/***/ }),
-
-/***/ 42:
+/***/ 40:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 
+"use strict";
 
 var LEAF_KEY, hasWeakMap;
 
@@ -537,22 +584,39 @@ function isShallowEqual( a, b, fromIndex ) {
 
 /***/ }),
 
-/***/ 448:
+/***/ 43:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-// ESM COMPAT FLAG
-__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _objectWithoutPropertiesLoose; });
+function _objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
 
-// NAMESPACE OBJECT: ./node_modules/@wordpress/annotations/build-module/store/selectors.js
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+
+  return target;
+}
+
+/***/ }),
+
+/***/ 435:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 var selectors_namespaceObject = {};
 __webpack_require__.r(selectors_namespaceObject);
 __webpack_require__.d(selectors_namespaceObject, "__experimentalGetAnnotationsForBlock", function() { return __experimentalGetAnnotationsForBlock; });
-__webpack_require__.d(selectors_namespaceObject, "__experimentalGetAllAnnotationsForBlock", function() { return __experimentalGetAllAnnotationsForBlock; });
+__webpack_require__.d(selectors_namespaceObject, "__experimentalGetAllAnnotationsForBlock", function() { return selectors_experimentalGetAllAnnotationsForBlock; });
 __webpack_require__.d(selectors_namespaceObject, "__experimentalGetAnnotationsForRichText", function() { return __experimentalGetAnnotationsForRichText; });
 __webpack_require__.d(selectors_namespaceObject, "__experimentalGetAnnotations", function() { return __experimentalGetAnnotations; });
-
-// NAMESPACE OBJECT: ./node_modules/@wordpress/annotations/build-module/store/actions.js
 var actions_namespaceObject = {};
 __webpack_require__.r(actions_namespaceObject);
 __webpack_require__.d(actions_namespaceObject, "__experimentalAddAnnotation", function() { return __experimentalAddAnnotation; });
@@ -612,7 +676,7 @@ function isValidAnnotationRange(annotation) {
 /**
  * Reducer managing annotations.
  *
- * @param {Object} state  The annotations currently shown in the editor.
+ * @param {Array} state The annotations currently shown in the editor.
  * @param {Object} action Dispatched action.
  *
  * @return {Array} Updated state.
@@ -620,8 +684,6 @@ function isValidAnnotationRange(annotation) {
 
 
 function reducer_annotations() {
-  var _state$blockClientId;
-
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   var action = arguments.length > 1 ? arguments[1] : undefined;
 
@@ -641,7 +703,7 @@ function reducer_annotations() {
         return state;
       }
 
-      var previousAnnotationsForBlock = (_state$blockClientId = state === null || state === void 0 ? void 0 : state[blockClientId]) !== null && _state$blockClientId !== void 0 ? _state$blockClientId : [];
+      var previousAnnotationsForBlock = Object(external_this_lodash_["get"])(state, blockClientId, []);
       return _objectSpread({}, state, Object(defineProperty["a" /* default */])({}, blockClientId, [].concat(Object(toConsumableArray["a" /* default */])(previousAnnotationsForBlock), [newAnnotation])));
 
     case 'ANNOTATION_REMOVE':
@@ -683,10 +745,10 @@ function reducer_annotations() {
 /* harmony default export */ var reducer = (reducer_annotations);
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/objectWithoutProperties.js
-var objectWithoutProperties = __webpack_require__(15);
+var objectWithoutProperties = __webpack_require__(19);
 
 // EXTERNAL MODULE: ./node_modules/rememo/es/rememo.js
-var rememo = __webpack_require__(42);
+var rememo = __webpack_require__(40);
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/annotations/build-module/store/selectors.js
 
@@ -697,63 +759,88 @@ function selectors_ownKeys(object, enumerableOnly) { var keys = Object.keys(obje
 function selectors_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { selectors_ownKeys(Object(source), true).forEach(function (key) { Object(defineProperty["a" /* default */])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { selectors_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 /**
- * External dependencies
+ * Returns true if the value passed is object-like, or false otherwise. A value
+ * is object-like if it can support property assignment, e.g. object or array.
+ *
+ * @param {*} value Value to test.
+ *
+ * @return {boolean} Whether value is object-like.
  */
-
+function isObjectLike( value ) {
+	return !! value && 'object' === typeof value;
+}
 
 /**
- * Shared reference to an empty array for cases where it is important to avoid
- * returning a new array reference on every invocation, as in a connected or
- * other pure component which performs `shouldComponentUpdate` check on props.
- * This should be used as a last resort, since the normalized data should be
- * maintained by the reducer result in state.
+ * Creates and returns a new cache object.
  *
- * @type {Array}
+ * @return {Object} Cache object.
  */
+function createCache() {
+	var cache = {
+		clear: function() {
+			cache.head = null;
+		},
+	};
 
-var EMPTY_ARRAY = [];
+	return cache;
+}
+
 /**
- * Returns the annotations for a specific client ID.
+ * Returns true if entries within the two arrays are strictly equal by
+ * reference from a starting index.
  *
- * @param {Object} state Editor state.
- * @param {string} clientId The ID of the block to get the annotations for.
+ * @param {Array}  a         First array.
+ * @param {Array}  b         Second array.
+ * @param {number} fromIndex Index from which to start comparison.
  *
- * @return {Array} The annotations applicable to this block.
+ * @return {boolean} Whether arrays are shallowly equal.
  */
+function isShallowEqual( a, b, fromIndex ) {
+	var i;
+
+	if ( a.length !== b.length ) {
+		return false;
+	}
+
+	for ( i = fromIndex; i < a.length; i++ ) {
+		if ( a[ i ] !== b[ i ] ) {
+			return false;
+		}
+	}
+
+	return true;
+}
 
 var __experimentalGetAnnotationsForBlock = Object(rememo["a" /* default */])(function (state, blockClientId) {
-  var _state$blockClientId;
-
-  return ((_state$blockClientId = state === null || state === void 0 ? void 0 : state[blockClientId]) !== null && _state$blockClientId !== void 0 ? _state$blockClientId : []).filter(function (annotation) {
+  return Object(external_this_lodash_["get"])(state, blockClientId, []).filter(function (annotation) {
     return annotation.selector === 'block';
   });
 }, function (state, blockClientId) {
-  var _state$blockClientId2;
-
-  return [(_state$blockClientId2 = state === null || state === void 0 ? void 0 : state[blockClientId]) !== null && _state$blockClientId2 !== void 0 ? _state$blockClientId2 : EMPTY_ARRAY];
+  return [Object(external_this_lodash_["get"])(state, blockClientId, EMPTY_ARRAY)];
 });
-function __experimentalGetAllAnnotationsForBlock(state, blockClientId) {
-  var _state$blockClientId3;
-
-  return (_state$blockClientId3 = state === null || state === void 0 ? void 0 : state[blockClientId]) !== null && _state$blockClientId3 !== void 0 ? _state$blockClientId3 : EMPTY_ARRAY;
-}
+var selectors_experimentalGetAllAnnotationsForBlock = function __experimentalGetAllAnnotationsForBlock(state, blockClientId) {
+  return Object(external_this_lodash_["get"])(state, blockClientId, EMPTY_ARRAY);
+};
 /**
- * Returns the annotations that apply to the given RichText instance.
+ * Returns a memoized selector function. The getDependants function argument is
+ * called before the memoized selector and is expected to return an immutable
+ * reference or array of references on which the selector depends for computing
+ * its own return value. The memoize cache is preserved only as long as those
+ * dependant references remain the same. If getDependants returns a different
+ * reference(s), the cache is cleared and the selector value regenerated.
  *
- * Both a blockClientId and a richTextIdentifier are required. This is because
- * a block might have multiple `RichText` components. This does mean that every
- * block needs to implement annotations itself.
+ * @param {Function} selector      Selector function.
+ * @param {Function} getDependants Dependant getter returning an immutable
+ *                                 reference or array of reference used in
+ *                                 cache bust consideration.
  *
- * @param {Object} state              Editor state.
- * @param {string} blockClientId      The client ID for the block.
- * @param {string} richTextIdentifier Unique identifier that identifies the given RichText.
- * @return {Array} All the annotations relevant for the `RichText`.
+ * @return {Function} Memoized selector.
  */
+/* harmony default export */ __webpack_exports__["a"] = (function( selector, getDependants ) {
+	var rootCache, getCache;
 
 var __experimentalGetAnnotationsForRichText = Object(rememo["a" /* default */])(function (state, blockClientId, richTextIdentifier) {
-  var _state$blockClientId4;
-
-  return ((_state$blockClientId4 = state === null || state === void 0 ? void 0 : state[blockClientId]) !== null && _state$blockClientId4 !== void 0 ? _state$blockClientId4 : []).filter(function (annotation) {
+  return Object(external_this_lodash_["get"])(state, blockClientId, []).filter(function (annotation) {
     return annotation.selector === 'range' && richTextIdentifier === annotation.richTextIdentifier;
   }).map(function (annotation) {
     var range = annotation.range,
@@ -762,9 +849,7 @@ var __experimentalGetAnnotationsForRichText = Object(rememo["a" /* default */])(
     return selectors_objectSpread({}, range, {}, other);
   });
 }, function (state, blockClientId) {
-  var _state$blockClientId5;
-
-  return [(_state$blockClientId5 = state === null || state === void 0 ? void 0 : state[blockClientId]) !== null && _state$blockClientId5 !== void 0 ? _state$blockClientId5 : EMPTY_ARRAY];
+  return [Object(external_this_lodash_["get"])(state, blockClientId, EMPTY_ARRAY)];
 });
 /**
  * Returns all annotations in the editor state.
@@ -779,187 +864,92 @@ function __experimentalGetAnnotations(state) {
   });
 }
 
-// CONCATENATED MODULE: ./node_modules/@wordpress/annotations/node_modules/uuid/dist/esm-browser/rng.js
-// Unique ID creation requires a high quality random # generator. In the browser we therefore
-// require the crypto API and do not support built-in fallback to lower quality random number
-// generators (like Math.random()).
-// getRandomValues needs to be invoked in a context where "this" is a Crypto implementation. Also,
-// find the complete implementation of crypto (msCrypto) on IE11.
-var getRandomValues = typeof crypto != 'undefined' && crypto.getRandomValues && crypto.getRandomValues.bind(crypto) || typeof msCrypto != 'undefined' && typeof msCrypto.getRandomValues == 'function' && msCrypto.getRandomValues.bind(msCrypto);
-var rnds8 = new Uint8Array(16); // eslint-disable-line no-undef
+// EXTERNAL MODULE: ./node_modules/uuid/v4.js
+var v4 = __webpack_require__(83);
+var v4_default = /*#__PURE__*/__webpack_require__.n(v4);
 
-function rng() {
-  if (!getRandomValues) {
-    throw new Error('crypto.getRandomValues() not supported. See https://github.com/uuidjs/uuid#getrandomvalues-not-supported');
-  }
+			// Can only compose WeakMap from object-like key.
+			if ( ! isObjectLike( dependant ) ) {
+				isUniqueByDependants = false;
+				break;
+			}
 
-  return getRandomValues(rnds8);
-}
-// CONCATENATED MODULE: ./node_modules/@wordpress/annotations/node_modules/uuid/dist/esm-browser/bytesToUuid.js
-/**
- * Convert array of 16 byte values to UUID string format of the form:
- * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
- */
-var byteToHex = [];
+			// Does current segment of cache already have a WeakMap?
+			if ( caches.has( dependant ) ) {
+				// Traverse into nested WeakMap.
+				caches = caches.get( dependant );
+			} else {
+				// Create, set, and traverse into a new one.
+				map = new WeakMap();
+				caches.set( dependant, map );
+				caches = map;
+			}
+		}
 
-for (var bytesToUuid_i = 0; bytesToUuid_i < 256; ++bytesToUuid_i) {
-  byteToHex[bytesToUuid_i] = (bytesToUuid_i + 0x100).toString(16).substr(1);
-}
+		// We use an arbitrary (but consistent) object as key for the last item
+		// in the WeakMap to serve as our running cache.
+		if ( ! caches.has( LEAF_KEY ) ) {
+			cache = createCache();
+			cache.isUniqueByDependants = isUniqueByDependants;
+			caches.set( LEAF_KEY, cache );
+		}
 
-function bytesToUuid(buf, offset) {
-  var i = offset || 0;
-  var bth = byteToHex; // join used to fix memory issue caused by concatenation: https://bugs.chromium.org/p/v8/issues/detail?id=3175#c4
+		return caches.get( LEAF_KEY );
+	}
 
-  return [bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], '-', bth[buf[i++]], bth[buf[i++]], '-', bth[buf[i++]], bth[buf[i++]], '-', bth[buf[i++]], bth[buf[i++]], '-', bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], bth[buf[i++]]].join('');
-}
+	// Assign cache handler by availability of WeakMap
+	getCache = hasWeakMap ? getWeakMapCache : getRootCache;
 
-/* harmony default export */ var esm_browser_bytesToUuid = (bytesToUuid);
-// CONCATENATED MODULE: ./node_modules/@wordpress/annotations/node_modules/uuid/dist/esm-browser/v4.js
+	/**
+	 * Resets root memoization cache.
+	 */
+	function clear() {
+		rootCache = hasWeakMap ? new WeakMap() : createCache();
+	}
 
+	// eslint-disable-next-line jsdoc/check-param-names
+	/**
+	 * The augmented selector call, considering first whether dependants have
+	 * changed before passing it to underlying memoize function.
+	 *
+	 * @param {Object} source    Source object for derivation.
+	 * @param {...*}   extraArgs Additional arguments to pass to selector.
+	 *
+	 * @return {*} Selector result.
+	 */
+	function callSelector( /* source, ...extraArgs */ ) {
+		var len = arguments.length,
+			cache, node, i, args, dependants;
 
+		// Create copy of arguments (avoid leaking deoptimization).
+		args = new Array( len );
+		for ( i = 0; i < len; i++ ) {
+			args[ i ] = arguments[ i ];
+		}
 
-function v4(options, buf, offset) {
-  var i = buf && offset || 0;
+		dependants = getDependants.apply( null, args );
+		cache = getCache( dependants );
 
-  if (typeof options == 'string') {
-    buf = options === 'binary' ? new Array(16) : null;
-    options = null;
-  }
+		// If not guaranteed uniqueness by dependants (primitive type or lack
+		// of WeakMap support), shallow compare against last dependants and, if
+		// references have changed, destroy cache to recalculate result.
+		if ( ! cache.isUniqueByDependants ) {
+			if ( cache.lastDependants && ! isShallowEqual( dependants, cache.lastDependants, 0 ) ) {
+				cache.clear();
+			}
 
-  options = options || {};
-  var rnds = options.random || (options.rng || rng)(); // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`
+			cache.lastDependants = dependants;
+		}
 
-  rnds[6] = rnds[6] & 0x0f | 0x40;
-  rnds[8] = rnds[8] & 0x3f | 0x80; // Copy bytes to buffer, if provided
+		node = cache.head;
+		while ( node ) {
+			// Check whether node arguments match arguments
+			if ( ! isShallowEqual( node.args, args, 1 ) ) {
+				node = node.next;
+				continue;
+			}
 
-  if (buf) {
-    for (var ii = 0; ii < 16; ++ii) {
-      buf[i + ii] = rnds[ii];
-    }
-  }
-
-  return buf || esm_browser_bytesToUuid(rnds);
-}
-
-/* harmony default export */ var esm_browser_v4 = (v4);
-// CONCATENATED MODULE: ./node_modules/@wordpress/annotations/build-module/store/actions.js
-/**
- * External dependencies
- */
-
-/**
- * @typedef WPAnnotationRange
- *
- * @property {number} start The offset where the annotation should start.
- * @property {number} end   The offset where the annotation should end.
- */
-
-/**
- * Adds an annotation to a block.
- *
- * The `block` attribute refers to a block ID that needs to be annotated.
- * `isBlockAnnotation` controls whether or not the annotation is a block
- * annotation. The `source` is the source of the annotation, this will be used
- * to identity groups of annotations.
- *
- * The `range` property is only relevant if the selector is 'range'.
- *
- * @param {Object}            annotation                    The annotation to add.
- * @param {string}            annotation.blockClientId      The blockClientId to add the annotation to.
- * @param {string}            annotation.richTextIdentifier Identifier for the RichText instance the annotation applies to.
- * @param {WPAnnotationRange} annotation.range              The range at which to apply this annotation.
- * @param {string}            [annotation.selector="range"] The way to apply this annotation.
- * @param {string}            [annotation.source="default"] The source that added the annotation.
- * @param {string}            [annotation.id]               The ID the annotation should have. Generates a UUID by default.
- *
- * @return {Object} Action object.
- */
-
-function __experimentalAddAnnotation(_ref) {
-  var blockClientId = _ref.blockClientId,
-      _ref$richTextIdentifi = _ref.richTextIdentifier,
-      richTextIdentifier = _ref$richTextIdentifi === void 0 ? null : _ref$richTextIdentifi,
-      _ref$range = _ref.range,
-      range = _ref$range === void 0 ? null : _ref$range,
-      _ref$selector = _ref.selector,
-      selector = _ref$selector === void 0 ? 'range' : _ref$selector,
-      _ref$source = _ref.source,
-      source = _ref$source === void 0 ? 'default' : _ref$source,
-      _ref$id = _ref.id,
-      id = _ref$id === void 0 ? esm_browser_v4() : _ref$id;
-  var action = {
-    type: 'ANNOTATION_ADD',
-    id: id,
-    blockClientId: blockClientId,
-    richTextIdentifier: richTextIdentifier,
-    source: source,
-    selector: selector
-  };
-
-  if (selector === 'range') {
-    action.range = range;
-  }
-
-  return action;
-}
-/**
- * Removes an annotation with a specific ID.
- *
- * @param {string} annotationId The annotation to remove.
- *
- * @return {Object} Action object.
- */
-
-function __experimentalRemoveAnnotation(annotationId) {
-  return {
-    type: 'ANNOTATION_REMOVE',
-    annotationId: annotationId
-  };
-}
-/**
- * Updates the range of an annotation.
- *
- * @param {string} annotationId ID of the annotation to update.
- * @param {number} start The start of the new range.
- * @param {number} end The end of the new range.
- *
- * @return {Object} Action object.
- */
-
-function __experimentalUpdateAnnotationRange(annotationId, start, end) {
-  return {
-    type: 'ANNOTATION_UPDATE_RANGE',
-    annotationId: annotationId,
-    start: start,
-    end: end
-  };
-}
-/**
- * Removes all annotations of a specific source.
- *
- * @param {string} source The source to remove.
- *
- * @return {Object} Action object.
- */
-
-function __experimentalRemoveAnnotationsBySource(source) {
-  return {
-    type: 'ANNOTATION_REMOVE_SOURCE',
-    source: source
-  };
-}
-
-// CONCATENATED MODULE: ./node_modules/@wordpress/annotations/build-module/store/index.js
-/**
- * WordPress dependencies
- */
-
-/**
- * Internal dependencies
- */
-
-
-
+			// At this point we can assume we've found a match
 
 /**
  * Module Constants
@@ -974,7 +964,7 @@ var store = Object(external_this_wp_data_["registerStore"])(MODULE_KEY, {
 /* harmony default export */ var build_module_store = (store);
 
 // EXTERNAL MODULE: external {"this":["wp","richText"]}
-var external_this_wp_richText_ = __webpack_require__(25);
+var external_this_wp_richText_ = __webpack_require__(24);
 
 // EXTERNAL MODULE: external {"this":["wp","i18n"]}
 var external_this_wp_i18n_ = __webpack_require__(1);
@@ -1211,7 +1201,11 @@ Object(external_this_wp_hooks_["addFilter"])('editor.BlockListBlock', 'core/anno
 
 
 
-/***/ }),
+function updateAnnotationsWithPositions(annotations, positions, _ref) {
+  var removeAnnotation = _ref.removeAnnotation,
+      updateAnnotationRange = _ref.updateAnnotationRange;
+  annotations.forEach(function (currentAnnotation) {
+    var position = positions[currentAnnotation.id]; // If we cannot find an annotation, delete it.
 
 /***/ 5:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -1232,6 +1226,36 @@ function _defineProperty(obj, key, value) {
 
   return obj;
 }
+
+    if (start !== position.start || end !== position.end) {
+      updateAnnotationRange(currentAnnotation.id, position.start, position.end);
+    }
+  });
+}
+
+/***/ 83:
+/***/ (function(module, exports, __webpack_require__) {
+
+var rng = __webpack_require__(116);
+var bytesToUuid = __webpack_require__(117);
+
+// CONCATENATED MODULE: ./node_modules/@wordpress/annotations/build-module/format/index.js
+
+
+/**
+ * WordPress dependencies
+ */
+
+/**
+ * Internal dependencies
+ */
+
+
+
+var format_name = annotation_annotation.name,
+    settings = Object(objectWithoutProperties["a" /* default */])(annotation_annotation, ["name"]);
+
+Object(external_this_wp_richText_["registerFormatType"])(format_name, settings);
 
 /***/ })
 

@@ -181,8 +181,8 @@ final class WP_Theme implements ArrayAccess {
 	 *
 	 * @global array $wp_theme_directories
 	 *
-	 * @param string        $theme_dir  Directory of the theme within the theme_root.
-	 * @param string        $theme_root Theme root.
+	 * @param string $theme_dir Directory of the theme within the theme_root.
+	 * @param string $theme_root Theme root.
 	 * @param WP_Theme|null $_child If this theme is a parent theme, the child may be passed for validation purposes.
 	 */
 	public function __construct( $theme_dir, $theme_root, $_child = null ) {
@@ -453,6 +453,8 @@ final class WP_Theme implements ArrayAccess {
 	/**
 	 * __isset() magic method for properties formerly returned by current_theme_info()
 	 *
+	 * @staticvar array $properties
+	 *
 	 * @since 3.4.0
 	 *
 	 * @param string $offset Property to check if set.
@@ -544,6 +546,8 @@ final class WP_Theme implements ArrayAccess {
 
 	/**
 	 * Method to implement ArrayAccess for keys formerly returned by get_themes()
+	 *
+	 * @staticvar array $keys
 	 *
 	 * @since 3.4.0
 	 *
@@ -773,9 +777,9 @@ final class WP_Theme implements ArrayAccess {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param string $header    Theme header. Name, Description, Author, Version, ThemeURI, AuthorURI, Status, Tags.
-	 * @param bool   $markup    Optional. Whether to mark up the header. Defaults to true.
-	 * @param bool   $translate Optional. Whether to translate the header. Defaults to true.
+	 * @param string $header Theme header. Name, Description, Author, Version, ThemeURI, AuthorURI, Status, Tags.
+	 * @param bool $markup Optional. Whether to mark up the header. Defaults to true.
+	 * @param bool $translate Optional. Whether to translate the header. Defaults to true.
 	 * @return string|array|false Processed header. An array for Tags if `$markup` is false, string otherwise.
 	 *                            False on failure.
 	 */
@@ -805,6 +809,9 @@ final class WP_Theme implements ArrayAccess {
 	 *
 	 * @since 3.4.0
 	 * @since 5.4.0 Added support for `Requires at least` and `Requires PHP` headers.
+	 *
+	 * @staticvar array $header_tags
+	 * @staticvar array $header_tags_with_a
 	 *
 	 * @param string $header Theme header. Accepts 'Name', 'Description', 'Author', 'Version',
 	 *                       'ThemeURI', 'AuthorURI', 'Status', 'Tags', 'RequiresWP', 'RequiresPHP'.
@@ -869,6 +876,8 @@ final class WP_Theme implements ArrayAccess {
 	 *
 	 * @since 3.4.0
 	 *
+	 * @staticvar string $comma
+	 *
 	 * @param string       $header    Theme header. Name, Description, Author, Version, ThemeURI, AuthorURI, Status, Tags.
 	 * @param string|array $value     Value to mark up. An array for Tags header, string otherwise.
 	 * @param string       $translate Whether the header has been translated.
@@ -912,6 +921,8 @@ final class WP_Theme implements ArrayAccess {
 	 * Translate a theme header.
 	 *
 	 * @since 3.4.0
+	 *
+	 * @staticvar array $tags_list
 	 *
 	 * @param string       $header Theme header. Name, Description, Author, Version, ThemeURI, AuthorURI, Status, Tags.
 	 * @param string|array $value  Value to translate. An array for Tags header, string otherwise.
@@ -962,7 +973,6 @@ final class WP_Theme implements ArrayAccess {
 					);
 
 					$feature_list = get_theme_feature_list( false ); // No API.
-
 					foreach ( $feature_list as $tags ) {
 						$tags_list += $tags;
 					}
@@ -1159,11 +1169,11 @@ final class WP_Theme implements ArrayAccess {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param string[]|string $type          Optional. Array of extensions to find, string of a single extension,
-	 *                                       or null for all extensions. Default null.
-	 * @param int             $depth         Optional. How deep to search for files. Defaults to a flat scan (0 depth).
-	 *                                       -1 depth is infinite.
-	 * @param bool            $search_parent Optional. Whether to return parent files. Default false.
+	 * @param string[]|string $type       Optional. Array of extensions to find, string of a single extension,
+	 *                                    or null for all extensions. Default null.
+	 * @param int          $depth         Optional. How deep to search for files. Defaults to a flat scan (0 depth).
+	 *                                    -1 depth is infinite.
+	 * @param bool         $search_parent Optional. Whether to return parent files. Default false.
 	 * @return string[] Array of files, keyed by the path to the file relative to the theme's directory, with the values
 	 *                  being absolute paths.
 	 */
@@ -1182,8 +1192,8 @@ final class WP_Theme implements ArrayAccess {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @return string[] Array of page templates, keyed by filename and post type,
-	 *                  with the value of the translated header name.
+	 * @return string Array of page templates, keyed by filename and post type,
+	 *               with the value of the translated header name.
 	 */
 	public function get_post_templates() {
 		// If you screw up your current theme and we invalidate your parent, most things still work. Let it slide.
