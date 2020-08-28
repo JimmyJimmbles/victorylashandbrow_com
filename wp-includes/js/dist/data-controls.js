@@ -111,7 +111,7 @@ function _nonIterableSpread() {
   throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 // CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js
-
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _toConsumableArray; });
 
 
 
@@ -175,7 +175,6 @@ function _iterableToArray(iter) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "apiFetch", function() { return apiFetch; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "select", function() { return select; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__unstableSyncSelect", function() { return __unstableSyncSelect; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "dispatch", function() { return dispatch; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "controls", function() { return controls; });
 /* harmony import */ var _babel_runtime_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(18);
@@ -254,42 +253,6 @@ function select(storeKey, selectorName) {
   };
 }
 /**
- * Dispatches a control action for triggering a registry select.
- *
- * Note: This functions like the `select` control, but does not wait
- * for resolvers.
- *
- * @param {string} storeKey     The key for the store the selector belongs to.
- * @param {string} selectorName The name of the selector.
- * @param {Array}  args         Arguments for the select.
- *
- * @example
- * ```js
- * import { __unstableSyncSelect } from '@wordpress/data-controls';
- *
- * // Action generator using `__unstableSyncSelect`.
- * export function* myAction() {
- * 	const isEditorSideBarOpened = yield __unstableSyncSelect( 'core/edit-post', 'isEditorSideBarOpened' );
- * 	// Do stuff with the result from the `__unstableSyncSelect`.
- * }
- * ```
- *
- * @return {Object} The control descriptor.
- */
-
-function __unstableSyncSelect(storeKey, selectorName) {
-  for (var _len2 = arguments.length, args = new Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
-    args[_key2 - 2] = arguments[_key2];
-  }
-
-  return {
-    type: 'SYNC_SELECT',
-    storeKey: storeKey,
-    selectorName: selectorName,
-    args: args
-  };
-}
-/**
  * Dispatches a control action for triggering a registry dispatch.
  *
  * @param {string} storeKey    The key for the store the action belongs to
@@ -311,8 +274,8 @@ function __unstableSyncSelect(storeKey, selectorName) {
  */
 
 function dispatch(storeKey, actionName) {
-  for (var _len3 = arguments.length, args = new Array(_len3 > 2 ? _len3 - 2 : 0), _key3 = 2; _key3 < _len3; _key3++) {
-    args[_key3 - 2] = arguments[_key3];
+  for (var _len2 = arguments.length, args = new Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+    args[_key2 - 2] = arguments[_key2];
   }
 
   return {

@@ -2,10 +2,6 @@
  * Colors
  */
 /**
- * Deprecated colors.
- * Please avoid using these.
- */
-/**
  * Breakpoints & Media Queries
  */
 /**
@@ -28,7 +24,7 @@
  * than the space allows.
  */
 /**
- * Focus styles.
+ * Button states and focus styles
  */
 /**
  * Applies editor left position to the selector passed as argument
@@ -46,14 +42,6 @@
 /**
  * Reset the WP Admin page styles for Gutenberg-like pages.
  */
-:root {
-  --wp-admin-theme-color: #007cba;
-  --wp-admin-theme-color-darker-10: #006ba1;
-  --wp-admin-theme-color-darker-20: #005a87; }
-
-#start-resizable-editor-section {
-  display: none; }
-
 .wp-block-audio figcaption {
   color: #555d66;
   font-size: 13px;
@@ -61,10 +49,10 @@
 
 .wp-block-code {
   font-family: Menlo, Consolas, monaco, monospace;
-  font-size: 15px;
-  color: #1e1e1e;
+  font-size: 14px;
+  color: #23282d;
   padding: 0.8em 1em;
-  border: 1px solid #ddd;
+  border: 1px solid #e2e4e7;
   border-radius: 4px; }
 
 .wp-block-embed figcaption {
@@ -161,6 +149,3 @@
   color: #555d66;
   font-size: 13px;
   text-align: center; }
-
-#end-resizable-editor-section {
-  display: none; }

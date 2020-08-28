@@ -59,14 +59,14 @@ wp.customize.selectiveRefresh = ( function( $, api ) {
 		 *
 		 * @since 4.5.0
 		 *
-		 * @param {string}  id                      - Unique identifier for the partial instance.
-		 * @param {Object}  options                 - Options hash for the partial instance.
-		 * @param {string}  options.type            - Type of partial (e.g. nav_menu, widget, etc)
-		 * @param {string}  options.selector        - jQuery selector to find the container element in the page.
-		 * @param {Array}   options.settings        - The IDs for the settings the partial relates to.
-		 * @param {string}  options.primarySetting  - The ID for the primary setting the partial renders.
-		 * @param {boolean} options.fallbackRefresh - Whether to refresh the entire preview in case of a partial refresh failure.
-		 * @param {Object}  [options.params]        - Deprecated wrapper for the above properties.
+		 * @param {string} id                      - Unique identifier for the partial instance.
+		 * @param {object} options                 - Options hash for the partial instance.
+		 * @param {string} options.type            - Type of partial (e.g. nav_menu, widget, etc)
+		 * @param {string} options.selector        - jQuery selector to find the container element in the page.
+		 * @param {array}  options.settings        - The IDs for the settings the partial relates to.
+		 * @param {string} options.primarySetting  - The ID for the primary setting the partial renders.
+		 * @param {bool}   options.fallbackRefresh - Whether to refresh the entire preview in case of a partial refresh failure.
+		 * @param {object} [options.params]        - Deprecated wrapper for the above properties.
 		 */
 		initialize: function( id, options ) {
 			var partial = this;
@@ -285,7 +285,7 @@ wp.customize.selectiveRefresh = ( function( $, api ) {
 		 *
 		 * @since 4.5.0
 		 *
-		 * @return {string[]}
+		 * @return {String[]}
 		 */
 		settings: function() {
 			var partial = this;
@@ -602,12 +602,12 @@ wp.customize.selectiveRefresh = ( function( $, api ) {
 		 *
 		 * @since 4.5.0
 		 *
-		 * @param {Object}                   args
+		 * @param {object}                   args
 		 * @param {Partial}                  args.partial
 		 * @param {jQuery|Element}           [args.container]
 		 * @param {Node}                     [args.startNode]
 		 * @param {Node}                     [args.endNode]
-		 * @param {Object}                   [args.context]
+		 * @param {object}                   [args.context]
 		 * @param {string}                   [args.addedContent]
 		 * @param {jQuery|DocumentFragment}  [args.removedNodes]
 		 */
@@ -645,7 +645,7 @@ wp.customize.selectiveRefresh = ( function( $, api ) {
 	 * @since 4.5.0
 	 * @see wp.customize.previewer.query()
 	 *
-	 * @return {Object}
+	 * @return {object}
 	 */
 	self.getCustomizeQuery = function() {
 		var dirtyCustomized = {};

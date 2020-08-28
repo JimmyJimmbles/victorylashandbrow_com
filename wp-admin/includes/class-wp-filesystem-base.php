@@ -60,7 +60,6 @@ class WP_Filesystem_Base {
 		if ( ! $folder && $this->is_dir( '/' . WPINC ) ) {
 			$folder = '/';
 		}
-
 		return $folder;
 	}
 
@@ -189,7 +188,6 @@ class WP_Filesystem_Base {
 				if ( ! defined( $constant ) ) {
 					continue;
 				}
-
 				if ( $folder === $dir ) {
 					return trailingslashit( constant( $constant ) );
 				}
@@ -206,7 +204,6 @@ class WP_Filesystem_Base {
 
 					if ( $this->is_dir( $potential_folder ) ) {
 						$this->cache[ $folder ] = $potential_folder;
-
 						return $potential_folder;
 					}
 				}
@@ -226,16 +223,12 @@ class WP_Filesystem_Base {
 		if ( $this->exists( $folder ) ) { // Folder exists at that absolute path.
 			$folder                 = trailingslashit( $folder );
 			$this->cache[ $folder ] = $folder;
-
 			return $folder;
 		}
-
 		$return = $this->search_for_folder( $folder );
-
 		if ( $return ) {
 			$this->cache[ $folder ] = $return;
 		}
-
 		return $return;
 	}
 
@@ -252,7 +245,7 @@ class WP_Filesystem_Base {
 	 * @return string|false The location of the remote path, false to cease looping.
 	 */
 	public function search_for_folder( $folder, $base = '.', $loop = false ) {
-		if ( empty( $base ) || '.' === $base ) {
+		if ( empty( $base ) || '.' == $base ) {
 			$base = trailingslashit( $this->cwd() );
 		}
 
@@ -286,7 +279,6 @@ class WP_Filesystem_Base {
 
 				// Let's try that folder:
 				$newdir = trailingslashit( path_join( $base, $key ) );
-
 				if ( $this->verbose ) {
 					/* translators: %s: Directory name. */
 					printf( "\n" . __( 'Changing to %s' ) . "<br/>\n", $newdir );
@@ -295,7 +287,6 @@ class WP_Filesystem_Base {
 				// Only search for the remaining path tokens in the directory, not the full path again.
 				$newfolder = implode( '/', array_slice( $folder_parts, $index + 1 ) );
 				$ret       = $this->search_for_folder( $newfolder, $newdir, $loop );
-
 				if ( $ret ) {
 					return $ret;
 				}
@@ -309,7 +300,6 @@ class WP_Filesystem_Base {
 				/* translators: %s: Directory name. */
 				printf( "\n" . __( 'Found %s' ) . "<br/>\n", $base . $last_path );
 			}
-
 			return trailingslashit( $base . $last_path );
 		}
 
@@ -377,7 +367,6 @@ class WP_Filesystem_Base {
 		$info .= ( ( $perms & 0x0001 ) ?
 					( ( $perms & 0x0200 ) ? 't' : 'x' ) :
 					( ( $perms & 0x0200 ) ? 'T' : '-' ) );
-
 		return $info;
 	}
 
@@ -412,8 +401,7 @@ class WP_Filesystem_Base {
 		$attarray = preg_split( '//', $mode );
 
 		for ( $i = 0, $c = count( $attarray ); $i < $c; $i++ ) {
-			$key = array_search( $attarray[ $i ], $legal, true );
-
+			$key = array_search( $attarray[ $i ], $legal );
 			if ( $key ) {
 				$realmode .= $legal[ $key ];
 			}
@@ -432,7 +420,6 @@ class WP_Filesystem_Base {
 		$newmode .= $mode[1] + $mode[2] + $mode[3];
 		$newmode .= $mode[4] + $mode[5] + $mode[6];
 		$newmode .= $mode[7] + $mode[8] + $mode[9];
-
 		return $newmode;
 	}
 

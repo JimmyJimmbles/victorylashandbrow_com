@@ -132,10 +132,19 @@ if ( isset( $tag->name ) ) {
 			<th scope="row"><label for="name"><?php _ex( 'Name', 'term name' ); ?></label></th>
 			<td><input name="name" id="name" type="text" value="<?php echo $tag_name_value; ?>" size="40" aria-required="true" />
 			<p class="description"><?php _e( 'The name is how it appears on your site.' ); ?></p></td>
+		</tr>
 <?php if ( ! global_terms_enabled() ) { ?>
 		<tr class="form-field term-slug-wrap">
 			<th scope="row"><label for="slug"><?php _e( 'Slug' ); ?></label></th>
-			<?php.4.0 The `$tag` parameter was added.
+			<?php
+			/**
+			 * Filters the editable slug.
+			 *
+			 * Note: This is a multi-use hook in that it is leveraged both for editable
+			 * post URIs and term slugs.
+			 *
+			 * @since 2.6.0
+			 * @since 4.4.0 The `$tag` parameter was added.
 			 *
 			 * @param string          $slug The editable slug. Will be either a term slug or post URI depending
 			 *                              upon the context in which it is evaluated.
@@ -168,7 +177,7 @@ if ( isset( $tag->name ) ) {
 				$dropdown_args = apply_filters( 'taxonomy_parent_dropdown_args', $dropdown_args, $taxonomy, 'edit' );
 				wp_dropdown_categories( $dropdown_args );
 				?>
-				<?php if ( 'category' === $taxonomy ) : ?>
+				<?php if ( 'category' == $taxonomy ) : ?>
 					<p class="description"><?php _e( 'Categories, unlike tags, can have a hierarchy. You might have a Jazz category, and under that have children categories for Bebop and Big Band. Totally optional.' ); ?></p>
 				<?php else : ?>
 					<p class="description"><?php _e( 'Assign a parent term to create a hierarchy. The term Jazz, for example, would be the parent of Bebop and Big Band.' ); ?></p>

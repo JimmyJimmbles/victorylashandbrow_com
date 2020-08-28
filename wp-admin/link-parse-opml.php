@@ -31,10 +31,10 @@ global $opml;
  * @param string $tagName XML element name.
  * @param array $attrs XML element attributes.
  */
-function startElement( $parser, $tag_name, $attrs ) { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.FunctionNameInvalid
+function startElement( $parser, $tagName, $attrs ) { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.FunctionNameInvalid
 	global $names, $urls, $targets, $descriptions, $feeds;
 
-	if ( 'OUTLINE' === $tag_name ) {
+	if ( 'OUTLINE' === $tagName ) {
 		$name = '';
 		if ( isset( $attrs['TEXT'] ) ) {
 			$name = $attrs['TEXT'];
@@ -68,7 +68,7 @@ function startElement( $parser, $tag_name, $attrs ) { // phpcs:ignore WordPress.
  * @param resource $parser XML Parser resource.
  * @param string $tagName XML tag name.
  */
-function endElement( $parser, $tag_name ) { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.FunctionNameInvalid
+function endElement( $parser, $tagName ) { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.FunctionNameInvalid
 	// Nothing to do.
 }
 
@@ -94,4 +94,3 @@ if ( ! xml_parse( $xml_parser, $opml, true ) ) {
 
 // Free up memory used by the XML parser.
 xml_parser_free( $xml_parser );
-unset( $xml_parser );

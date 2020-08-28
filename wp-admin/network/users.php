@@ -39,7 +39,7 @@ if ( isset( $_GET['action'] ) ) {
 			} else {
 				wp_redirect( network_admin_url( 'users.php' ) );
 			}
-			exit;
+			exit();
 
 		case 'allusers':
 			if ( ! current_user_can( 'manage_network_users' ) ) {
@@ -116,13 +116,13 @@ if ( isset( $_GET['action'] ) ) {
 
 				if ( ! in_array( $doaction, array( 'delete', 'spam', 'notspam' ), true ) ) {
 					$sendback = wp_get_referer();
-					$user_ids = (array) $_POST['allusers'];
 
+					$user_ids = (array) $_POST['allusers'];
 					/** This action is documented in wp-admin/network/site-themes.php */
 					$sendback = apply_filters( 'handle_network_bulk_actions-' . get_current_screen()->id, $sendback, $doaction, $user_ids ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
 
 					wp_safe_redirect( $sendback );
-					exit;
+					exit();
 				}
 
 				wp_safe_redirect(
@@ -142,7 +142,7 @@ if ( isset( $_GET['action'] ) ) {
 				}
 				wp_redirect( $location );
 			}
-			exit;
+			exit();
 
 		case 'dodelete':
 			check_admin_referer( 'ms-users-delete' );
@@ -165,9 +165,7 @@ if ( isset( $_GET['action'] ) ) {
 					}
 				}
 			}
-
 			$i = 0;
-
 			if ( is_array( $_POST['user'] ) && ! empty( $_POST['user'] ) ) {
 				foreach ( $_POST['user'] as $id ) {
 					if ( ! current_user_can( 'delete_user', $id ) ) {
@@ -193,7 +191,7 @@ if ( isset( $_GET['action'] ) ) {
 					network_admin_url( 'users.php' )
 				)
 			);
-			exit;
+			exit();
 	}
 }
 

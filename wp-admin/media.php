@@ -29,7 +29,7 @@ switch ( $action ) {
 			$location = 'media.php';
 			$referer  = wp_get_original_referer();
 			if ( $referer ) {
-				if ( false !== strpos( $referer, 'upload.php' ) || ( url_to_postid( $referer ) === $attachment_id ) ) {
+				if ( false !== strpos( $referer, 'upload.php' ) || ( url_to_postid( $referer ) == $attachment_id ) ) {
 					$location = $referer;
 				}
 			}
@@ -53,7 +53,7 @@ switch ( $action ) {
 
 		if ( empty( $_GET['attachment_id'] ) ) {
 			wp_redirect( admin_url( 'upload.php' ) );
-			exit;
+			exit();
 		}
 		$att_id = (int) $_GET['attachment_id'];
 

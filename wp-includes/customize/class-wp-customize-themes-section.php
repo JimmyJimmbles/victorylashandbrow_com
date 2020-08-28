@@ -149,7 +149,7 @@ class WP_Customize_Themes_Section extends WP_Customize_Section {
 			<span class="themes-displayed">
 				<?php
 				/* translators: %s: Number of themes displayed. */
-				printf( __( '%s themes' ), '<span class="theme-count">0</span>' );
+				echo sprintf( __( '%s themes' ), '<span class="theme-count">0</span>' );
 				?>
 			</span>
 		</div>

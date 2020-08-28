@@ -52,7 +52,7 @@ if ( isset( $_POST['action'] ) && 'deleteblog' == $_POST['action'] && isset( $_P
 
 	$switched_locale = switch_to_locale( get_locale() );
 
-	/* translators: Do not translate USERNAME, URL_DELETE, SITENAME, SITEURL: those are placeholders. */
+	/* translators: Do not translate USERNAME, URL_DELETE, SITE_NAME: those are placeholders. */
 	$content = __(
 		"Howdy ###USERNAME###,
 
@@ -68,8 +68,8 @@ some time in the future! (But remember your current site and username
 are gone forever.)
 
 Thanks for using the site,
-All at ###SITENAME###
-###SITEURL###"
+Webmaster
+###SITE_NAME###"
 	);
 	/**
 	 * Filters the email content sent when a site in a Multisite network is deleted.
@@ -82,8 +82,7 @@ All at ###SITENAME###
 
 	$content = str_replace( '###USERNAME###', $user->user_login, $content );
 	$content = str_replace( '###URL_DELETE###', $url_delete, $content );
-	$content = str_replace( '###SITENAME###', get_network()->site_name, $content );
-	$content = str_replace( '###SITEURL###', network_home_url(), $content );
+	$content = str_replace( '###SITE_NAME###', get_network()->site_name, $content );
 
 	wp_mail(
 		get_option( 'admin_email' ),
@@ -123,7 +122,7 @@ All at ###SITENAME###
 		<?php
 			printf(
 				/* translators: %s: Site address. */
-				__( "I'm sure I want to permanently delete my site, and I am aware I can never get it back or use %s again." ),
+				__( "I'm sure I want to permanently disable my site, and I am aware I can never get it back or use %s again." ),
 				$blog->domain . $blog->path
 			);
 		?>

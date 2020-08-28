@@ -16,7 +16,6 @@
  * @link https://developer.wordpress.org/themes/customize-api
  *
  * @see WP_Customize_Manager
- * @link https://developer.wordpress.org/themes/customize-api
  */
 class WP_Customize_Setting {
 	/**
@@ -98,7 +97,7 @@ class WP_Customize_Setting {
 	 * Callback to convert a Customize PHP setting value to a value that is JSON serializable.
 	 *
 	 * @since 3.4.0
-	 * @var callable
+	 * @var string
 	 */
 	public $sanitize_js_callback = '';
 
@@ -547,7 +546,7 @@ class WP_Customize_Setting {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param mixed $default A default value which is used as a fallback. Default null.
+	 * @param mixed $default A default value which is used as a fallback. Default is null.
 	 * @return mixed The default value on failure, otherwise the sanitized and validated value.
 	 */
 	final public function post_value( $default = null ) {
@@ -847,9 +846,9 @@ class WP_Customize_Setting {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param array $root
-	 * @param array $keys
-	 * @param bool  $create Default false.
+	 * @param $root
+	 * @param $keys
+	 * @param bool $create Default is false.
 	 * @return array|void Keys are 'root', 'node', and 'key'.
 	 */
 	final protected function multidimensional( &$root, $keys, $create = false ) {
@@ -902,8 +901,8 @@ class WP_Customize_Setting {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param array $root
-	 * @param array $keys
+	 * @param $root
+	 * @param $keys
 	 * @param mixed $value The value to update.
 	 * @return mixed
 	 */
@@ -928,9 +927,9 @@ class WP_Customize_Setting {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param array $root
-	 * @param array $keys
-	 * @param mixed $default A default value which is used as a fallback. Default null.
+	 * @param $root
+	 * @param $keys
+	 * @param mixed $default A default value which is used as a fallback. Default is null.
 	 * @return mixed The requested value or the default value.
 	 */
 	final protected function multidimensional_get( $root, $keys, $default = null ) {
@@ -947,8 +946,8 @@ class WP_Customize_Setting {
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param array $root
-	 * @param array $keys
+	 * @param $root
+	 * @param $keys
 	 * @return bool True if value is set, false if not.
 	 */
 	final protected function multidimensional_isset( $root, $keys ) {

@@ -40,8 +40,7 @@ class WP_Widget_Archives extends WP_Widget {
 	 * @param array $instance Settings for the current Archives widget instance.
 	 */
 	public function widget( $args, $instance ) {
-		$default_title = __( 'Archives' );
-		$title         = ! empty( $instance['title'] ) ? $instance['title'] : $default_title;
+		$title = ! empty( $instance['title'] ) ? $instance['title'] : __( 'Archives' );
 
 		/** This filter is documented in wp-includes/widgets/class-wp-widget-pages.php */
 		$title = apply_filters( 'widget_title', $title, $instance, $this->id_base );
@@ -121,6 +120,9 @@ class WP_Widget_Archives extends WP_Widget {
 })();
 /* ]]> */
 </script>
+
+		<?php } else { ?>
+		<ul>
 			<?php
 			wp_get_archives(
 				/**
@@ -144,37 +146,8 @@ class WP_Widget_Archives extends WP_Widget {
 				)
 			);
 			?>
-
-			<ul>
-				<?php
-				wp_get_archives(
-					/**
-					 * Filters the arguments for the Archives widget.
-					 *
-					 * @since 2.8.0
-					 * @since 4.9.0 Added the `$instance` parameter.
-					 *
-					 * @see wp_get_archives()
-					 *
-					 * @param array $args     An array of Archives option arguments.
-					 * @param array $instance Array of settings for the current widget.
-					 */
-					apply_filters(
-						'widget_archives_args',
-						array(
-							'type'            => 'monthly',
-							'show_post_count' => $count,
-						),
-						$instance
-					)
-				);
-				?>
-			</ul>
-
+		</ul>
 			<?php
-			if ( 'html5' === $format ) {
-				echo '</nav>';
-			}
 		}
 
 		echo $args['after_widget'];
@@ -224,16 +197,11 @@ class WP_Widget_Archives extends WP_Widget {
 			)
 		);
 		?>
+		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label> <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $instance['title'] ); ?>" /></p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $instance['title'] ); ?>" />
-		</p>
-		<p>
-			<input class="checkbox" type="checkbox"<?php checked( $instance['dropdown'] ); ?> id="<?php echo $this->get_field_id( 'dropdown' ); ?>" name="<?php echo $this->get_field_name( 'dropdown' ); ?>" />
-			<label for="<?php echo $this->get_field_id( 'dropdown' ); ?>"><?php _e( 'Display as dropdown' ); ?></label>
+			<input class="checkbox" type="checkbox"<?php checked( $instance['dropdown'] ); ?> id="<?php echo $this->get_field_id( 'dropdown' ); ?>" name="<?php echo $this->get_field_name( 'dropdown' ); ?>" /> <label for="<?php echo $this->get_field_id( 'dropdown' ); ?>"><?php _e( 'Display as dropdown' ); ?></label>
 			<br/>
-			<input class="checkbox" type="checkbox"<?php checked( $instance['count'] ); ?> id="<?php echo $this->get_field_id( 'count' ); ?>" name="<?php echo $this->get_field_name( 'count' ); ?>" />
-			<label for="<?php echo $this->get_field_id( 'count' ); ?>"><?php _e( 'Show post counts' ); ?></label>
+			<input class="checkbox" type="checkbox"<?php checked( $instance['count'] ); ?> id="<?php echo $this->get_field_id( 'count' ); ?>" name="<?php echo $this->get_field_name( 'count' ); ?>" /> <label for="<?php echo $this->get_field_id( 'count' ); ?>"><?php _e( 'Show post counts' ); ?></label>
 		</p>
 		<?php
 	}

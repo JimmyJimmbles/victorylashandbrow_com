@@ -95,7 +95,7 @@
 	 * @since 4.7.0
 	 * @alias wp.customize.Menus.insertAutoDraftPost
 	 *
-	 * @param {Object} params - Parameters for the draft post to create.
+	 * @param {object} params - Parameters for the draft post to create.
 	 * @param {string} params.post_type - Post type to add.
 	 * @param {string} params.post_title - Post title to use.
 	 * @return {jQuery.promise} Promise resolved with the added post.
@@ -216,9 +216,9 @@
 				}
 			} );
 
-			// Clear the search results and trigger an `input` event to fire a new search.
+			// Clear the search results and trigger a `keyup` event to fire a new search.
 			this.$clearResults.on( 'click', function() {
-				self.$search.val( '' ).focus().trigger( 'input' );
+				self.$search.val( '' ).focus().trigger( 'keyup' );
 			} );
 
 			this.$el.on( 'input', '#custom-menu-item-name.invalid, #custom-menu-item-url.invalid', function() {
@@ -387,7 +387,7 @@
 		 * @since 4.7.0 Changed function signature to take list of item types instead of single type/object.
 		 * @access private
 		 *
-		 * @param {Array.<Object>} itemTypes List of objects containing type and key.
+		 * @param {Array.<object>} itemTypes List of objects containing type and key.
 		 * @param {string} deprecated Formerly the object parameter.
 		 * @return {void}
 		 */
@@ -733,7 +733,7 @@
 			$( 'body' ).removeClass( 'adding-menu-items' );
 			$( '#available-menu-items .menu-item-handle.item-added' ).removeClass( 'item-added' );
 
-			this.$search.val( '' ).trigger( 'input' );
+			this.$search.val( '' ).trigger( 'keyup' );
 		},
 
 		// Add a few keyboard enhancements to the panel.
@@ -905,7 +905,7 @@
 		 *
 		 * @since 4.3.0
 		 *
-		 * @param {string} id
+		 * @param {String} id
 		 * @param {Object} options
 		 */
 		initialize: function( id, options ) {
@@ -2212,7 +2212,7 @@
 		 *
 		 * @private
 		 *
-		 * @param {number} offset 1|-1
+		 * @param {Number} offset 1|-1
 		 */
 		_changePosition: function( offset ) {
 			var control = this,
@@ -2272,7 +2272,7 @@
 		 *
 		 * @private
 		 *
-		 * @param {number} offset 1|-1
+		 * @param {Number} offset 1|-1
 		 */
 		_changeDepth: function( offset ) {
 			if ( 1 !== offset && -1 !== offset ) {
@@ -2655,7 +2655,7 @@
 		 * Notice that the UI aspects here are handled by wpNavMenu.initSortables()
 		 * which is called in MenuSection.onChangeExpanded()
 		 *
-		 * @param {Object} menuList - The element that has sortable().
+		 * @param {object} menuList - The element that has sortable().
 		 */
 		_setupSortable: function( menuList ) {
 			var control = this;
@@ -2854,7 +2854,7 @@
 		/**
 		 * Enable/disable the reordering UI
 		 *
-		 * @param {boolean} showOrHide to enable/disable reordering
+		 * @param {Boolean} showOrHide to enable/disable reordering
 		 */
 		toggleReordering: function( showOrHide ) {
 			var addNewItemBtn = this.container.find( '.add-new-menu-item' ),
@@ -3135,9 +3135,9 @@
 	 *
 	 * @alias wp.customize.Menus.applySavedData
 	 *
-	 * @param {Object} data
-	 * @param {Array} data.nav_menu_updates
-	 * @param {Array} data.nav_menu_item_updates
+	 * @param {object} data
+	 * @param {array} data.nav_menu_updates
+	 * @param {array} data.nav_menu_item_updates
 	 */
 	api.Menus.applySavedData = function( data ) {
 
@@ -3394,7 +3394,7 @@
 	 * @alias wp.customize.Menus.getMenuItemControl
 	 *
 	 * @param {string} menuItemId
-	 * @return {Object|null}
+	 * @return {object|null}
 	 */
 	api.Menus.getMenuItemControl = function( menuItemId ) {
 		return api.control( menuItemIdToSettingId( menuItemId ) );
@@ -3403,7 +3403,7 @@
 	/**
 	 * @alias wp.customize.Menus~menuItemIdToSettingId
 	 *
-	 * @param {string} menuItemId
+	 * @param {String} menuItemId
 	 */
 	function menuItemIdToSettingId( menuItemId ) {
 		return 'nav_menu_item[' + menuItemId + ']';

@@ -102,8 +102,8 @@
 	 */
 	api.Preview = api.Messenger.extend(/** @lends wp.customize.Preview.prototype */{
 		/**
-		 * @param {Object} params  - Parameters to configure the messenger.
-		 * @param {Object} options - Extend any instance parameter or method with this object.
+		 * @param {object} params  - Parameters to configure the messenger.
+		 * @param {object} options - Extend any instance parameter or method with this object.
 		 */
 		initialize: function( params, options ) {
 			var preview = this, urlParser = document.createElement( 'a' );
@@ -399,10 +399,10 @@
 		/**
 		 * Rewrite Ajax requests to inject customizer state.
 		 *
-		 * @param {Object} options Options.
+		 * @param {object} options Options.
 		 * @param {string} options.type Type.
 		 * @param {string} options.url URL.
-		 * @param {Object} originalOptions Original options.
+		 * @param {object} originalOptions Original options.
 		 * @param {XMLHttpRequest} xhr XHR.
 		 * @return {void}
 		 */

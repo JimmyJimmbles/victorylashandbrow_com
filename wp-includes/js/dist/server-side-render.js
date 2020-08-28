@@ -152,7 +152,13 @@ function _createClass(Constructor, protoProps, staticProps) {
 /***/ 14:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-(function() { module.exports = this["lodash"]; }());
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _classCallCheck; });
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
 
 /***/ }),
 
@@ -169,6 +175,8 @@ function _possibleConstructorReturn(self, call) {
   if (call && (Object(_helpers_esm_typeof__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])(call) === "object" || typeof call === "function")) {
     return call;
   }
+
+  return Object(_assertThisInitialized__WEBPACK_IMPORTED_MODULE_1__[/* default */ "a"])(self);
 }
 
 /***/ }),
@@ -190,8 +198,7 @@ function _getPrototypeOf(o) {
 /***/ 17:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-// EXPORTS
-__webpack_require__.d(__webpack_exports__, "a", function() { return /* binding */ _inherits; });
+"use strict";
 
 // CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js
 function _setPrototypeOf(o, p) {
@@ -203,6 +210,7 @@ function _setPrototypeOf(o, p) {
   return _setPrototypeOf(o, p);
 }
 // CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/inherits.js
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _inherits; });
 
 function _inherits(subClass, superClass) {
   if (typeof superClass !== "function" && superClass !== null) {
@@ -244,7 +252,8 @@ function _objectWithoutProperties(source, excluded) {
     }
   }
 
-(function() { module.exports = this["wp"]["url"]; }());
+  return target;
+}
 
 /***/ }),
 
@@ -255,10 +264,10 @@ function _objectWithoutProperties(source, excluded) {
 
 /***/ }),
 
-/***/ 4:
+/***/ 3:
 /***/ (function(module, exports) {
 
-(function() { module.exports = this["wp"]["data"]; }());
+(function() { module.exports = this["wp"]["components"]; }());
 
 /***/ }),
 
@@ -339,7 +348,6 @@ function _objectWithoutPropertiesLoose(source, excluded) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-// ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/extends.js
@@ -428,17 +436,17 @@ function rendererPath(block) {
     attributes: attributes
   } : {}, {}, urlQueryArgs));
 }
-var server_side_render_ServerSideRender = /*#__PURE__*/function (_Component) {
+var server_side_render_ServerSideRender =
+/*#__PURE__*/
+function (_Component) {
   Object(inherits["a" /* default */])(ServerSideRender, _Component);
-
-  var _super = _createSuper(ServerSideRender);
 
   function ServerSideRender(props) {
     var _this;
 
     Object(classCallCheck["a" /* default */])(this, ServerSideRender);
 
-    _this = _super.call(this, props);
+    _this = Object(possibleConstructorReturn["a" /* default */])(this, Object(getPrototypeOf["a" /* default */])(ServerSideRender).call(this, props));
     _this.state = {
       response: null
     };
@@ -552,8 +560,8 @@ server_side_render_ServerSideRender.defaultProps = {
   ErrorResponsePlaceholder: function ErrorResponsePlaceholder(_ref2) {
     var response = _ref2.response,
         className = _ref2.className;
-    var errorMessage = Object(external_this_wp_i18n_["sprintf"])( // translators: %s: error message describing the problem
-    Object(external_this_wp_i18n_["__"])('Error loading block: %s'), response.errorMsg);
+    // translators: %s: error message describing the problem
+    var errorMessage = Object(external_this_wp_i18n_["sprintf"])(Object(external_this_wp_i18n_["__"])('Error loading block: %s'), response.errorMsg);
     return Object(external_this_wp_element_["createElement"])(external_this_wp_components_["Placeholder"], {
       className: className
     }, errorMessage);
@@ -665,7 +673,7 @@ function _defineProperty(obj, key, value) {
 
 /***/ }),
 
-/***/ 8:
+/***/ 7:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

@@ -47,7 +47,7 @@ switch ( $action ) {
 			break;
 		}
 
-		// Don't restore if revisions are disabled and this is not an autosave.
+		// Restore if revisions are enabled or this is an autosave.
 		if ( ! wp_revisions_enabled( $post ) && ! wp_is_post_autosave( $revision ) ) {
 			$redirect = 'edit.php?post_type=' . $post->post_type;
 			break;
@@ -60,18 +60,7 @@ switch ( $action ) {
 
 		check_admin_referer( "restore-post_{$revision->ID}" );
 
-		/*
-		 * Ensure the global $post remains the same after revision is restored.
-		 * Because wp_insert_post() and wp_transition_post_status() are called
-		 * during the process, plugins can unexpectedly modify $post.
-		 */
-		$backup_global_post = clone $post;
-
 		wp_restore_post_revision( $revision->ID );
-
-		// Restore the global $post as it was before.
-		$post = $backup_global_post;
-
 		$redirect = add_query_arg(
 			array(
 				'message'  => 5,

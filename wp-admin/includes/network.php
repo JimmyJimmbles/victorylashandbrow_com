@@ -52,15 +52,13 @@ function allow_subdomain_install() {
  */
 function allow_subdirectory_install() {
 	global $wpdb;
-
-	/**
-	 * Filters whether to enable the subdirectory installation feature in Multisite.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param bool $allow Whether to enable the subdirectory installation feature in Multisite.
-	 *                    Default false.
-	 */
+		/**
+		 * Filters whether to enable the subdirectory installation feature in Multisite.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param bool $allow Whether to enable the subdirectory installation feature in Multisite. Default is false.
+		 */
 	if ( apply_filters( 'allow_subdirectory_install', false ) ) {
 		return true;
 	}
@@ -99,9 +97,8 @@ function get_clean_basedomain() {
 /**
  * Prints step 1 for Network installation process.
  *
- * @todo Realistically, step 1 should be a welcome screen explaining what a Network is and such.
- *       Navigating to Tools > Network should not be a sudden "Welcome to a new install process!
- *       Fill this out and click here." See also contextual help todo.
+ * @todo Realistically, step 1 should be a welcome screen explaining what a Network is and such. Navigating to Tools > Network
+ *  should not be a sudden "Welcome to a new install process! Fill this out and click here." See also contextual help todo.
  *
  * @since 3.0.0
  *
@@ -165,14 +162,14 @@ function network_step1( $errors = false ) {
 		$error_codes = $errors->get_error_codes();
 	}
 
-	if ( ! empty( $_POST['sitename'] ) && ! in_array( 'empty_sitename', $error_codes, true ) ) {
+	if ( ! empty( $_POST['sitename'] ) && ! in_array( 'empty_sitename', $error_codes ) ) {
 		$site_name = $_POST['sitename'];
 	} else {
 		/* translators: %s: Default network title. */
 		$site_name = sprintf( __( '%s Sites' ), get_option( 'blogname' ) );
 	}
 
-	if ( ! empty( $_POST['email'] ) && ! in_array( 'invalid_email', $error_codes, true ) ) {
+	if ( ! empty( $_POST['email'] ) && ! in_array( 'invalid_email', $error_codes ) ) {
 		$admin_email = $_POST['email'];
 	} else {
 		$admin_email = get_option( 'admin_email' );
@@ -381,13 +378,12 @@ function network_step1( $errors = false ) {
  *
  * @since 3.0.0
  *
- * @global wpdb $wpdb     WordPress database abstraction object.
- * @global bool $is_nginx Whether the server software is Nginx or something else.
+ * @global wpdb $wpdb WordPress database abstraction object.
  *
  * @param WP_Error $errors
  */
 function network_step2( $errors = false ) {
-	global $wpdb, $is_nginx;
+	global $wpdb;
 
 	$hostname          = get_clean_basedomain();
 	$slashed_home      = trailingslashit( get_option( 'home' ) );
