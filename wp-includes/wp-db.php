@@ -597,6 +597,7 @@ class wpdb {
 	 *
 	 * @since 2.0.8
 	 *
+	 * @link https://core.trac.wordpress.org/ticket/3354
 	 * @global string $wp_version The WordPress version string.
 	 *
 	 * @param string $dbuser     MySQL database user.
@@ -1184,7 +1185,6 @@ class wpdb {
 	 * @since 2.8.0
 	 *
 	 * @uses wpdb::_real_escape()
-	 * @since 2.8.0
 	 *
 	 * @param string|array $data Data to escape.
 	 * @return string|array Escaped data, in the same type as supplied.
@@ -1279,7 +1279,6 @@ class wpdb {
 	 *     $wpdb->prepare( "SELECT * FROM `table` WHERE `column` = %s AND `field` = %d OR `other_field` LIKE %s", array( 'foo', 1337, '%bar' ) );
 	 *     $wpdb->prepare( "SELECT DATE_FORMAT(`field`, '%%c') FROM `table` WHERE `column` = %s", 'foo' );
 	 *
-	 * @link https://www.php.net/sprintf Description of syntax.
 	 * @since 2.3.0
 	 * @since 5.3.0 Formalized the existing and already documented `...$args` parameter
 	 *              by updating the function signature. The second parameter was changed
@@ -1433,6 +1432,7 @@ class wpdb {
 	 * Prints SQL/DB error.
 	 *
 	 * @since 0.71
+	 *
 	 * @global array $EZSQL_ERROR Stores error information of query and error string.
 	 *
 	 * @param string $str The error to display.
@@ -2007,8 +2007,7 @@ class wpdb {
 				}
 			}
 
-			// Log number of rows the query returned
-			// and return number of rows selected.
+			// Log and return the number of rows selected.
 			$this->num_rows = $num_rows;
 			$return_val     = $num_rows;
 		}
@@ -2560,12 +2559,12 @@ class wpdb {
 			$this->query( $query );
 		}
 
-		// Extract var out of cached results based x,y vals.
+		// Extract var out of cached results based on x,y vals.
 		if ( ! empty( $this->last_result[ $y ] ) ) {
 			$values = array_values( get_object_vars( $this->last_result[ $y ] ) );
 		}
 
-		// If there is a value return it else return null.
+		// If there is a value return it, else return null.
 		return ( isset( $values[ $x ] ) && '' !== $values[ $x ] ) ? $values[ $x ] : null;
 	}
 
@@ -2600,11 +2599,11 @@ class wpdb {
 			return null;
 		}
 
-		if ( OBJECT == $output ) {
+		if ( OBJECT === $output ) {
 			return $this->last_result[ $y ] ? $this->last_result[ $y ] : null;
-		} elseif ( ARRAY_A == $output ) {
+		} elseif ( ARRAY_A === $output ) {
 			return $this->last_result[ $y ] ? get_object_vars( $this->last_result[ $y ] ) : null;
-		} elseif ( ARRAY_N == $output ) {
+		} elseif ( ARRAY_N === $output ) {
 			return $this->last_result[ $y ] ? array_values( get_object_vars( $this->last_result[ $y ] ) ) : null;
 		} elseif ( OBJECT === strtoupper( $output ) ) {
 			// Back compat for OBJECT being previously case-insensitive.
@@ -2677,10 +2676,10 @@ class wpdb {
 		}
 
 		$new_array = array();
-		if ( OBJECT == $output ) {
+		if ( OBJECT === $output ) {
 			// Return an integer-keyed array of row objects.
 			return $this->last_result;
-		} elseif ( OBJECT_K == $output ) {
+		} elseif ( OBJECT_K === $output ) {
 			// Return an array of row objects with keys from column 1.
 			// (Duplicates are discarded.)
 			if ( $this->last_result ) {
@@ -2693,11 +2692,11 @@ class wpdb {
 				}
 			}
 			return $new_array;
-		} elseif ( ARRAY_A == $output || ARRAY_N == $output ) {
+		} elseif ( ARRAY_A === $output || ARRAY_N === $output ) {
 			// Return an integer-keyed array of...
 			if ( $this->last_result ) {
 				foreach ( (array) $this->last_result as $row ) {
-					if ( ARRAY_N == $output ) {
+					if ( ARRAY_N === $output ) {
 						// ...integer-keyed row arrays.
 						$new_array[] = array_values( get_object_vars( $row ) );
 					} else {
@@ -3072,11 +3071,8 @@ class wpdb {
 				$truncate_by_byte_length = 'byte' === $value['length']['type'];
 			} else {
 				$length = false;
-				/*
-				 * Since we have no length, we'll never truncate.
-				 * Initialize the variable to false. true would take us
-				 * through an unnecessary (for this case) codepath below.
-				 */
+				// Since we have no length, we'll never truncate. Initialize the variable to false.
+				// True would take us through an unnecessary (for this case) codepath below.
 				$truncate_by_byte_length = false;
 			}
 
@@ -3409,7 +3405,7 @@ class wpdb {
 		$this->load_col_info();
 
 		if ( $this->col_info ) {
-			if ( -1 == $col_offset ) {
+			if ( -1 === $col_offset ) {
 				$i         = 0;
 				$new_array = array();
 				foreach ( (array) $this->col_info as $col ) {
@@ -3455,6 +3451,7 @@ class wpdb {
 	 *
 	 * @param string $message    The error message.
 	 * @param string $error_code Optional. A computer-readable string to identify the error.
+	 *                           Default '500'.
 	 * @return void|false Void if the showing of errors is enabled, false if disabled.
 	 */
 	public function bail( $message, $error_code = '500' ) {
@@ -3527,7 +3524,6 @@ class wpdb {
 	 *
 	 * @global string $wp_version             The WordPress version string.
 	 * @global string $required_mysql_version The required MySQL version string.
-	 *
 	 * @return void|WP_Error
 	 */
 	public function check_database_version() {

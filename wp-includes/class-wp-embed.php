@@ -215,27 +215,9 @@ class WP_Embed {
 		$url = str_replace( '&amp;', '&', $url );
 
 		// Look for known internal handlers.
-		ksort( $this->handlers );
-		foreach ( $this->handlers as $priority => $handlers ) {
-			foreach ( $handlers as $id => $handler ) {
-				if ( preg_match( $handler['regex'], $url, $matches ) && is_callable( $handler['callback'] ) ) {
-					$return = call_user_func( $handler['callback'], $matches, $attr, $url, $rawattr );
-					if ( false !== $return ) {
-						/**
-						 * Filters the returned embed HTML.
-						 *
-						 * @since 2.9.0
-						 *
-						 * @see WP_Embed::shortcode()
-						 *
-						 * @param string|false $return The HTML result of the shortcode, or false on failure.
-						 * @param string       $url    The embed URL.
-						 * @param array        $attr   An array of shortcode attributes.
-						 */
-						return apply_filters( 'embed_handler_html', $return, $url, $attr );
-					}
-				}
-			}
+		$embed_handler_html = $this->get_embed_handler_html( $rawattr, $url );
+		if ( false !== $embed_handler_html ) {
+			return $embed_handler_html;
 		}
 
 		$post_ID = ( ! empty( $post->ID ) ) ? $post->ID : null;

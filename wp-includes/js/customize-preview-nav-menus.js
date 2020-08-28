@@ -132,8 +132,8 @@ wp.customize.navMenusPreview = wp.customize.MenusCustomizerPreview = ( function(
 			 *
 			 * @since 4.5.0
 			 * @param {wp.customize.Value|string} setting  - Object or ID.
-			 * @param {number|object|false|null}  newValue - New value, or null if the setting was just removed.
-			 * @param {number|object|false|null}  oldValue - Old value, or null if the setting was just added.
+			 * @param {number|Object|false|null}  newValue - New value, or null if the setting was just removed.
+			 * @param {number|Object|false|null}  oldValue - Old value, or null if the setting was just added.
 			 * @return {boolean}
 			 */
 			isRelatedSetting: function( setting, newValue, oldValue ) {

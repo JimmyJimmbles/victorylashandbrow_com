@@ -77,16 +77,16 @@ class WP_Upgrader {
 	 * @since 2.8.0
 	 *
 	 * @var array|WP_Error $result {
-	 *      @type string $source             The full path to the source the files were installed from.
-	 *      @type string $source_files       List of all the files in the source directory.
-	 *      @type string $destination        The full path to the installation destination folder.
-	 *      @type string $destination_name   The name of the destination folder, or empty if `$destination`
-	 *                                       and `$local_destination` are the same.
-	 *      @type string $local_destination  The full local path to the destination folder. This is usually
-	 *                                       the same as `$destination`.
-	 *      @type string $remote_destination The full remote path to the destination folder
-	 *                                       (i.e., from `$wp_filesystem`).
-	 *      @type bool   $clear_destination  Whether the destination folder was cleared.
+	 *     @type string $source             The full path to the source the files were installed from.
+	 *     @type string $source_files       List of all the files in the source directory.
+	 *     @type string $destination        The full path to the installation destination folder.
+	 *     @type string $destination_name   The name of the destination folder, or empty if `$destination`
+	 *                                      and `$local_destination` are the same.
+	 *     @type string $local_destination  The full local path to the destination folder. This is usually
+	 *                                      the same as `$destination`.
+	 *     @type string $remote_destination The full remote path to the destination folder
+	 *                                      (i.e., from `$wp_filesystem`).
+	 *     @type bool   $clear_destination  Whether the destination folder was cleared.
 	 * }
 	 */
 	public $result = array();
@@ -349,8 +349,8 @@ class WP_Upgrader {
 	 * @since 4.9.0
 	 * @access protected
 	 *
-	 * @param  array  $nested_files  Array of files as returned by WP_Filesystem::dirlist()
-	 * @param  string $path          Relative path to prepend to child nodes. Optional.
+	 * @param array  $nested_files Array of files as returned by WP_Filesystem::dirlist().
+	 * @param string $path         Relative path to prepend to child nodes. Optional.
 	 * @return array A flattened array of the $nested_files specified.
 	 */
 	protected function flatten_dirlist( $nested_files, $path = '' ) {
@@ -501,7 +501,7 @@ class WP_Upgrader {
 		$remote_destination = $wp_filesystem->find_folder( $local_destination );
 
 		// Locate which directory to copy to the new folder. This is based on the actual folder holding the files.
-		if ( 1 == count( $source_files ) && $wp_filesystem->is_dir( trailingslashit( $args['source'] ) . $source_files[0] . '/' ) ) {
+		if ( 1 === count( $source_files ) && $wp_filesystem->is_dir( trailingslashit( $args['source'] ) . $source_files[0] . '/' ) ) {
 			// Only one folder? Then we want its contents.
 			$source = trailingslashit( $args['source'] ) . trailingslashit( $source_files[0] );
 		} elseif ( count( $source_files ) == 0 ) {
@@ -747,7 +747,7 @@ class WP_Upgrader {
 		if ( is_wp_error( $download ) && $download->get_error_data( 'softfail-filename' ) ) {
 
 			// Don't output the 'no signature could be found' failure message for now.
-			if ( 'signature_verification_no_signature' != $download->get_error_code() || WP_DEBUG ) {
+			if ( 'signature_verification_no_signature' !== $download->get_error_code() || WP_DEBUG ) {
 				// Output the failure error as a normal feedback, and not as an error.
 				$this->skin->feedback( $download->get_error_message() );
 

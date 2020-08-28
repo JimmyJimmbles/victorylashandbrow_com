@@ -31,11 +31,6 @@ if ( ! current_user_can( 'update_core' ) && ! current_user_can( 'update_themes' 
  * @global string $wp_local_package Locale code of the package.
  * @global wpdb   $wpdb             WordPress database abstraction object.
  *
- * @since 2.7.0
- *
- * @global string $wp_local_package Locale code of the package.
- * @global wpdb   $wpdb             WordPress database abstraction object.
- *
  * @param object $update
  */
 function list_core_update( $update ) {
@@ -284,7 +279,7 @@ function core_upgrade_preamble() {
 	echo '</ul>';
 	// Don't show the maintenance mode notice when we are only showing a single re-install option.
 	if ( $updates && ( count( $updates ) > 1 || 'latest' !== $updates[0]->response ) ) {
-		echo '<p>' . __( 'While your site is being updated, it will be in maintenance mode. As soon as your updates are complete, your site will return to normal.' ) . '</p>';
+		echo '<p>' . __( 'While your site is being updated, it will be in maintenance mode. As soon as your updates are complete, this mode will be deactivated.' ) . '</p>';
 	} elseif ( ! $updates ) {
 		list( $normalized_version ) = explode( '-', $wp_version );
 		echo '<p>' . sprintf(
@@ -795,7 +790,7 @@ $action = isset( $_GET['action'] ) ? $_GET['action'] : 'upgrade-core';
 $upgrade_error = false;
 if ( ( 'do-theme-upgrade' === $action || ( 'do-plugin-upgrade' === $action && ! isset( $_GET['plugins'] ) ) )
 	&& ! isset( $_POST['checked'] ) ) {
-	$upgrade_error = 'do-theme-upgrade' == $action ? 'themes' : 'plugins';
+	$upgrade_error = ( 'do-theme-upgrade' === $action ) ? 'themes' : 'plugins';
 	$action        = 'upgrade-core';
 }
 
@@ -852,7 +847,7 @@ get_current_screen()->set_help_sidebar(
 	'<p>' . __( '<a href="https://wordpress.org/support/">Support</a>' ) . '</p>'
 );
 
-if ( 'upgrade-core' == $action ) {
+if ( 'upgrade-core' === $action ) {
 	// Force a update check when requested.
 	$force_check = ! empty( $_GET['force-check'] );
 	wp_version_check( array(), $force_check );
@@ -932,7 +927,7 @@ if ( 'upgrade-core' == $action ) {
 	}
 
 	require_once ABSPATH . 'wp-admin/admin-header.php';
-	if ( 'do-core-reinstall' == $action ) {
+	if ( 'do-core-reinstall' === $action ) {
 		$reinstall = true;
 	} else {
 		$reinstall = false;

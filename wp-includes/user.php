@@ -915,7 +915,7 @@ function count_users( $strategy = 'time', $site_id = null ) {
 	$blog_prefix = $wpdb->get_blog_prefix( $site_id );
 	$result      = array();
 
-	if ( 'time' == $strategy ) {
+	if ( 'time' === $strategy ) {
 		if ( is_multisite() && get_current_blog_id() != $site_id ) {
 			switch_to_blog( $site_id );
 			$avail_roles = wp_roles()->get_names();
@@ -1559,7 +1559,7 @@ function wp_insert_user( $userdata ) {
 			return new WP_Error( 'invalid_user_id', __( 'Invalid user ID.' ) );
 		}
 
-		// hashed in wp_update_user(), plaintext if called directly.
+		// Hashed in wp_update_user(), plaintext if called directly.
 		$user_pass = ! empty( $userdata['user_pass'] ) ? $userdata['user_pass'] : $old_user_data->user_pass;
 	} else {
 		$update = false;
@@ -2513,7 +2513,7 @@ function register_new_user( $user_login, $user_email ) {
 	$user_email = apply_filters( 'user_registration_email', $user_email );
 
 	// Check the username.
-	if ( '' == $sanitized_user_login ) {
+	if ( '' === $sanitized_user_login ) {
 		$errors->add( 'empty_username', __( '<strong>Error</strong>: Please enter a username.' ) );
 	} elseif ( ! validate_username( $user_login ) ) {
 		$errors->add( 'invalid_username', __( '<strong>Error</strong>: This username is invalid because it uses illegal characters. Please enter a valid username.' ) );
@@ -2530,13 +2530,13 @@ function register_new_user( $user_login, $user_email ) {
 	}
 
 	// Check the email address.
-	if ( '' == $user_email ) {
+	if ( '' === $user_email ) {
 		$errors->add( 'empty_email', __( '<strong>Error</strong>: Please type your email address.' ) );
 	} elseif ( ! is_email( $user_email ) ) {
 		$errors->add( 'invalid_email', __( '<strong>Error</strong>: The email address isn&#8217;t correct.' ) );
 		$user_email = '';
 	} elseif ( email_exists( $user_email ) ) {
-		$errors->add( 'email_exists', __( '<strong>Error</strong>: This email is already registered, please choose another one.' ) );
+		$errors->add( 'email_exists', __( '<strong>Error</strong>: This email is already registered. Please choose another one.' ) );
 	}
 
 	/**
@@ -2581,7 +2581,7 @@ function register_new_user( $user_login, $user_email ) {
 			'registerfail',
 			sprintf(
 				/* translators: %s: Admin email address. */
-				__( '<strong>Error</strong>: Couldn&#8217;t register you&hellip; please contact the <a href="mailto:%s">webmaster</a> !' ),
+				__( '<strong>Error</strong>: Couldn&#8217;t register you&hellip; please contact the <a href="mailto:%s">site admin</a>!' ),
 				get_option( 'admin_email' )
 			)
 		);
@@ -3128,7 +3128,7 @@ function wp_user_personal_data_exporter( $email_address ) {
 			foreach ( $session_tokens_props_to_export as $key => $name ) {
 				if ( ! empty( $session_token[ $key ] ) ) {
 					$value = $session_token[ $key ];
-					if ( in_array( $key, array( 'expiration', 'login' ) ) ) {
+					if ( in_array( $key, array( 'expiration', 'login' ), true ) ) {
 						$value = date_i18n( 'F d, Y H:i A', $value );
 					}
 					$session_tokens_data_to_export[] = array(

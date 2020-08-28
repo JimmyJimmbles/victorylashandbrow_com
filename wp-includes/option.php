@@ -154,7 +154,7 @@ function get_option( $option, $default = false ) {
 	}
 
 	// If home is not set, use siteurl.
-	if ( 'home' == $option && '' == $value ) {
+	if ( 'home' === $option && '' === $value ) {
 		return get_option( 'siteurl' );
 	}
 
@@ -595,6 +595,7 @@ function add_option( $option, $value = '', $deprecated = '', $autoload = 'yes' )
 
 	// This option exists now.
 	$notoptions = wp_cache_get( 'notoptions', 'options' ); // Yes, again... we need it to be fresh.
+
 	if ( is_array( $notoptions ) && isset( $notoptions[ $option ] ) ) {
 		unset( $notoptions[ $option ] );
 		wp_cache_set( 'notoptions', $notoptions, 'options' );
@@ -1510,6 +1511,7 @@ function add_network_option( $network_id, $option, $value ) {
 
 		// This option exists now.
 		$notoptions = wp_cache_get( $notoptions_key, 'site-options' ); // Yes, again... we need it to be fresh.
+
 		if ( is_array( $notoptions ) && isset( $notoptions[ $option ] ) ) {
 			unset( $notoptions[ $option ] );
 			wp_cache_set( $notoptions_key, $notoptions, 'site-options' );
@@ -2196,8 +2198,8 @@ function register_initial_settings() {
  * @global array $new_allowed_options
  * @global array $wp_registered_settings
  *
- * @param string $option_group A settings group name. Should correspond to a whitelisted option key name.
- *                             Default whitelisted option key names include 'general', 'discussion', 'media',
+ * @param string $option_group A settings group name. Should correspond to an allowed option key name.
+ *                             Default allowed option key names include 'general', 'discussion', 'media',
  *                             'reading', 'writing', 'misc', 'options', and 'privacy'.
  * @param string $option_name The name of an option to sanitize and save.
  * @param array  $args {
@@ -2359,9 +2361,10 @@ function unregister_setting( $option_group, $option_name, $deprecated = '' ) {
 		$option_group = 'reading';
 	}
 
-	$pos = array_search( $option_name, (array) $new_whitelist_options[ $option_group ] );
+	$pos = array_search( $option_name, (array) $new_allowed_options[ $option_group ], true );
+
 	if ( false !== $pos ) {
-		unset( $new_whitelist_options[ $option_group ][ $pos ] );
+		unset( $new_allowed_options[ $option_group ][ $pos ] );
 	}
 
 	if ( '' !== $deprecated ) {

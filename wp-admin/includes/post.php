@@ -103,13 +103,15 @@ function _wp_translate_postdata( $update = false, $post_data = null ) {
 	}
 
 	// What to do based on which button they pressed.
-	if ( isset( $post_data['saveasdraft'] ) && '' != $post_data['saveasdraft'] ) {
+	if ( isset( $post_data['saveasdraft'] ) && '' !== $post_data['saveasdraft'] ) {
 		$post_data['post_status'] = 'draft';
 	}
 	if ( isset( $post_data['saveasprivate'] ) && '' !== $post_data['saveasprivate'] ) {
 		$post_data['post_status'] = 'private';
 	}
-	if ( isset( $post_data['publish'] ) && ( '' != $post_data['publish'] ) && ( ! isset( $post_data['post_status'] ) || 'private' !== $post_data['post_status'] ) ) {
+	if ( isset( $post_data['publish'] ) && ( '' !== $post_data['publish'] )
+		&& ( ! isset( $post_data['post_status'] ) || 'private' !== $post_data['post_status'] )
+	) {
 		$post_data['post_status'] = 'publish';
 	}
 	if ( isset( $post_data['advanced'] ) && '' !== $post_data['advanced'] ) {
@@ -381,7 +383,7 @@ function edit_post( $post_data = null ) {
 	}
 
 	// Attachment stuff.
-	if ( 'attachment' == $post_data['post_type'] ) {
+	if ( 'attachment' === $post_data['post_type'] ) {
 		if ( isset( $post_data['_wp_attachment_image_alt'] ) ) {
 			$image_alt = wp_unslash( $post_data['_wp_attachment_image_alt'] );
 
@@ -1463,7 +1465,9 @@ function get_sample_permalink_html( $id, $new_title = null, $new_slug = null ) {
 		}
 
 		// Encourage a pretty permalink setting.
-		if ( '' == get_option( 'permalink_structure' ) && current_user_can( 'manage_options' ) && ! ( 'page' == get_option( 'show_on_front' ) && get_option( 'page_on_front' ) == $id ) ) {
+		if ( ! get_option( 'permalink_structure' ) && current_user_can( 'manage_options' )
+			&& ! ( 'page' === get_option( 'show_on_front' ) && get_option( 'page_on_front' ) == $id )
+		) {
 			$return .= '<span id="change-permalinks"><a href="options-permalink.php" class="button button-small" target="_blank">' . __( 'Change Permalinks' ) . "</a></span>\n";
 		}
 	} else {
@@ -1505,9 +1509,9 @@ function get_sample_permalink_html( $id, $new_title = null, $new_slug = null ) {
  *
  * @since 2.9.0
  *
- * @param int $thumbnail_id ID of the attachment used for thumbnail
- * @param int|WP_Post $post Optional. The post ID or object associated with the thumbnail, defaults to global $post.
- * @return string html
+ * @param int         $thumbnail_id ID of the attachment used for thumbnail
+ * @param int|WP_Post $post         Optional. The post ID or object associated with the thumbnail, defaults to global $post.
+ * @return string The post thumbnail HTML.
  */
 function _wp_post_thumbnail_html( $thumbnail_id = null, $post = null ) {
 	$_wp_additional_image_sizes = wp_get_additional_image_sizes();
@@ -1705,7 +1709,7 @@ function _admin_notice_post_locked() {
 	if ( $locked ) {
 		$query_args = array();
 		if ( get_post_type_object( $post->post_type )->public ) {
-			if ( 'publish' == $post->post_status || $user->ID != $post->post_author ) {
+			if ( 'publish' === $post->post_status || $user->ID != $post->post_author ) {
 				// Latest content is in autosave.
 				$nonce                       = wp_create_nonce( 'post_preview_' . $post->ID );
 				$query_args['preview_id']    = $post->ID;
@@ -1968,7 +1972,9 @@ function wp_autosave( $post_data ) {
 		$post_data['post_category'] = explode( ',', $post_data['catslist'] );
 	}
 
-	if ( ! wp_check_post_lock( $post->ID ) && get_current_user_id() == $post->post_author && ( 'auto-draft' == $post->post_status || 'draft' == $post->post_status ) ) {
+	if ( ! wp_check_post_lock( $post->ID ) && get_current_user_id() == $post->post_author
+		&& ( 'auto-draft' === $post->post_status || 'draft' === $post->post_status )
+	) {
 		// Drafts and auto-drafts are just overwritten by autosave for the same user if the post is not locked.
 		return edit_post( wp_slash( $post_data ) );
 	} else {

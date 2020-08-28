@@ -35,6 +35,9 @@ class WP_Site_Health {
 	public function __construct() {
 		$this->maybe_create_scheduled_event();
 
+		// Save memory limit before it's affected by wp_raise_memory_limit( 'admin' ).
+		$this->php_memory_limit = ini_get( 'memory_limit' );
+
 		$this->timeout_late_cron   = 0;
 		$this->timeout_missed_cron = - 5 * MINUTE_IN_SECONDS;
 
@@ -144,8 +147,7 @@ class WP_Site_Health {
 	 *
 	 * @since 5.4.0
 	 *
-	 * @param $callback
-	 *
+	 * @param callable $callback
 	 * @return mixed|void
 	 */
 	private function perform_test( $callback ) {
@@ -155,19 +157,19 @@ class WP_Site_Health {
 		 * @since 5.3.0
 		 *
 		 * @param array $test_result {
-		 *     An associated array of test result data.
+		 *     An associative array of test result data.
 		 *
-		 *     @param string $label  A label describing the test, and is used as a header in the output.
-		 *     @param string $status The status of the test, which can be a value of `good`, `recommended` or `critical`.
-		 *     @param array  $badge {
+		 *     @type string $label       A label describing the test, and is used as a header in the output.
+		 *     @type string $status      The status of the test, which can be a value of `good`, `recommended` or `critical`.
+		 *     @type array  $badge {
 		 *         Tests are put into categories which have an associated badge shown, these can be modified and assigned here.
 		 *
-		 *         @param string $label The test label, for example `Performance`.
-		 *         @param string $color Default `blue`. A string representing a color to use for the label.
+		 *         @type string $label The test label, for example `Performance`.
+		 *         @type string $color Default `blue`. A string representing a color to use for the label.
 		 *     }
-		 *     @param string $description A more descriptive explanation of what the test looks for, and why it is important for the end user.
-		 *     @param string $actions     An action to direct the user to where they can resolve the issue, if one exists.
-		 *     @param string $test        The name of the test being ran, used as a reference point.
+		 *     @type string $description A more descriptive explanation of what the test looks for, and why it is important for the end user.
+		 *     @type string $actions     An action to direct the user to where they can resolve the issue, if one exists.
+		 *     @type string $test        The name of the test being ran, used as a reference point.
 		 * }
 		 */
 		return apply_filters( 'site_status_test_result', call_user_func( $callback ) );

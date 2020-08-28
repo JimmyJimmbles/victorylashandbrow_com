@@ -276,7 +276,7 @@ if ( empty( $tzstring ) ) { // Create a UTC+- zone if no timezone string exists.
 	?>
 	<br />
 	<?php
-	if ( in_array( $tzstring, timezone_identifiers_list() ) ) {
+	if ( in_array( $tzstring, timezone_identifiers_list(), true ) ) {
 		$transitions = timezone_transitions_get( timezone_open( $tzstring ), time() );
 
 		// 0 index is the state at current time, 1 index is the next transition, if any.

@@ -42,6 +42,8 @@ function wp_styles() {
  * @return string[] On success, an array of handles of processed WP_Dependencies items; otherwise, an empty array.
  */
 function wp_print_styles( $handles = false ) {
+	global $wp_styles;
+
 	if ( '' === $handles ) { // For 'wp_head'.
 		$handles = false;
 	}

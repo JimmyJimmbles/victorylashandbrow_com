@@ -335,6 +335,7 @@ function is_taxonomy_hierarchical( $taxonomy ) {
  *              arguments to register the Taxonomy in REST API.
  * @since 5.1.0 Introduced `meta_box_sanitize_cb` argument.
  * @since 5.4.0 Added the registered taxonomy object as a return value.
+ * @since 5.5.0 Introduced `default_term` argument.
  *
  * @global array $wp_taxonomies Registered taxonomies.
  *
@@ -838,17 +839,18 @@ function get_tax_sql( $tax_query, $primary_table, $primary_id_column ) {
  *
  * @see sanitize_term_field() The $context param lists the available values for get_term_by() $filter param.
  *
- * @param int|WP_Term|object $term If integer, term data will be fetched from the database, or from the cache if
- *                                 available. If stdClass object (as in the results of a database query), will apply
- *                                 filters and return a `WP_Term` object corresponding to the `$term` data. If `WP_Term`,
- *                                 will return `$term`.
- * @param string     $taxonomy Optional. Taxonomy name that $term is part of.
- * @param string     $output   Optional. The required return type. One of OBJECT, ARRAY_A, or ARRAY_N, which correspond to
- *                             a WP_Term object, an associative array, or a numeric array, respectively. Default OBJECT.
- * @param string     $filter   Optional, default is raw or no WordPress defined filter will applied.
- * @return WP_Term|array|WP_Error|null Object of the type specified by `$output` on success. When `$output` is 'OBJECT',
- *                                     a WP_Term instance is returned. If taxonomy does not exist, a WP_Error is
- *                                     returned. Returns null for miscellaneous failure.
+ * @param int|WP_Term|object $term     If integer, term data will be fetched from the database,
+ *                                     or from the cache if available.
+ *                                     If stdClass object (as in the results of a database query),
+ *                                     will apply filters and return a `WP_Term` object with the `$term` data.
+ *                                     If `WP_Term`, will return `$term`.
+ * @param string             $taxonomy Optional. Taxonomy name that `$term` is part of.
+ * @param string             $output   Optional. The required return type. One of OBJECT, ARRAY_A, or ARRAY_N, which
+ *                                     correspond to a WP_Term object, an associative array, or a numeric array,
+ *                                     respectively. Default OBJECT.
+ * @param string             $filter   Optional. How to sanitize term fields. Default 'raw'.
+ * @return WP_Term|array|WP_Error|null WP_Term instance (or array) on success, depending on the `$output` value.
+ *                                     WP_Error if `$taxonomy` does not exist. Null for miscellaneous failure.
  */
 function get_term( $term, $taxonomy = '', $output = OBJECT, $filter = 'raw' ) {
 	if ( empty( $term ) ) {
@@ -1169,11 +1171,11 @@ function get_term_to_edit( $id, $taxonomy ) {
  *
  * @param array|string $args       Optional. Array or string of arguments. See WP_Term_Query::__construct()
  *                                 for information on accepted arguments. Default empty.
- * @param array|string $deprecated Argument array, when using the legacy function parameter format. If present, this
- *                                 parameter will be interpreted as `$args`, and the first function parameter will
- *                                 be parsed as a taxonomy or array of taxonomies.
- * @return WP_Term[]|int|WP_Error List of WP_Term instances and their children. Will return WP_Error, if any of taxonomies
- *                                do not exist.
+ * @param array|string $deprecated Argument array, when using the legacy function parameter format. If present,
+ *                                 this parameter will be interpreted as `$args`, and the first function parameter
+ *                                 will be parsed as a taxonomy or array of taxonomies.
+ * @return WP_Term[]|int|WP_Error Array of WP_Term instances, a count thereof,
+ *                                or WP_Error if any of the taxonomies do not exist.
  */
 function get_terms( $args = array(), $deprecated = '' ) {
 	$term_query = new WP_Term_Query();
@@ -1826,6 +1828,15 @@ function wp_delete_term( $term, $taxonomy, $args = array() ) {
 		$defaults['default'] = (int) get_option( 'default_category' );
 		if ( $defaults['default'] === $term ) {
 			return 0; // Don't delete the default category.
+		}
+	}
+
+	// Don't delete the default custom taxonomy term.
+	$taxonomy_object = get_taxonomy( $taxonomy );
+	if ( ! empty( $taxonomy_object->default_term ) ) {
+		$defaults['default'] = (int) get_option( 'default_term_' . $taxonomy );
+		if ( $defaults['default'] === $term ) {
+			return 0;
 		}
 	}
 

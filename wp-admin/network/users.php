@@ -27,7 +27,7 @@ if ( isset( $_GET['action'] ) ) {
 			check_admin_referer( 'deleteuser' );
 
 			$id = intval( $_GET['id'] );
-			if ( '0' != $id && '1' != $id ) {
+			if ( $id > 1 ) {
 				$_POST['allusers'] = array( $id ); // confirm_delete_users() can only handle arrays.
 				$title             = __( 'Users' );
 				$parent_file       = 'users.php';
@@ -66,7 +66,7 @@ if ( isset( $_GET['action'] ) ) {
 								confirm_delete_users( $_POST['allusers'] );
 								echo '</div>';
 								require_once ABSPATH . 'wp-admin/admin-footer.php';
-								exit();
+								exit;
 
 							case 'spam':
 								$user = get_userdata( $user_id );
@@ -157,7 +157,7 @@ if ( isset( $_GET['action'] ) ) {
 							continue;
 						}
 
-						if ( ! empty( $_POST['delete'] ) && 'reassign' == $_POST['delete'][ $blogid ][ $id ] ) {
+						if ( ! empty( $_POST['delete'] ) && 'reassign' === $_POST['delete'][ $blogid ][ $id ] ) {
 							remove_user_from_blog( $id, $blogid, (int) $user_id );
 						} else {
 							remove_user_from_blog( $id, $blogid );
@@ -178,7 +178,7 @@ if ( isset( $_GET['action'] ) ) {
 				}
 			}
 
-			if ( 1 == $i ) {
+			if ( 1 === $i ) {
 				$deletefunction = 'delete';
 			} else {
 				$deletefunction = 'all_delete';

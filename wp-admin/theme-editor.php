@@ -160,7 +160,7 @@ if ( ! empty( $posted_content ) ) {
 	$f       = fopen( $file, 'r' );
 	$content = fread( $f, filesize( $file ) );
 
-	if ( '.php' == substr( $file, strrpos( $file, '.' ) ) ) {
+	if ( '.php' === substr( $file, strrpos( $file, '.' ) ) ) {
 		$functions = wp_doc_link_parse( $content );
 
 		$docs_select  = '<select name="docs-list" id="docs-list">';
@@ -175,9 +175,9 @@ if ( ! empty( $posted_content ) ) {
 }
 
 $file_description = get_file_description( $relative_file );
-$file_show        = array_search( $file, array_filter( $allowed_files ) );
+$file_show        = array_search( $file, array_filter( $allowed_files ), true );
 $description      = esc_html( $file_description );
-if ( $file_description != $file_show ) {
+if ( $file_description !== $file_show ) {
 	$description .= ' <span>(' . esc_html( $file_show ) . ')</span>';
 }
 ?>
@@ -226,11 +226,11 @@ if ( $file_description != $file_show ) {
 		<select name="theme" id="theme">
 		<?php
 		foreach ( wp_get_themes( array( 'errors' => null ) ) as $a_stylesheet => $a_theme ) {
-			if ( $a_theme->errors() && 'theme_no_stylesheet' == $a_theme->errors()->get_error_code() ) {
+			if ( $a_theme->errors() && 'theme_no_stylesheet' === $a_theme->errors()->get_error_code() ) {
 				continue;
 			}
 
-			$selected = $a_stylesheet == $stylesheet ? ' selected="selected"' : '';
+			$selected = ( $a_stylesheet === $stylesheet ) ? ' selected="selected"' : '';
 			echo "\n\t" . '<option value="' . esc_attr( $a_stylesheet ) . '"' . $selected . '>' . $a_theme->display( 'Name' ) . '</option>';
 		}
 		?>
@@ -298,7 +298,7 @@ else :
 
 		<div>
 			<div class="editor-notices">
-				<?php if ( is_child_theme() && $theme->get_stylesheet() == get_template() ) : ?>
+				<?php if ( is_child_theme() && $theme->get_stylesheet() === get_template() ) : ?>
 					<div class="notice notice-warning inline">
 						<p>
 							<?php if ( is_writeable( $file ) ) : ?>
@@ -362,7 +362,7 @@ if ( ! in_array( 'theme_editor_notice', $dismissed_pointers, true ) ) :
 						<?php
 						if ( ! $theme->parent() ) {
 							echo '<p>';
-							echo sprintf(
+							printf(
 								/* translators: %s: Link to documentation on child themes. */
 								__( 'If you need to tweak more than your theme&#8217;s CSS, you might want to try <a href="%s">making a child theme</a>.' ),
 								esc_url( __( 'https://developer.wordpress.org/themes/advanced-topics/child-themes/' ) )

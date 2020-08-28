@@ -296,7 +296,7 @@ if ( ! class_exists( 'PO', false ) ) :
 				if ( ! $res ) {
 					break;
 				}
-				if ( '' == $res['entry']->singular ) {
+				if ( '' === $res['entry']->singular ) {
 					$this->set_headers( $this->make_headers( $res['entry']->translations[0] ) );
 				} else {
 					$this->add_entry( $res['entry'] );

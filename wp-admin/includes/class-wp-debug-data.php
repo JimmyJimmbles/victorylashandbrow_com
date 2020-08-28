@@ -1277,6 +1277,53 @@ class WP_Debug_Data {
 				$theme_version_string_debug .= sprintf( ' (latest version: %s)', $theme_updates[ $theme_slug ]->update['new_version'] );
 			}
 
+			if ( $auto_updates_enabled ) {
+				if ( isset( $transient->response[ $theme_slug ] ) ) {
+					$item = $transient->response[ $theme_slug ];
+				} elseif ( isset( $transient->no_update[ $theme_slug ] ) ) {
+					$item = $transient->no_update[ $theme_slug ];
+				} else {
+					$item = array(
+						'theme'        => $theme_slug,
+						'new_version'  => $theme->version,
+						'url'          => '',
+						'package'      => '',
+						'requires'     => '',
+						'requires_php' => '',
+					);
+				}
+
+				$type = 'theme';
+				/** This filter is documented in wp-admin/includes/class-wp-automatic-updater.php */
+				$auto_update_forced = apply_filters( "auto_update_{$type}", null, (object) $item );
+
+				if ( ! is_null( $auto_update_forced ) ) {
+					$enabled = $auto_update_forced;
+				} else {
+					$enabled = in_array( $theme_slug, $auto_updates, true );
+				}
+
+				if ( $enabled ) {
+					$auto_updates_string = __( 'Auto-updates enabled' );
+				} else {
+					$auto_updates_string = __( 'Auto-updates disabled' );
+				}
+
+				/**
+				 * Filters the text string of the auto-updates setting for each theme in the Site Health debug data.
+				 *
+				 * @since 5.5.0
+				 *
+				 * @param string   $auto_updates_string The string output for the auto-updates column.
+				 * @param WP_Theme $theme               An object of theme data.
+				 * @param bool     $enabled             Whether auto-updates are enabled for this item.
+				 */
+				$auto_updates_string = apply_filters( 'theme_auto_update_debug_string', $auto_updates_string, $theme, $enabled );
+
+				$theme_version_string       .= ' | ' . $auto_updates_string;
+				$theme_version_string_debug .= ',' . $auto_updates_string;
+			}
+
 			$info['wp-themes-inactive']['fields'][ sanitize_text_field( $theme->name ) ] = array(
 				'label' => sprintf(
 					/* translators: 1: Theme name. 2: Theme slug. */

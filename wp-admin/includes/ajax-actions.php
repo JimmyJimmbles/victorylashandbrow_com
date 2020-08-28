@@ -1271,8 +1271,8 @@ function wp_ajax_replyto_comment( $action ) {
 
 	if ( empty( $post->post_status ) ) {
 		wp_die( 1 );
-	} elseif ( in_array( $post->post_status, array( 'draft', 'pending', 'trash' ) ) ) {
-		wp_die( __( 'Error: You are replying to a comment on a draft post.' ) );
+	} elseif ( in_array( $post->post_status, array( 'draft', 'pending', 'trash' ), true ) ) {
+		wp_die( __( 'Error: You can&#8217;t reply to a comment on a draft post.' ) );
 	}
 
 	$user = wp_get_current_user();
@@ -1301,8 +1301,8 @@ function wp_ajax_replyto_comment( $action ) {
 		wp_die( __( 'Sorry, you must be logged in to reply to a comment.' ) );
 	}
 
-	if ( '' == $comment_content ) {
-		wp_die( __( 'Error: Please type a comment.' ) );
+	if ( '' === $comment_content ) {
+		wp_die( __( 'Error: Please type your comment text.' ) );
 	}
 
 	$comment_parent = 0;
@@ -1344,7 +1344,7 @@ function wp_ajax_replyto_comment( $action ) {
 	$position = ( isset( $_POST['position'] ) && (int) $_POST['position'] ) ? (int) $_POST['position'] : '-1';
 
 	ob_start();
-	if ( isset( $_REQUEST['mode'] ) && 'dashboard' == $_REQUEST['mode'] ) {
+	if ( isset( $_REQUEST['mode'] ) && 'dashboard' === $_REQUEST['mode'] ) {
 		require_once ABSPATH . 'wp-admin/includes/dashboard.php';
 		_wp_dashboard_recent_comments_row( $comment );
 	} else {
@@ -1403,8 +1403,8 @@ function wp_ajax_edit_comment() {
 		wp_die( -1 );
 	}
 
-	if ( '' == $_POST['content'] ) {
-		wp_die( __( 'Error: Please type a comment.' ) );
+	if ( '' === $_POST['content'] ) {
+		wp_die( __( 'Error: Please type your comment text.' ) );
 	}
 
 	if ( isset( $_POST['status'] ) ) {

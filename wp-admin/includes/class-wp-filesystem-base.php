@@ -55,6 +55,7 @@ class WP_Filesystem_Base {
 	 */
 	public function abspath() {
 		$folder = $this->find_folder( ABSPATH );
+
 		// Perhaps the FTP folder is rooted at the WordPress install.
 		// Check for wp-includes folder in root. Could have some false positives, but rare.
 		if ( ! $folder && $this->is_dir( '/' . WPINC ) ) {
@@ -99,7 +100,7 @@ class WP_Filesystem_Base {
 		$theme_root = get_theme_root( $theme );
 
 		// Account for relative theme roots.
-		if ( '/themes' == $theme_root || ! is_dir( $theme_root ) ) {
+		if ( '/themes' === $theme_root || ! is_dir( $theme_root ) ) {
 			$theme_root = WP_CONTENT_DIR . $theme_root;
 		}
 
@@ -200,6 +201,7 @@ class WP_Filesystem_Base {
 				if ( ! defined( $constant ) ) {
 					continue;
 				}
+
 				if ( 0 === stripos( $folder, $dir ) ) { // $folder starts with $dir.
 					$potential_folder = preg_replace( '#^' . preg_quote( $dir, '#' ) . '/#i', trailingslashit( constant( $constant ) ), $folder );
 					$potential_folder = trailingslashit( $potential_folder );
@@ -211,8 +213,9 @@ class WP_Filesystem_Base {
 					}
 				}
 			}
-		} elseif ( 'direct' == $this->method ) {
+		} elseif ( 'direct' === $this->method ) {
 			$folder = str_replace( '\\', '/', $folder ); // Windows path sanitisation.
+
 			return trailingslashit( $folder );
 		}
 
@@ -315,7 +318,7 @@ class WP_Filesystem_Base {
 
 		// Prevent this function from looping again.
 		// No need to proceed if we've just searched in `/`.
-		if ( $loop || '/' == $base ) {
+		if ( $loop || '/' === $base ) {
 			return false;
 		}
 
@@ -339,6 +342,7 @@ class WP_Filesystem_Base {
 	 */
 	public function gethchmod( $file ) {
 		$perms = intval( $this->getchmod( $file ), 8 );
+
 		if ( ( $perms & 0xC000 ) == 0xC000 ) { // Socket.
 			$info = 's';
 		} elseif ( ( $perms & 0xA000 ) == 0xA000 ) { // Symbolic Link.

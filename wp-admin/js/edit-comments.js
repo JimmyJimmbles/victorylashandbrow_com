@@ -192,7 +192,8 @@ var getCount, updateCount, updateCountText, updatePending, updateApproved,
 	updateHtmlTitle = function( diff ) {
 		var newTitle, regExMatch, titleCount, commentFrag;
 
-		titleRegEx = titleRegEx || new RegExp( adminCommentsL10n.docTitleCommentsCount.replace( '%s', '\\([0-9' + thousandsSeparator + ']+\\)' ) + '?' );
+		/* translators: %s: Comments count. */
+		titleRegEx = titleRegEx || new RegExp( __( 'Comments (%s)' ).replace( '%s', '\\([0-9' + thousandsSeparator + ']+\\)' ) + '?' );
 		// Count funcs operate on a $'d element.
 		titleDiv = titleDiv || $( '<div />' );
 		newTitle = adminTitle;

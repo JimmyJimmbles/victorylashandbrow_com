@@ -497,7 +497,7 @@
 	 *
 	 * @param {Object} [options] Options.
 	 * @param {boolean} [options.unsaved=false] Whether only values not saved yet into a changeset will be returned (differential changes).
-	 * @return {object} Dirty setting values.
+	 * @return {Object} Dirty setting values.
 	 */
 	api.dirtyValues = function dirtyValues( options ) {
 		var values = {};
@@ -736,7 +736,7 @@
 	 *
 	 * @param {(wp.customize.Panel|wp.customize.Section|wp.customize.Control)} a
 	 * @param {(wp.customize.Panel|wp.customize.Section|wp.customize.Control)} b
-	 * @return {Number}
+	 * @return {number}
 	 */
 	api.utils.prioritySort = function ( a, b ) {
 		if ( a.priority() === b.priority() && typeof a.params.instanceNumber === 'number' && typeof b.params.instanceNumber === 'number' ) {
@@ -850,7 +850,7 @@
 	 *
 	 * @since 4.9.0
 	 *
-	 * @return {int} Current timestamp.
+	 * @return {number} Current timestamp.
 	 */
 	api.utils.getCurrentTimestamp = function getCurrentTimestamp() {
 		var currentDate, currentClientTimestamp, timestampDifferential;
@@ -1055,8 +1055,8 @@
 		 *
 		 * @since 4.1.0
 		 *
-		 * @param {String} parentType
-		 * @param {String} childType
+		 * @param {string} parentType
+		 * @param {string} childType
 		 * @return {Array}
 		 */
 		_children: function ( parentType, childType ) {
@@ -1154,9 +1154,9 @@
 		/**
 		 * @since 4.1.0
 		 *
-		 * @param {Boolean} active
+		 * @param {boolean} active
 		 * @param {Object}  [params]
-		 * @return {Boolean} False if state already applied.
+		 * @return {boolean} False if state already applied.
 		 */
 		_toggleActive: function ( active, params ) {
 			var self = this;
@@ -1175,7 +1175,7 @@
 
 		/**
 		 * @param {Object} [params]
-		 * @return {Boolean} False if already active.
+		 * @return {boolean} False if already active.
 		 */
 		activate: function ( params ) {
 			return this._toggleActive( true, params );
@@ -1183,7 +1183,7 @@
 
 		/**
 		 * @param {Object} [params]
-		 * @return {Boolean} False if already inactive.
+		 * @return {boolean} False if already inactive.
 		 */
 		deactivate: function ( params ) {
 			return this._toggleActive( false, params );
@@ -1203,7 +1203,7 @@
 		 * @param {boolean}  expanded - The new state to apply.
 		 * @param {Object}   [params] - Object containing options for expand/collapse.
 		 * @param {Function} [params.completeCallback] - Function to call when expansion/collapse is complete.
-		 * @return {Boolean} False if state already applied or active state is false.
+		 * @return {boolean} False if state already applied or active state is false.
 		 */
 		_toggleExpanded: function( expanded, params ) {
 			var instance = this, previousCompleteCallback;
@@ -1240,7 +1240,7 @@
 
 		/**
 		 * @param {Object} [params]
-		 * @return {Boolean} False if already expanded or if inactive.
+		 * @return {boolean} False if already expanded or if inactive.
 		 */
 		expand: function ( params ) {
 			return this._toggleExpanded( true, params );
@@ -1248,7 +1248,7 @@
 
 		/**
 		 * @param {Object} [params]
-		 * @return {Boolean} False if already collapsed.
+		 * @return {boolean} False if already collapsed.
 		 */
 		collapse: function ( params ) {
 			return this._toggleExpanded( false, params );
@@ -1545,7 +1545,7 @@
 		 *
 		 * @since 4.1.0
 		 *
-		 * @return {Boolean}
+		 * @return {boolean}
 		 */
 		isContextuallyActive: function () {
 			var section = this,
@@ -1697,7 +1697,7 @@
 		 * @since 4.9.0
 		 *
 		 * @param {string} id - ID.
-		 * @param {object} options - Options.
+		 * @param {Object} options - Options.
 		 * @return {void}
 		 */
 		initialize: function( id, options ) {
@@ -1799,7 +1799,7 @@
 		 *
 		 * @since 4.2.0
 		 *
-		 * @return {Boolean}
+		 * @return {boolean}
 		 */
 		isContextuallyActive: function () {
 			return this.active();
@@ -2166,8 +2166,8 @@
 		 * Loads controls into the section from data received from loadThemes().
 		 *
 		 * @since 4.9.0
-		 * @param {Array} themes - Array of theme data to create controls with.
-		 * @param {integer} page - Page of results being loaded.
+		 * @param {Array}  themes - Array of theme data to create controls with.
+		 * @param {number} page   - Page of results being loaded.
 		 * @return {void}
 		 */
 		loadControls: function( themes, page ) {
@@ -2412,7 +2412,7 @@
 		 *
 		 * @since 4.9.0
 		 *
-		 * @return {int} Visible count.
+		 * @return {number} Visible count.
 		 */
 		getVisibleCount: function() {
 			return this.contentContainer.find( 'li.customize-control:visible' ).length;
@@ -3036,7 +3036,7 @@
 		 * @since 4.9.0
 		 *
 		 * @param {string} id - The ID for the panel.
-		 * @param {object} options - Options.
+		 * @param {Object} options - Options.
 		 * @return {void}
 		 */
 		initialize: function( id, options ) {
@@ -3496,7 +3496,7 @@
 		 * @param {string} options.label            - Label.
 		 * @param {string} options.description      - Description.
 		 * @param {number} [options.instanceNumber] - Order in which this instance was created in relation to other instances.
-		 * @param {object} [options.params]         - Deprecated wrapper for the above properties.
+		 * @param {Object} [options.params]         - Deprecated wrapper for the above properties.
 		 * @return {void}
 		 */
 		initialize: function( id, options ) {
@@ -5245,7 +5245,7 @@
 		 *
 		 * @since 4.9.0
 		 * @param {string} id      - Unique identifier for the control instance.
-		 * @param {object} options - Options hash for the control instance.
+		 * @param {Object} options - Options hash for the control instance.
 		 * @return {void}
 		 */
 		initialize: function( id, options ) {
@@ -5384,7 +5384,7 @@
 		 * Initialize syntax-highlighting editor.
 		 *
 		 * @since 4.9.0
-		 * @param {object} codeEditorSettings - Code editor settings.
+		 * @param {Object} codeEditorSettings - Code editor settings.
 		 * @return {void}
 		 */
 		initSyntaxHighlightingEditor: function( codeEditorSettings ) {
@@ -5626,7 +5626,7 @@
 		 * @since 4.9.0
 		 *
 		 * @param {string} datetime - Date/Time string. Accepts Y-m-d[ H:i[:s]] format.
-		 * @return {object|null} Returns object containing date components or null if parse error.
+		 * @return {Object|null} Returns object containing date components or null if parse error.
 		 */
 		parseDateTime: function parseDateTime( datetime ) {
 			var control = this, matches, date, midDayHour = 12;
@@ -6611,9 +6611,9 @@
 		 *
 		 * @param {Object} data - Data from preview.
 		 * @param {string} data.currentUrl - Current URL.
-		 * @param {object} data.activePanels - Active panels.
-		 * @param {object} data.activeSections Active sections.
-		 * @param {object} data.activeControls Active controls.
+		 * @param {Object} data.activePanels - Active panels.
+		 * @param {Object} data.activeSections Active sections.
+		 * @param {Object} data.activeControls Active controls.
 		 * @return {void}
 		 */
 		ready: function( data ) {
@@ -6993,7 +6993,7 @@
 	 *
 	 * @since 4.6.0
 	 * @param {string[]} settingIds Setting IDs.
-	 * @return {object<string, wp.customize.Control>} Mapping setting ids to arrays of controls.
+	 * @return {Object<string, wp.customize.Control>} Mapping setting ids to arrays of controls.
 	 */
 	api.findControlsForSettings = function findControlsForSettings( settingIds ) {
 		var controls = {}, settingControls;

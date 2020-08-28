@@ -1399,6 +1399,7 @@ p.customize-section-description {
 	border-color: #007cba;
 	border-style: solid;
 	box-shadow: 0 0 0 1px #007cba;
+	/* Only visible in Windows High Contrast mode */
 	outline: 2px solid transparent;
 }
 

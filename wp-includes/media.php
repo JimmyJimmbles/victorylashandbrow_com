@@ -747,7 +747,7 @@ function wp_image_matches_ratio( $source_width, $source_height, $target_width, $
  * @param array|string $size    Optional. Image size. Accepts any valid image size, or an array
  *                              of width and height values in pixels (in that order).
  *                              Default 'thumbnail'.
- * @return array|false $data {
+ * @return array|false {
  *     Array of file relative path, width, and height on success. Additionally includes absolute
  *     path and URL if registered size is passed to $size parameter. False on failure.
  *
@@ -947,6 +947,7 @@ function wp_get_registered_image_subsizes() {
  *     @type string $0 Image source URL.
  *     @type int    $1 Image width in pixels.
  *     @type int    $2 Image height in pixels.
+ *     @type bool   $3 Whether the image is a resized image.
  * }
  */
 function wp_get_attachment_image_src( $attachment_id, $size = 'thumbnail', $icon = false ) {
@@ -982,6 +983,7 @@ function wp_get_attachment_image_src( $attachment_id, $size = 'thumbnail', $icon
 	 *     @type string $0 Image source URL.
 	 *     @type int    $1 Image width in pixels.
 	 *     @type int    $2 Image height in pixels.
+	 *     @type bool   $3 Whether the image is a resized image.
 	 * }
 	 * @param int          $attachment_id Image attachment ID.
 	 * @param string|int[] $size          Requested size of image. Image size name, or array of width
@@ -1024,8 +1026,11 @@ function wp_get_attachment_image( $attachment_id, $size = 'thumbnail', $icon = f
 
 	if ( $image ) {
 		list( $src, $width, $height ) = $image;
-		$hwstring                     = image_hwstring( $width, $height );
-		$size_class                   = $size;
+
+		$attachment = get_post( $attachment_id );
+		$hwstring   = image_hwstring( $width, $height );
+		$size_class = $size;
+
 		if ( is_array( $size_class ) ) {
 			$size_class = join( 'x', $size_class );
 		}
@@ -1073,7 +1078,7 @@ function wp_get_attachment_image( $attachment_id, $size = 'thumbnail', $icon = f
 		 *
 		 * @since 2.8.0
 		 *
-		 * @param string[]     $attr       Array of attribute values for the image markup, keyed by attribute name.
+		 * @param array        $attr       Array of attribute values for the image markup, keyed by attribute name.
 		 *                                 See wp_get_attachment_image().
 		 * @param WP_Post      $attachment Image attachment post.
 		 * @param string|array $size       Requested size. Image size or array of width and height values
@@ -1638,24 +1643,12 @@ function wp_image_add_srcset_and_sizes( $image, $image_meta, $attachment_id ) {
 	$width  = preg_match( '/ width="([0-9]+)"/', $image, $match_width ) ? (int) $match_width[1] : 0;
 	$height = preg_match( '/ height="([0-9]+)"/', $image, $match_height ) ? (int) $match_height[1] : 0;
 
-	if ( ! $width || ! $height ) {
-		/*
-		 * If attempts to parse the size value failed, attempt to use the image meta data to match
-		 * the image file name from 'src' against the available sizes for an attachment.
-		 */
-		$image_filename = wp_basename( $image_src );
-
-		if ( wp_basename( $image_meta['file'] ) === $image_filename ) {
-			$width  = (int) $image_meta['width'];
-			$height = (int) $image_meta['height'];
-		} else {
-			foreach ( $image_meta['sizes'] as $image_size_data ) {
-				if ( $image_filename === $image_size_data['file'] ) {
-					$width  = (int) $image_size_data['width'];
-					$height = (int) $image_size_data['height'];
-					break;
-				}
-			}
+	if ( $width && $height ) {
+		$size_array = array( $width, $height );
+	} else {
+		$size_array = wp_image_src_get_dimensions( $image_src, $image_meta, $attachment_id );
+		if ( ! $size_array ) {
+			return $image;
 		}
 	}
 
@@ -4203,8 +4196,8 @@ function wp_enqueue_media( $args = array() ) {
 		'dragInfo'                    => __( 'Drag and drop to reorder media files.' ),
 
 		// Upload.
-		'uploadFilesTitle'            => __( 'Upload Files' ),
-		'uploadImagesTitle'           => __( 'Upload Images' ),
+		'uploadFilesTitle'            => __( 'Upload files' ),
+		'uploadImagesTitle'           => __( 'Upload images' ),
 
 		// Library.
 		'mediaLibraryTitle'           => __( 'Media Library' ),
@@ -4232,7 +4225,7 @@ function wp_enqueue_media( $args = array() ) {
 		'filterByDate'                => __( 'Filter by date' ),
 		'filterByType'                => __( 'Filter by type' ),
 		'searchLabel'                 => __( 'Search' ),
-		'searchMediaLabel'            => __( 'Search Media' ),          // Backward compatibility pre-5.3.
+		'searchMediaLabel'            => __( 'Search media' ),          // Backward compatibility pre-5.3.
 		'searchMediaPlaceholder'      => __( 'Search media items...' ), // Placeholder (no ellipsis), backward compatibility pre-5.3.
 		'mediaFound'                  => __( 'Number of media items found: %d' ),
 		'mediaFoundHasMoreResults'    => __( 'Number of media items displayed: %d. Scroll the page for more results.' ),
@@ -4240,7 +4233,7 @@ function wp_enqueue_media( $args = array() ) {
 		'noMediaTryNewSearch'         => __( 'No media items found. Try a different search.' ),
 
 		// Library Details.
-		'attachmentDetails'           => __( 'Attachment Details' ),
+		'attachmentDetails'           => __( 'Attachment details' ),
 
 		// From URL.
 		'insertFromUrlTitle'          => __( 'Insert from URL' ),
@@ -4250,9 +4243,9 @@ function wp_enqueue_media( $args = array() ) {
 		'setFeaturedImage'            => $post_type_object->labels->set_featured_image,
 
 		// Gallery.
-		'createGalleryTitle'          => __( 'Create Gallery' ),
-		'editGalleryTitle'            => __( 'Edit Gallery' ),
-		'cancelGalleryTitle'          => __( '&#8592; Cancel Gallery' ),
+		'createGalleryTitle'          => __( 'Create gallery' ),
+		'editGalleryTitle'            => __( 'Edit gallery' ),
+		'cancelGalleryTitle'          => __( '&#8592; Cancel gallery' ),
 		'insertGallery'               => __( 'Insert gallery' ),
 		'updateGallery'               => __( 'Update gallery' ),
 		'addToGallery'                => __( 'Add to gallery' ),
@@ -4260,16 +4253,16 @@ function wp_enqueue_media( $args = array() ) {
 		'reverseOrder'                => __( 'Reverse order' ),
 
 		// Edit Image.
-		'imageDetailsTitle'           => __( 'Image Details' ),
-		'imageReplaceTitle'           => __( 'Replace Image' ),
-		'imageDetailsCancel'          => __( 'Cancel Edit' ),
-		'editImage'                   => __( 'Edit Image' ),
+		'imageDetailsTitle'           => __( 'Image details' ),
+		'imageReplaceTitle'           => __( 'Replace image' ),
+		'imageDetailsCancel'          => __( 'Cancel edit' ),
+		'editImage'                   => __( 'Edit image' ),
 
 		// Crop Image.
-		'chooseImage'                 => __( 'Choose Image' ),
-		'selectAndCrop'               => __( 'Select and Crop' ),
-		'skipCropping'                => __( 'Skip Cropping' ),
-		'cropImage'                   => __( 'Crop Image' ),
+		'chooseImage'                 => __( 'Choose image' ),
+		'selectAndCrop'               => __( 'Select and crop' ),
+		'skipCropping'                => __( 'Skip cropping' ),
+		'cropImage'                   => __( 'Crop image' ),
 		'cropYourImage'               => __( 'Crop your image' ),
 		'cropping'                    => __( 'Cropping&hellip;' ),
 		/* translators: 1: Suggested width number, 2: Suggested height number. */
@@ -4277,18 +4270,18 @@ function wp_enqueue_media( $args = array() ) {
 		'cropError'                   => __( 'There has been an error cropping your image.' ),
 
 		// Edit Audio.
-		'audioDetailsTitle'           => __( 'Audio Details' ),
-		'audioReplaceTitle'           => __( 'Replace Audio' ),
-		'audioAddSourceTitle'         => __( 'Add Audio Source' ),
-		'audioDetailsCancel'          => __( 'Cancel Edit' ),
+		'audioDetailsTitle'           => __( 'Audio details' ),
+		'audioReplaceTitle'           => __( 'Replace audio' ),
+		'audioAddSourceTitle'         => __( 'Add audio source' ),
+		'audioDetailsCancel'          => __( 'Cancel edit' ),
 
 		// Edit Video.
-		'videoDetailsTitle'           => __( 'Video Details' ),
-		'videoReplaceTitle'           => __( 'Replace Video' ),
-		'videoAddSourceTitle'         => __( 'Add Video Source' ),
-		'videoDetailsCancel'          => __( 'Cancel Edit' ),
-		'videoSelectPosterImageTitle' => __( 'Select Poster Image' ),
-		'videoAddTrackTitle'          => __( 'Add Subtitles' ),
+		'videoDetailsTitle'           => __( 'Video details' ),
+		'videoReplaceTitle'           => __( 'Replace video' ),
+		'videoAddSourceTitle'         => __( 'Add video source' ),
+		'videoDetailsCancel'          => __( 'Cancel edit' ),
+		'videoSelectPosterImageTitle' => __( 'Select poster image' ),
+		'videoAddTrackTitle'          => __( 'Add subtitles' ),
 
 		// Playlist.
 		'playlistDragInfo'            => __( 'Drag and drop to reorder tracks.' ),
@@ -4311,7 +4304,7 @@ function wp_enqueue_media( $args = array() ) {
 		'addToVideoPlaylistTitle'     => __( 'Add to video Playlist' ),
 
 		// Headings.
-		'filterAttachments'           => __( 'Filter Media' ),
+		'filterAttachments'           => __( 'Filter media' ),
 		'attachmentsList'             => __( 'Media list' ),
 	);
 

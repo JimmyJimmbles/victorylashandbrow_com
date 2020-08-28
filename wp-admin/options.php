@@ -200,12 +200,12 @@ if ( ! is_multisite() ) {
 }
 
 /**
- * Filters the options whitelist.
+ * Filters the allowed options list.
  *
  * @since 2.7.0
  * @deprecated 5.5.0 Use {@see 'allowed_options'} instead.
  *
- * @param array $whitelist_options The options whitelist.
+ * @param array $allowed_options The allowed options list.
  */
 $allowed_options = apply_filters_deprecated(
 	'whitelist_options',
@@ -215,8 +215,17 @@ $allowed_options = apply_filters_deprecated(
 	__( 'Please consider writing more inclusive code.' )
 );
 
-if ( 'update' == $action ) { // We are saving settings sent from a settings page.
-	if ( 'options' == $option_page && ! isset( $_POST['option_page'] ) ) { // This is for back compat and will eventually be removed.
+/**
+ * Filters the allowed options list.
+ *
+ * @since 5.5.0
+ *
+ * @param array $allowed_options The allowed options list.
+ */
+$allowed_options = apply_filters( 'allowed_options', $allowed_options );
+
+if ( 'update' === $action ) { // We are saving settings sent from a settings page.
+	if ( 'options' === $option_page && ! isset( $_POST['option_page'] ) ) { // This is for back compat and will eventually be removed.
 		$unregistered = true;
 		check_admin_referer( 'update-options' );
 	} else {
@@ -224,11 +233,11 @@ if ( 'update' == $action ) { // We are saving settings sent from a settings page
 		check_admin_referer( $option_page . '-options' );
 	}
 
-	if ( ! isset( $whitelist_options[ $option_page ] ) ) {
+	if ( ! isset( $allowed_options[ $option_page ] ) ) {
 		wp_die(
 			sprintf(
 				/* translators: %s: The options page name. */
-				__( '<strong>Error</strong>: Options page %s not found in the options whitelist.' ),
+				__( '<strong>Error</strong>: Options page %s not found in the allowed options list.' ),
 				'<code>' . esc_html( $option_page ) . '</code>'
 			)
 		);
@@ -352,7 +361,8 @@ $options = $wpdb->get_results( "SELECT * FROM $wpdb->options ORDER BY option_nam
 
 foreach ( (array) $options as $option ) :
 	$disabled = false;
-	if ( '' == $option->option_name ) {
+
+	if ( '' === $option->option_name ) {
 		continue;
 	}
 

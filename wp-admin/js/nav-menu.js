@@ -1220,7 +1220,7 @@
 
 		eventOnClickMenuDelete : function() {
 			// Delete warning AYS.
-			if ( window.confirm( navMenuL10n.warnDeleteMenu ) ) {
+			if ( window.confirm( wp.i18n.__( 'You are about to permanently delete this menu.\n\'Cancel\' to stop, \'OK\' to delete.' ) ) ) {
 				window.onbeforeunload = null;
 				return true;
 			}

@@ -261,7 +261,7 @@ if ( isset( $_GET['updated'] ) ) {
 					}
 					?>
 					<textarea name="limited_email_domains" id="limited_email_domains" aria-describedby="limited-email-domains-desc" cols="45" rows="5">
-<?php echo esc_textarea( '' == $limited_email_domains ? '' : implode( "\n", (array) $limited_email_domains ) ); ?></textarea>
+<?php echo esc_textarea( $limited_email_domains ); ?></textarea>
 					<p class="description" id="limited-email-domains-desc">
 						<?php _e( 'If you want to limit site registrations to certain domains. One domain per line.' ); ?>
 					</p>

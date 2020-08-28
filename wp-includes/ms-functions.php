@@ -141,7 +141,7 @@ function get_blog_count( $network_id = null ) {
  *
  * @param int $blog_id ID of the blog.
  * @param int $post_id ID of the post being looked for.
- * @return WP_Post|null WP_Post on success or null on failure
+ * @return WP_Post|null WP_Post object on success, null on failure
  */
 function get_blog_post( $blog_id, $post_id ) {
 	switch_to_blog( $blog_id );
@@ -160,7 +160,7 @@ function get_blog_post( $blog_id, $post_id ) {
  *
  * @param int    $blog_id ID of the blog the user is being added to.
  * @param int    $user_id ID of the user being added.
- * @param string $role    The role you want the user to have
+ * @param string $role    The role you want the user to have.
  * @return true|WP_Error True on success or a WP_Error object if the user doesn't exist
  *                       or could not be added.
  */
@@ -948,9 +948,11 @@ function wpmu_signup_blog_notification( $domain, $path, $title, $user_login, $us
 	}
 
 	$activate_url = esc_url( $activate_url );
-	$admin_email  = get_site_option( 'admin_email' );
-	if ( '' == $admin_email ) {
-		$admin_email = 'support@' . $_SERVER['SERVER_NAME'];
+
+	$admin_email = get_site_option( 'admin_email' );
+
+	if ( '' === $admin_email ) {
+		$admin_email = 'support@' . wp_parse_url( network_home_url(), PHP_URL_HOST );
 	}
 
 	$from_name       = ( '' !== get_site_option( 'site_name' ) ) ? esc_html( get_site_option( 'site_name' ) ) : 'WordPress';
@@ -1075,8 +1077,9 @@ function wpmu_signup_user_notification( $user_login, $user_email, $key, $meta = 
 
 	// Send email with activation link.
 	$admin_email = get_site_option( 'admin_email' );
-	if ( '' == $admin_email ) {
-		$admin_email = 'support@' . $_SERVER['SERVER_NAME'];
+
+	if ( '' === $admin_email ) {
+		$admin_email = 'support@' . wp_parse_url( network_home_url(), PHP_URL_HOST );
 	}
 
 	$from_name       = ( '' !== get_site_option( 'site_name' ) ) ? esc_html( get_site_option( 'site_name' ) ) : 'WordPress';
@@ -1231,7 +1234,7 @@ function wpmu_activate_signup( $key ) {
 		 * failed in between creating the blog and setting the activation flag.
 		 * Let's just set the active flag and instruct the user to reset their password.
 		 */
-		if ( 'blog_taken' == $blog_id->get_error_code() ) {
+		if ( 'blog_taken' === $blog_id->get_error_code() ) {
 			$blog_id->add_data( $signup );
 			$wpdb->update(
 				$wpdb->signups,
@@ -1657,8 +1660,10 @@ We hope you enjoy your new site. Thanks!
 	 */
 	$welcome_email = apply_filters( 'update_welcome_email', $welcome_email, $blog_id, $user_id, $password, $title, $meta );
 
-	if ( '' == $admin_email ) {
-		$admin_email = 'support@' . $_SERVER['SERVER_NAME'];
+	$admin_email = get_site_option( 'admin_email' );
+
+	if ( '' === $admin_email ) {
+		$admin_email = 'support@' . wp_parse_url( network_home_url(), PHP_URL_HOST );
 	}
 
 	$from_name       = ( '' !== get_site_option( 'site_name' ) ) ? esc_html( get_site_option( 'site_name' ) ) : 'WordPress';
@@ -1749,8 +1754,8 @@ function wpmu_welcome_user_notification( $user_id, $password, $meta = array() ) 
 
 	$admin_email = get_site_option( 'admin_email' );
 
-	if ( '' == $admin_email ) {
-		$admin_email = 'support@' . $_SERVER['SERVER_NAME'];
+	if ( '' === $admin_email ) {
+		$admin_email = 'support@' . wp_parse_url( network_home_url(), PHP_URL_HOST );
 	}
 
 	$from_name       = ( '' !== get_site_option( 'site_name' ) ) ? esc_html( get_site_option( 'site_name' ) ) : 'WordPress';
@@ -1872,7 +1877,7 @@ function check_upload_mimes( $mimes ) {
 	$site_mimes = array();
 	foreach ( $site_exts as $ext ) {
 		foreach ( $mimes as $ext_pattern => $mime ) {
-			if ( '' != $ext && false !== strpos( $ext_pattern, $ext ) ) {
+			if ( '' !== $ext && false !== strpos( $ext_pattern, $ext ) ) {
 				$site_mimes[ $ext_pattern ] = $mime;
 			}
 		}
@@ -2143,7 +2148,7 @@ function maybe_add_existing_user_to_blog() {
 	$parts = explode( '/', $_SERVER['REQUEST_URI'] );
 	$key   = array_pop( $parts );
 
-	if ( '' == $key ) {
+	if ( '' === $key ) {
 		$key = array_pop( $parts );
 	}
 
@@ -2179,7 +2184,12 @@ function maybe_add_existing_user_to_blog() {
  *
  * @since MU (3.0.0)
  *
- * @param array $details User details.
+ * @param array $details {
+ *     User details. Must at least contain values for the keys listed below.
+ *
+ *     @type int    $user_id The ID of the user being added to the current blog.
+ *     @type string $role    The role to be assigned to the user.
+ * }
  * @return true|WP_Error|void True on success or a WP_Error object if the user doesn't exist
  *                            or could not be added. Void if $details array was not provided.
  */

@@ -82,7 +82,7 @@ this["wp"] = this["wp"] || {}; this["wp"]["viewport"] =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 436);
+/******/ 	return __webpack_require__(__webpack_require__.s = 454);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -94,42 +94,13 @@ this["wp"] = this["wp"] || {}; this["wp"]["viewport"] =
 
 /***/ }),
 
-/***/ 12:
+/***/ 14:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _extends; });
-function _extends() {
-  _extends = Object.assign || function (target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i];
 
-      for (var key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-          target[key] = source[key];
-        }
-      }
-    }
-
-    return target;
-  };
-
-  return _extends.apply(this, arguments);
-}
-
-/***/ }),
-
-/***/ 2:
-/***/ (function(module, exports) {
-
-(function() { module.exports = this["lodash"]; }());
-
-/***/ }),
-
-/***/ 20:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, "a", function() { return /* binding */ _slicedToArray; });
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/arrayWithHoles.js
 var arrayWithHoles = __webpack_require__(38);
@@ -162,13 +133,12 @@ function _iterableToArrayLimit(arr, i) {
   return _arr;
 }
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js
-var unsupportedIterableToArray = __webpack_require__(27);
+var unsupportedIterableToArray = __webpack_require__(29);
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/nonIterableRest.js
 var nonIterableRest = __webpack_require__(39);
 
 // CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/slicedToArray.js
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _slicedToArray; });
 
 
 
@@ -179,7 +149,14 @@ function _slicedToArray(arr, i) {
 
 /***/ }),
 
-/***/ 25:
+/***/ 2:
+/***/ (function(module, exports) {
+
+(function() { module.exports = this["lodash"]; }());
+
+/***/ }),
+
+/***/ 26:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -196,54 +173,25 @@ function _arrayLikeToArray(arr, len) {
 
 /***/ }),
 
-/***/ 27:
+/***/ 29:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _unsupportedIterableToArray; });
-/* harmony import */ var _arrayLikeToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(25);
+/* harmony import */ var _arrayLikeToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(26);
 
 function _unsupportedIterableToArray(o, minLen) {
   if (!o) return;
   if (typeof o === "string") return Object(_arrayLikeToArray__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])(o, minLen);
   var n = Object.prototype.toString.call(o).slice(8, -1);
   if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(n);
+  if (n === "Map" || n === "Set") return Array.from(o);
   if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return Object(_arrayLikeToArray__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])(o, minLen);
 }
 
 /***/ }),
 
 /***/ 38:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _arrayWithHoles; });
-function _arrayWithHoles(arr) {
-  if (Array.isArray(arr)) return arr;
-}
-
-/***/ }),
-
-/***/ 39:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _nonIterableRest; });
-function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-/***/ }),
-
-/***/ 4:
-/***/ (function(module, exports) {
-
-(function() { module.exports = this["wp"]["data"]; }());
-
-/***/ }),
-
-/***/ 436:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -287,6 +235,8 @@ __webpack_require__.d(__webpack_exports__, "withViewportMatch", function() { ret
 var actions_namespaceObject = {};
 __webpack_require__.r(actions_namespaceObject);
 __webpack_require__.d(actions_namespaceObject, "setIsMatching", function() { return actions_setIsMatching; });
+
+// NAMESPACE OBJECT: ./node_modules/@wordpress/viewport/build-module/store/selectors.js
 var selectors_namespaceObject = {};
 __webpack_require__.r(selectors_namespaceObject);
 __webpack_require__.d(selectors_namespaceObject, "isViewportMatch", function() { return isViewportMatch; });
@@ -445,15 +395,6 @@ var slicedToArray = __webpack_require__(14);
 // EXTERNAL MODULE: external {"this":["wp","element"]}
 var external_this_wp_element_ = __webpack_require__(0);
 
-// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/extends.js
-var esm_extends = __webpack_require__(12);
-
-// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/slicedToArray.js + 1 modules
-var slicedToArray = __webpack_require__(20);
-
-// EXTERNAL MODULE: external {"this":["wp","element"]}
-var external_this_wp_element_ = __webpack_require__(0);
-
 // CONCATENATED MODULE: ./node_modules/@wordpress/viewport/build-module/with-viewport-match.js
 
 
@@ -565,8 +506,6 @@ var if_viewport_matches_ifViewportMatches = function ifViewportMatches(query) {
 /* harmony default export */ var if_viewport_matches = (if_viewport_matches_ifViewportMatches);
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/viewport/build-module/index.js
-/* concated harmony reexport ifViewportMatches */__webpack_require__.d(__webpack_exports__, "ifViewportMatches", function() { return if_viewport_matches; });
-/* concated harmony reexport withViewportMatch */__webpack_require__.d(__webpack_exports__, "withViewportMatch", function() { return with_viewport_match; });
 /**
  * Internal dependencies
  */
@@ -602,6 +541,31 @@ var OPERATORS = {
 };
 listener(BREAKPOINTS, OPERATORS);
 
+
+/***/ }),
+
+/***/ 8:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _extends; });
+function _extends() {
+  _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+
+    return target;
+  };
+
+  return _extends.apply(this, arguments);
+}
 
 /***/ }),
 

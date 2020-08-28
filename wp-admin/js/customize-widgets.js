@@ -1075,7 +1075,7 @@
 		 * Get the state for an input depending on its type.
 		 *
 		 * @param {jQuery|Element} input
-		 * @return {string|boolean|array|*}
+		 * @return {string|boolean|Array|*}
 		 * @private
 		 */
 		_getInputState: function( input ) {
@@ -1498,7 +1498,7 @@
 		/**
 		 * Get the position (index) of the widget in the containing sidebar
 		 *
-		 * @return {Number}
+		 * @return {number}
 		 */
 		getWidgetSidebarPosition: function() {
 			var sidebarWidgetIds, position;
@@ -2065,7 +2065,7 @@
 
 		/**
 		 * @param {string} widgetId or an id_base for adding a previously non-existing widget.
-		 * @return {object|false} widget_form control instance, or false on error.
+		 * @return {Object|false} widget_form control instance, or false on error.
 		 */
 		addWidget: function( widgetId ) {
 			var self = this, controlHtml, $widget, controlType = 'widget_form', controlContainer, controlConstructor,
@@ -2333,7 +2333,7 @@
 	}
 
 	/**
-	 * @param {String} widgetId
+	 * @param {string} widgetId
 	 * @return {Object}
 	 */
 	function parseWidgetId( widgetId ) {
@@ -2355,8 +2355,8 @@
 	}
 
 	/**
-	 * @param {String} widgetId
-	 * @return {String} settingId
+	 * @param {string} widgetId
+	 * @return {string} settingId
 	 */
 	function widgetIdToSettingId( widgetId ) {
 		var parsed = parseWidgetId( widgetId ), settingId;

@@ -5847,7 +5847,7 @@ class wp_xmlrpc_server extends IXR_Server {
 		$tags_input = isset( $content_struct['mt_keywords'] ) ? $content_struct['mt_keywords'] : null;
 
 		if ( 'publish' === $post_status || 'private' === $post_status ) {
-			if ( 'page' == $post_type && ! current_user_can( 'publish_pages' ) ) {
+			if ( 'page' === $post_type && ! current_user_can( 'publish_pages' ) ) {
 				return new IXR_Error( 401, __( 'Sorry, you are not allowed to publish this page.' ) );
 			} elseif ( ! current_user_can( 'publish_posts' ) ) {
 				return new IXR_Error( 401, __( 'Sorry, you are not allowed to publish this post.' ) );
@@ -5991,7 +5991,7 @@ class wp_xmlrpc_server extends IXR_Server {
 		/** This action is documented in wp-includes/class-wp-xmlrpc-server.php */
 		do_action( 'xmlrpc_call', 'metaWeblog.getPost' );
 
-		if ( '' != $postdata['post_date'] ) {
+		if ( '' !== $postdata['post_date'] ) {
 			$post_date         = $this->_convert_date( $postdata['post_date'] );
 			$post_date_gmt     = $this->_convert_date_gmt( $postdata['post_date_gmt'], $postdata['post_date'] );
 			$post_modified     = $this->_convert_date( $postdata['post_modified'] );

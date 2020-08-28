@@ -597,9 +597,11 @@ function wp_doc_link_parse( $content ) {
 			continue;
 		}
 
-		if ( T_STRING == $tokens[ $t ][0] && ( '(' == $tokens[ $t + 1 ] || '(' == $tokens[ $t + 2 ] ) ) {
+		if ( T_STRING == $tokens[ $t ][0] && ( '(' === $tokens[ $t + 1 ] || '(' === $tokens[ $t + 2 ] ) ) {
 			// If it's a function or class defined locally, there's not going to be any docs available.
-			if ( ( isset( $tokens[ $t - 2 ][1] ) && in_array( $tokens[ $t - 2 ][1], array( 'function', 'class' ) ) ) || ( isset( $tokens[ $t - 2 ][0] ) && T_OBJECT_OPERATOR == $tokens[ $t - 1 ][0] ) ) {
+			if ( ( isset( $tokens[ $t - 2 ][1] ) && in_array( $tokens[ $t - 2 ][1], array( 'function', 'class' ), true ) )
+				|| ( isset( $tokens[ $t - 2 ][0] ) && T_OBJECT_OPERATOR == $tokens[ $t - 1 ][0] )
+			) {
 				$ignore_functions[] = $tokens[ $t ][1];
 			}
 			// Add this to our stack of unique references.
@@ -686,6 +688,8 @@ function set_screen_options() {
 				}
 				break;
 			default:
+				$screen_option = false;
+
 				if ( '_page' === substr( $option, -5 ) || 'layout_columns' === $option ) {
 					/**
 					 * Filters a screen option value before it is set.
@@ -693,7 +697,7 @@ function set_screen_options() {
 					 * The filter can also be used to modify non-standard [items]_per_page
 					 * settings. See the parent function for a full list of standard options.
 					 *
-					 * Returning false to the filter will skip saving the current option.
+					 * Returning false from the filter will skip saving the current option.
 					 *
 					 * @since 2.8.0
 					 * @since 5.4.2 Only applied to options ending with '_page',
@@ -701,12 +705,12 @@ function set_screen_options() {
 					 *
 					 * @see set_screen_options()
 					 *
-					 * @param bool   $keep   Whether to save or skip saving the screen option value.
-					 *                       Default false.
-					 * @param string $option The option name.
-					 * @param int    $value  The number of rows to use.
+					 * @param mixed  $screen_option The value to save instead of the option value.
+					 *                              Default false (to skip saving the current option).
+					 * @param string $option        The option name.
+					 * @param int    $value         The option value.
 					 */
-					$value = apply_filters( 'set-screen-option', false, $option, $value ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+					$screen_option = apply_filters( 'set-screen-option', $screen_option, $option, $value ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
 				}
 
 				/**
@@ -720,12 +724,12 @@ function set_screen_options() {
 				 *
 				 * @see set_screen_options()
 				 *
-				 * @param bool   $keep   Whether to save or skip saving the screen option value.
-				 *                       Default false.
-				 * @param string $option The option name.
-				 * @param int    $value  The number of rows to use.
+				 * @param mixed   $screen_option The value to save instead of the option value.
+				 *                               Default false (to skip saving the current option).
+				 * @param string  $option        The option name.
+				 * @param int     $value         The option value.
 				 */
-				$value = apply_filters( "set_screen_option_{$option}", false, $option, $value );
+				$value = apply_filters( "set_screen_option_{$option}", $screen_option, $option, $value );
 
 				if ( false === $value ) {
 					return;

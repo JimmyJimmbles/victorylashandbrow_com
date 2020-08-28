@@ -426,8 +426,7 @@ class Plugin_Upgrader extends WP_Upgrader {
 		}
 
 		// Check that the folder contains at least 1 valid plugin.
-		$plugins_found = false;
-		$files         = glob( $working_directory . '*.php' );
+		$files = glob( $working_directory . '*.php' );
 		if ( $files ) {
 			foreach ( $files as $file ) {
 				$info = get_plugin_data( $file, false, false );
@@ -645,7 +644,7 @@ class Plugin_Upgrader extends WP_Upgrader {
 
 		// If plugin is in its own directory, recursively delete the directory.
 		// Base check on if plugin includes directory separator AND that it's not the root plugin folder.
-		if ( strpos( $plugin, '/' ) && $this_plugin_dir != $plugins_dir ) {
+		if ( strpos( $plugin, '/' ) && $this_plugin_dir !== $plugins_dir ) {
 			$deleted = $wp_filesystem->delete( $this_plugin_dir, true );
 		} else {
 			$deleted = $wp_filesystem->delete( $plugins_dir . $plugin );

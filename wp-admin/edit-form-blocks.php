@@ -132,19 +132,12 @@ wp_localize_script( 'wp-editor', '_wpMetaBoxUrl', $meta_box_url );
  * Initialize the editor.
  */
 
-<<<<<<< HEAD
-$align_wide       = get_theme_support( 'align-wide' );
-$color_palette    = current( (array) get_theme_support( 'editor-color-palette' ) );
-$font_sizes       = current( (array) get_theme_support( 'editor-font-sizes' ) );
-$gradient_presets = current( (array) get_theme_support( 'editor-gradient-presets' ) );
-=======
 $align_wide         = get_theme_support( 'align-wide' );
 $color_palette      = current( (array) get_theme_support( 'editor-color-palette' ) );
 $font_sizes         = current( (array) get_theme_support( 'editor-font-sizes' ) );
 $gradient_presets   = current( (array) get_theme_support( 'editor-gradient-presets' ) );
 $custom_line_height = get_theme_support( 'custom-line-height' );
 $custom_units       = get_theme_support( 'custom-units' );
->>>>>>> master
 
 /**
  * Filters the allowed block types for the editor, defaulting to true (all
@@ -292,28 +285,6 @@ if ( $user_id ) {
 $body_placeholder = apply_filters( 'write_your_story', __( 'Start writing or type / to choose a block' ), $post );
 
 $editor_settings = array(
-<<<<<<< HEAD
-	'alignWide'              => $align_wide,
-	'availableTemplates'     => $available_templates,
-	'allowedBlockTypes'      => $allowed_block_types,
-	'disableCustomColors'    => get_theme_support( 'disable-custom-colors' ),
-	'disableCustomFontSizes' => get_theme_support( 'disable-custom-font-sizes' ),
-	'disableCustomGradients' => get_theme_support( 'disable-custom-gradients' ),
-	'disablePostFormats'     => ! current_theme_supports( 'post-formats' ),
-	/** This filter is documented in wp-admin/edit-form-advanced.php */
-	'titlePlaceholder'       => apply_filters( 'enter_title_here', __( 'Add title' ), $post ),
-	'bodyPlaceholder'        => $body_placeholder,
-	'isRTL'                  => is_rtl(),
-	'autosaveInterval'       => AUTOSAVE_INTERVAL,
-	'maxUploadFileSize'      => $max_upload_size,
-	'allowedMimeTypes'       => get_allowed_mime_types(),
-	'styles'                 => $styles,
-	'imageSizes'             => $available_image_sizes,
-	'imageDimensions'        => $image_dimensions,
-	'richEditingEnabled'     => user_can_richedit(),
-	'postLock'               => $lock_details,
-	'postLockUtils'          => array(
-=======
 	'alignWide'                            => $align_wide,
 	'availableTemplates'                   => $available_templates,
 	'allowedBlockTypes'                    => $allowed_block_types,
@@ -334,7 +305,6 @@ $editor_settings = array(
 	'richEditingEnabled'                   => user_can_richedit(),
 	'postLock'                             => $lock_details,
 	'postLockUtils'                        => array(
->>>>>>> master
 		'nonce'       => wp_create_nonce( 'lock-post_' . $post->ID ),
 		'unlockNonce' => wp_create_nonce( 'update-post_' . $post->ID ),
 		'ajaxUrl'     => admin_url( 'admin-ajax.php' ),

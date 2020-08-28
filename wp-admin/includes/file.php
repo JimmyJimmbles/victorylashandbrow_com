@@ -1580,7 +1580,7 @@ function _unzip_file_ziparchive( $file, $to, $needed_dirs = array() ) {
 			return new WP_Error( 'stat_failed_ziparchive', __( 'Could not retrieve file from archive.' ) );
 		}
 
-		if ( '/' == substr( $info['name'], -1 ) ) { // Directory.
+		if ( '/' === substr( $info['name'], -1 ) ) { // Directory.
 			continue;
 		}
 
@@ -1991,16 +1991,17 @@ function get_filesystem_method( $args = array(), $context = '', $allow_relaxed_f
  *
  * @param string        $form_post                    The URL to post the form to.
  * @param string        $type                         Optional. Chosen type of filesystem. Default empty.
- * @param bool|WP_Error $error                        Optional. Whether the current request has failed to connect,
- *                                                    or an error object. Default false.
- * @param string        $context                      Optional. Full path to the directory that is tested for being
- *                                                    writable. Default empty.
- * @param array         $extra_fields                 Optional. Extra `POST` fields to be checked for inclusion in
- *                                                    the post. Default null.
- * @param bool          $allow_relaxed_file_ownership Optional. Whether to allow Group/World writable. Default false.
- *
- * @return bool|array True if no filesystem credentials are required, false if they are required but have not been
- *                    provided, array of credentials if they are required and have been provided.
+ * @param bool|WP_Error $error                        Optional. Whether the current request has failed
+ *                                                    to connect, or an error object. Default false.
+ * @param string        $context                      Optional. Full path to the directory that is tested
+ *                                                    for being writable. Default empty.
+ * @param array         $extra_fields                 Optional. Extra `POST` fields to be checked
+ *                                                    for inclusion in the post. Default null.
+ * @param bool          $allow_relaxed_file_ownership Optional. Whether to allow Group/World writable.
+ *                                                    Default false.
+ * @return bool|array True if no filesystem credentials are required,
+ *                    false if they are required but have not been provided,
+ *                    array of credentials if they are required and have been provided.
  */
 function request_filesystem_credentials( $form_post, $type = '', $error = false, $context = '', $extra_fields = null, $allow_relaxed_file_ownership = false ) {
 	global $pagenow;
@@ -2089,7 +2090,7 @@ function request_filesystem_credentials( $form_post, $type = '', $error = false,
 
 	if ( ( defined( 'FTP_SSH' ) && FTP_SSH ) || ( defined( 'FS_METHOD' ) && 'ssh2' === FS_METHOD ) ) {
 		$credentials['connection_type'] = 'ssh';
-	} elseif ( ( defined( 'FTP_SSL' ) && FTP_SSL ) && 'ftpext' == $type ) { // Only the FTP Extension understands SSL.
+	} elseif ( ( defined( 'FTP_SSL' ) && FTP_SSL ) && 'ftpext' === $type ) { // Only the FTP Extension understands SSL.
 		$credentials['connection_type'] = 'ftps';
 	} elseif ( ! empty( $submitted_form['connection_type'] ) ) {
 		$credentials['connection_type'] = $submitted_form['connection_type'];
@@ -2102,6 +2103,7 @@ function request_filesystem_credentials( $form_post, $type = '', $error = false,
 		)
 	) {
 		$stored_credentials = $credentials;
+
 		if ( ! empty( $stored_credentials['port'] ) ) { // Save port as part of hostname to simplify above code.
 			$stored_credentials['hostname'] .= ':' . $stored_credentials['port'];
 		}
@@ -2122,7 +2124,7 @@ function request_filesystem_credentials( $form_post, $type = '', $error = false,
 	$connection_type = isset( $credentials['connection_type'] ) ? $credentials['connection_type'] : '';
 
 	if ( $error ) {
-		$error_string = __( '<strong>Error</strong>: There was an error connecting to the server, Please verify the settings are correct.' );
+		$error_string = __( '<strong>Error</strong>: Could not connect to the server. Please verify the settings are correct.' );
 		if ( is_wp_error( $error ) ) {
 			$error_string = esc_html( $error->get_error_message() );
 		}
@@ -2283,6 +2285,7 @@ function wp_print_request_filesystem_credentials_modal() {
 	ob_start();
 	$filesystem_credentials_are_stored = request_filesystem_credentials( self_admin_url() );
 	ob_end_clean();
+
 	$request_filesystem_credentials = ( 'direct' !== $filesystem_method && ! $filesystem_credentials_are_stored );
 	if ( ! $request_filesystem_credentials ) {
 		return;

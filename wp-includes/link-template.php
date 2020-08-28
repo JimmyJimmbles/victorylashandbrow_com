@@ -681,7 +681,7 @@ function get_post_comments_feed_link( $post_id = 0, $feed = '' ) {
 	$post       = get_post( $post_id );
 	$unattached = 'attachment' === $post->post_type && 0 === (int) $post->post_parent;
 
-	if ( '' != get_option( 'permalink_structure' ) ) {
+	if ( get_option( 'permalink_structure' ) ) {
 		if ( 'page' === get_option( 'show_on_front' ) && get_option( 'page_on_front' ) == $post_id ) {
 			$url = _get_page_link( $post_id );
 		} else {

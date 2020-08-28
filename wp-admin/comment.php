@@ -105,7 +105,7 @@ switch ( $action ) {
 		}
 
 		// No need to re-approve/re-trash/re-spam a comment.
-		if ( str_replace( '1', 'approve', $comment->comment_approved ) == $action ) {
+		if ( str_replace( '1', 'approve', $comment->comment_approved ) === $action ) {
 			wp_redirect( admin_url( 'edit-comments.php?same=' . $comment_id ) );
 			die();
 		}
@@ -141,7 +141,7 @@ switch ( $action ) {
 				break;
 		}
 
-		if ( '0' != $comment->comment_approved ) { // If not unapproved.
+		if ( '0' !== $comment->comment_approved ) { // If not unapproved.
 			$message = '';
 			switch ( $comment->comment_approved ) {
 				case '1':

@@ -82,7 +82,7 @@ this["wp"] = this["wp"] || {}; this["wp"]["mediaUtils"] =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 443);
+/******/ 	return __webpack_require__(__webpack_require__.s = 460);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -101,7 +101,22 @@ this["wp"] = this["wp"] || {}; this["wp"]["mediaUtils"] =
 
 /***/ }),
 
-/***/ 13:
+/***/ 12:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _assertThisInitialized; });
+function _assertThisInitialized(self) {
+  if (self === void 0) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return self;
+}
+
+/***/ }),
+
+/***/ 14:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -156,7 +171,7 @@ function _slicedToArray(arr, i) {
 
 /***/ }),
 
-/***/ 14:
+/***/ 16:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -170,13 +185,10 @@ function _getPrototypeOf(o) {
 
 /***/ }),
 
-/***/ 15:
+/***/ 18:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _possibleConstructorReturn; });
-/* harmony import */ var _helpers_esm_typeof__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(34);
-/* harmony import */ var _assertThisInitialized__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, "a", function() { return /* binding */ _toConsumableArray; });
@@ -233,7 +245,14 @@ function _createClass(Constructor, protoProps, staticProps) {
 
 /***/ }),
 
-/***/ 16:
+/***/ 2:
+/***/ (function(module, exports) {
+
+(function() { module.exports = this["lodash"]; }());
+
+/***/ }),
+
+/***/ 20:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -246,7 +265,7 @@ function _classCallCheck(instance, Constructor) {
 
 /***/ }),
 
-/***/ 17:
+/***/ 22:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -282,7 +301,7 @@ function _inherits(subClass, superClass) {
 
 /***/ }),
 
-/***/ 18:
+/***/ 23:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -290,32 +309,13 @@ function _inherits(subClass, superClass) {
 /* harmony import */ var _helpers_esm_typeof__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(40);
 /* harmony import */ var _assertThisInitialized__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(12);
 
-// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js
-var arrayLikeToArray = __webpack_require__(25);
 
-// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/arrayWithoutHoles.js
+function _possibleConstructorReturn(self, call) {
+  if (call && (Object(_helpers_esm_typeof__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])(call) === "object" || typeof call === "function")) {
+    return call;
+  }
 
-function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) return Object(arrayLikeToArray["a" /* default */])(arr);
-}
-// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/iterableToArray.js
-var iterableToArray = __webpack_require__(35);
-
-// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js
-var unsupportedIterableToArray = __webpack_require__(27);
-
-// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/nonIterableSpread.js
-function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _toConsumableArray; });
-
-
-
-
-function _toConsumableArray(arr) {
-  return _arrayWithoutHoles(arr) || Object(iterableToArray["a" /* default */])(arr) || Object(unsupportedIterableToArray["a" /* default */])(arr) || _nonIterableSpread();
+  return Object(_assertThisInitialized__WEBPACK_IMPORTED_MODULE_1__[/* default */ "a"])(self);
 }
 
 /***/ }),
@@ -327,74 +327,7 @@ function _toConsumableArray(arr) {
 
 /***/ }),
 
-/***/ 20:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _unsupportedIterableToArray; });
-/* harmony import */ var _arrayLikeToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(26);
-
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return Object(_arrayLikeToArray__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return Object(_arrayLikeToArray__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])(o, minLen);
-}
-
-// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/arrayWithHoles.js
-var arrayWithHoles = __webpack_require__(38);
-
-// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/iterableToArrayLimit.js
-function _iterableToArrayLimit(arr, i) {
-  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
-  var _arr = [];
-  var _n = true;
-  var _d = false;
-  var _e = undefined;
-
-  try {
-    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-      _arr.push(_s.value);
-
-/***/ 35:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _iterableToArray; });
-function _iterableToArray(iter) {
-  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
-}
-// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js
-var unsupportedIterableToArray = __webpack_require__(27);
-
-// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/nonIterableRest.js
-var nonIterableRest = __webpack_require__(39);
-
-// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/slicedToArray.js
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _slicedToArray; });
-
-/***/ }),
-
-/***/ 38:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-
-function _slicedToArray(arr, i) {
-  return Object(arrayWithHoles["a" /* default */])(arr) || _iterableToArrayLimit(arr, i) || Object(unsupportedIterableToArray["a" /* default */])(arr, i) || Object(nonIterableRest["a" /* default */])();
-}
-
-/***/ }),
-
-/***/ 23:
-/***/ (function(module, exports) {
-
-(function() { module.exports = this["regeneratorRuntime"]; }());
-
-/***/ }),
-
-/***/ 25:
+/***/ 26:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -411,43 +344,20 @@ function _arrayLikeToArray(arr, len) {
 
 /***/ }),
 
-/***/ 27:
+/***/ 29:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _unsupportedIterableToArray; });
-/* harmony import */ var _arrayLikeToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(25);
+/* harmony import */ var _arrayLikeToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(26);
 
 function _unsupportedIterableToArray(o, minLen) {
   if (!o) return;
   if (typeof o === "string") return Object(_arrayLikeToArray__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])(o, minLen);
   var n = Object.prototype.toString.call(o).slice(8, -1);
   if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(n);
+  if (n === "Map" || n === "Set") return Array.from(o);
   if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return Object(_arrayLikeToArray__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])(o, minLen);
-}
-
-/***/ }),
-
-/***/ 34:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _typeof; });
-function _typeof(obj) {
-  "@babel/helpers - typeof";
-
-  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-    _typeof = function _typeof(obj) {
-      return typeof obj;
-    };
-  } else {
-    _typeof = function _typeof(obj) {
-      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-    };
-  }
-
-  return _typeof(obj);
 }
 
 /***/ }),
@@ -485,21 +395,44 @@ function _nonIterableRest() {
 
 /***/ }),
 
-/***/ 41:
+/***/ 40:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _typeof; });
+function _typeof(obj) {
+  "@babel/helpers - typeof";
+
+  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    _typeof = function _typeof(obj) {
+      return typeof obj;
+    };
+  } else {
+    _typeof = function _typeof(obj) {
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    };
+  }
+
+  return _typeof(obj);
+}
+
+/***/ }),
+
+/***/ 44:
+/***/ (function(module, exports) {
+
+(function() { module.exports = this["wp"]["blob"]; }());
+
+/***/ }),
+
+/***/ 45:
 /***/ (function(module, exports) {
 
 (function() { module.exports = this["wp"]["apiFetch"]; }());
 
 /***/ }),
 
-/***/ 42:
-/***/ (function(module, exports) {
-
-(function() { module.exports = this["wp"]["apiFetch"]; }());
-
-/***/ }),
-
-/***/ 443:
+/***/ 460:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -511,22 +444,22 @@ __webpack_require__.d(__webpack_exports__, "MediaUpload", function() { return /*
 __webpack_require__.d(__webpack_exports__, "uploadMedia", function() { return /* reexport */ uploadMedia; });
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/classCallCheck.js
-var classCallCheck = __webpack_require__(14);
+var classCallCheck = __webpack_require__(20);
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/createClass.js
-var createClass = __webpack_require__(13);
+var createClass = __webpack_require__(19);
+
+// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js
+var assertThisInitialized = __webpack_require__(12);
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js
-var possibleConstructorReturn = __webpack_require__(15);
+var possibleConstructorReturn = __webpack_require__(23);
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js
 var getPrototypeOf = __webpack_require__(16);
 
-// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js
-var assertThisInitialized = __webpack_require__(7);
-
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/inherits.js + 1 modules
-var inherits = __webpack_require__(17);
+var inherits = __webpack_require__(22);
 
 // EXTERNAL MODULE: external {"this":"lodash"}
 var external_this_lodash_ = __webpack_require__(2);
@@ -561,6 +494,7 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 var _window = window,
     wp = _window.wp;
+var DEFAULT_EMPTY_GALLERY = [];
 /**
  * Prepares the Featured Image toolbars and frames.
  *
@@ -987,27 +921,27 @@ var media_upload_MediaUpload = /*#__PURE__*/function (_Component) {
 
 
 // EXTERNAL MODULE: external {"this":"regeneratorRuntime"}
-var external_this_regeneratorRuntime_ = __webpack_require__(23);
+var external_this_regeneratorRuntime_ = __webpack_require__(24);
 var external_this_regeneratorRuntime_default = /*#__PURE__*/__webpack_require__.n(external_this_regeneratorRuntime_);
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/defineProperty.js
 var defineProperty = __webpack_require__(5);
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js
-var asyncToGenerator = __webpack_require__(49);
+var asyncToGenerator = __webpack_require__(50);
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js + 2 modules
 var toConsumableArray = __webpack_require__(18);
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/slicedToArray.js + 1 modules
-var slicedToArray = __webpack_require__(20);
+var slicedToArray = __webpack_require__(14);
 
 // EXTERNAL MODULE: external {"this":["wp","apiFetch"]}
-var external_this_wp_apiFetch_ = __webpack_require__(42);
+var external_this_wp_apiFetch_ = __webpack_require__(45);
 var external_this_wp_apiFetch_default = /*#__PURE__*/__webpack_require__.n(external_this_wp_apiFetch_);
 
 // EXTERNAL MODULE: external {"this":["wp","blob"]}
-var external_this_wp_blob_ = __webpack_require__(41);
+var external_this_wp_blob_ = __webpack_require__(44);
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/media-utils/build-module/utils/upload-media.js
 
@@ -1020,6 +954,12 @@ var external_this_wp_blob_ = __webpack_require__(41);
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { Object(defineProperty["a" /* default */])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 /**
  * External dependencies
@@ -1089,10 +1029,8 @@ function uploadMedia(_x) {
  */
 
 function _uploadMedia() {
-  _uploadMedia = Object(asyncToGenerator["a" /* default */])(
-  /*#__PURE__*/
-  external_this_regeneratorRuntime_default.a.mark(function _callee(_ref) {
-    var allowedTypes, _ref$additionalData, additionalData, filesList, maxUploadFileSize, _ref$onError, onError, onFileChange, _ref$wpAllowedMimeTyp, wpAllowedMimeTypes, files, filesSet, setAndUpdateFiles, isAllowedType, allowedMimeTypesForUser, isAllowedMimeTypeForUser, triggerError, validFiles, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, _mediaFile, idx, mediaFile, savedMedia, mediaObject, message;
+  _uploadMedia = Object(asyncToGenerator["a" /* default */])( /*#__PURE__*/external_this_regeneratorRuntime_default.a.mark(function _callee(_ref) {
+    var allowedTypes, _ref$additionalData, additionalData, filesList, maxUploadFileSize, _ref$onError, onError, onFileChange, _ref$wpAllowedMimeTyp, wpAllowedMimeTypes, files, filesSet, setAndUpdateFiles, isAllowedType, allowedMimeTypesForUser, isAllowedMimeTypeForUser, triggerError, validFiles, _iterator, _step, _mediaFile, idx, mediaFile, savedMedia, mediaObject, message;
 
     return external_this_regeneratorRuntime_default.a.wrap(function _callee$(_context) {
       while (1) {
@@ -1321,7 +1259,29 @@ function createMediaFromFile(file, additionalData) {
 
 /***/ }),
 
-/***/ 49:
+/***/ 5:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _defineProperty; });
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
+/***/ }),
+
+/***/ 50:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1360,43 +1320,6 @@ function _asyncToGenerator(fn) {
       _next(undefined);
     });
   };
-}
-
-/***/ }),
-
-/***/ 5:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _defineProperty; });
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-
-  return obj;
-}
-
-/***/ }),
-
-/***/ 7:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _assertThisInitialized; });
-function _assertThisInitialized(self) {
-  if (self === void 0) {
-    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-  }
-
-  return self;
 }
 
 /***/ })

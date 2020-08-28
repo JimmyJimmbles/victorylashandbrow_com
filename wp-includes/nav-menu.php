@@ -497,7 +497,7 @@ function wp_update_nav_menu_item( $menu_id = 0, $menu_item_db_id = 0, $menu_item
 		}
 
 		// Hack to get wp to create a post object when too many properties are empty.
-		if ( '' == $args['menu-item-title'] && '' == $args['menu-item-description'] ) {
+		if ( '' === $args['menu-item-title'] && '' === $args['menu-item-description'] ) {
 			$args['menu-item-description'] = ' ';
 		}
 	}
@@ -666,7 +666,7 @@ function _is_valid_nav_menu_item( $item ) {
  *                               processed in this function. Default 'menu_order'.
  *     @type bool   $nopaging    Whether to retrieve all menu items (true) or paginate (false). Default true.
  * }
- * @return array|false $items Array of menu items, otherwise false.
+ * @return array|false Array of menu items, otherwise false.
  */
 function wp_get_nav_menu_items( $menu, $args = array() ) {
 	$menu = wp_get_nav_menu_object( $menu );
@@ -816,7 +816,7 @@ function wp_setup_nav_menu_item( $menu_item ) {
 				$object = get_post_type_object( $menu_item->object );
 				if ( $object ) {
 					$menu_item->type_label = $object->labels->singular_name;
-					// Use post states for special pages (only in the admin).
+					// Denote post states for special pages (only in the admin).
 					if ( function_exists( 'get_post_states' ) ) {
 						$menu_post   = get_post( $menu_item->object_id );
 						$post_states = get_post_states( $menu_post );

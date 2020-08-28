@@ -338,9 +338,22 @@ switch ( $action ) {
 					if ( isset( $_REQUEST['menu-item'] ) ) {
 						wp_save_nav_menu_items( $nav_menu_selected_id, absint( $_REQUEST['menu-item'] ) );
 					}
-					if ( isset( $_REQUEST['zero-menu-state'] ) ) {
+
+					// Set the menu_location value correctly for the newly created menu.
+					foreach ( $menu_locations as $location => $id ) {
+						if ( 0 === $id ) {
+							$menu_locations[ $location ] = $nav_menu_selected_id;
+						}
+					}
+
+					set_theme_mod( 'nav_menu_locations', $menu_locations );
+
+					if ( isset( $_REQUEST['zero-menu-state'] ) || ! empty( $_POST['auto-add-pages'] ) ) {
 						// If there are menu items, add them.
 						wp_nav_menu_update_menu_items( $nav_menu_selected_id, $nav_menu_selected_title );
+					}
+
+					if ( isset( $_REQUEST['zero-menu-state'] ) ) {
 						// Auto-save nav_menu_locations.
 						$locations = get_nav_menu_locations();
 

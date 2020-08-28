@@ -633,8 +633,9 @@ function _wp_relative_upload_path( $path ) {
  * @global WP_Post $post Global post object.
  *
  * @param mixed  $args   Optional. User defined arguments for replacing the defaults. Default empty.
- * @param string $output Optional. The required return type. One of OBJECT, ARRAY_A, or ARRAY_N, which correspond to
- *                       a WP_Post object, an associative array, or a numeric array, respectively. Default OBJECT.
+ * @param string $output Optional. The required return type. One of OBJECT, ARRAY_A, or ARRAY_N, which
+ *                       correspond to a WP_Post object, an associative array, or a numeric array,
+ *                       respectively. Default OBJECT.
  * @return WP_Post[]|int[] Array of post objects or post IDs.
  */
 function get_children( $args = '', $output = OBJECT ) {
@@ -4966,7 +4967,7 @@ function get_pung( $post_id ) {
  * @since 4.7.0 `$post_id` can be a WP_Post object.
  *
  * @param int|WP_Post $post_id Post Object or ID
- * @param string[] List of URLs yet to ping.
+ * @return string[]|false List of URLs yet to ping.
  */
 function get_to_ping( $post_id ) {
 	$post = get_post( $post_id );
@@ -5050,8 +5051,9 @@ function get_all_page_ids() {
  * @deprecated 3.5.0 Use get_post()
  *
  * @param int|WP_Post $page   Page object or page ID. Passed by reference.
- * @param string      $output Optional. The required return type. One of OBJECT, ARRAY_A, or ARRAY_N, which correspond to
- *                            a WP_Post object, an associative array, or a numeric array, respectively. Default OBJECT.
+ * @param string      $output Optional. The required return type. One of OBJECT, ARRAY_A, or ARRAY_N, which
+ *                            correspond to a WP_Post object, an associative array, or a numeric array,
+ *                            respectively. Default OBJECT.
  * @param string      $filter Optional. How the return value should be filtered. Accepts 'raw',
  *                            'edit', 'db', 'display'. Default 'raw'.
  * @return WP_Post|array|null WP_Post or array on success, null on failure.

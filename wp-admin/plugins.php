@@ -76,10 +76,10 @@ if ( $action ) {
 				update_site_option( 'recently_activated', $recent );
 			}
 
-			if ( isset( $_GET['from'] ) && 'import' == $_GET['from'] ) {
+			if ( isset( $_GET['from'] ) && 'import' === $_GET['from'] ) {
 				// Overrides the ?error=true one above and redirects to the Imports page, stripping the -importer suffix.
 				wp_redirect( self_admin_url( 'import.php?import=' . str_replace( '-importer', '', dirname( $plugin ) ) ) );
-			} elseif ( isset( $_GET['from'] ) && 'press-this' == $_GET['from'] ) {
+			} elseif ( isset( $_GET['from'] ) && 'press-this' === $_GET['from'] ) {
 				wp_redirect( self_admin_url( 'press-this.php' ) );
 			} else {
 				// Overrides the ?error=true one above.
@@ -298,6 +298,7 @@ if ( $action ) {
 			if ( ! isset( $_REQUEST['verify-delete'] ) ) {
 				wp_enqueue_script( 'jquery' );
 				require_once ABSPATH . 'wp-admin/admin-header.php';
+
 				?>
 				<div class="wrap">
 				<?php
@@ -400,6 +401,7 @@ if ( $action ) {
 				</form>
 				</div>
 				<?php
+
 				require_once ABSPATH . 'wp-admin/admin-footer.php';
 				exit;
 			} else {

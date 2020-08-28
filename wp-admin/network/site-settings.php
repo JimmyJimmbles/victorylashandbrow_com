@@ -43,8 +43,8 @@ if ( isset( $_REQUEST['action'] ) && 'update-site' === $_REQUEST['action'] && is
 	foreach ( (array) $_POST['option'] as $key => $val ) {
 		$key = wp_unslash( $key );
 		$val = wp_unslash( $val );
-		if ( 0 === $key || is_array( $val ) || in_array( $key, $skip_options ) ) {
-			continue; // Avoids "0 is a protected WP option and may not be modified" error when edit blog options.
+		if ( 0 === $key || is_array( $val ) || in_array( $key, $skip_options, true ) ) {
+			continue; // Avoids "0 is a protected WP option and may not be modified" error when editing blog options.
 		}
 		update_option( $key, $val );
 	}
@@ -162,6 +162,7 @@ if ( ! empty( $messages ) ) {
 				<?php
 			}
 		} // End foreach.
+
 		/**
 		 * Fires at the end of the Edit Site form, before the submit button.
 		 *

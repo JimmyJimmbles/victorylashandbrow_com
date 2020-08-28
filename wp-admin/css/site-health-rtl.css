@@ -214,12 +214,6 @@
 	margin-right: 0.5rem;
 }
 
-.site-health-copy-buttons .success.visible {
-	display: inline-block;
-	height: 30px;
-	line-height: 2.30769231;
-}
-
 .site-status-has-issues.hide {
 	display: none;
 }

@@ -719,7 +719,7 @@ function wp_default_scripts( $scripts ) {
 	$scripts->add( 'cropper', '/wp-includes/js/crop/cropper.js', array( 'scriptaculous-dragdrop' ) );
 
 	// jQuery.
-	$scripts->add( 'jquery', false, array( 'jquery-core', 'jquery-migrate' ), '1.12.4-wp' );
+	$scripts->add( 'jquery', '/wp-includes/js/jquery/jquery.js', array(), '1.12.4-wp' );
 	$scripts->add( 'jquery-core', '/wp-includes/js/jquery/jquery.js', array(), '1.12.4-wp' );
 	$scripts->add( 'jquery-migrate', "/wp-includes/js/jquery/jquery-migrate$suffix.js", array(), '1.4.1' );
 
@@ -1014,25 +1014,7 @@ function wp_default_scripts( $scripts ) {
 	$scripts->add( 'htmlhint-kses', '/wp-includes/js/codemirror/htmlhint-kses.js', array( 'htmlhint' ) );
 	$scripts->add( 'code-editor', "/wp-admin/js/code-editor$suffix.js", array( 'jquery', 'wp-codemirror', 'underscore' ) );
 	$scripts->add( 'wp-theme-plugin-editor', "/wp-admin/js/theme-plugin-editor$suffix.js", array( 'wp-util', 'wp-sanitize', 'jquery', 'jquery-ui-core', 'wp-a11y', 'underscore' ) );
-	did_action( 'init' ) && $scripts->add_inline_script(
-		'wp-theme-plugin-editor',
-		sprintf(
-			'wp.themePluginEditor.l10n = %s;',
-			wp_json_encode(
-				array(
-					'saveAlert' => __( 'The changes you made will be lost if you navigate away from this page.' ),
-					'saveError' => __( 'Something went wrong. Your change may not have been saved. Please try again. There is also a chance that you may need to manually fix and upload the file over FTP.' ),
-					'lintError' => array(
-						/* translators: %d: Error count. */
-						'singular' => _n( 'There is %d error which must be fixed before you can update this file.', 'There are %d errors which must be fixed before you can update this file.', 1 ),
-						/* translators: %d: Error count. */
-						'plural'   => _n( 'There is %d error which must be fixed before you can update this file.', 'There are %d errors which must be fixed before you can update this file.', 2 ),
-						// @todo This is lacking, as some languages have a dedicated dual form. For proper handling of plurals in JS, see #20491.
-					),
-				)
-			)
-		)
-	);
+	$scripts->set_translations( 'wp-theme-plugin-editor' );
 
 	$scripts->add( 'wp-playlist', "/wp-includes/js/mediaelement/wp-playlist$suffix.js", array( 'wp-util', 'backbone', 'mediaelement' ), false, 1 );
 
@@ -1201,8 +1183,9 @@ function wp_default_scripts( $scripts ) {
 
 	// To enqueue media-views or media-editor, call wp_enqueue_media().
 	// Both rely on numerous settings, styles, and templates to operate correctly.
-	$scripts->add( 'media-views', "/wp-includes/js/media-views$suffix.js", array( 'utils', 'media-models', 'wp-plupload', 'jquery-ui-sortable', 'wp-mediaelement', 'wp-api-request', 'wp-a11y', 'wp-i18n' ), false, 1 );
+	$scripts->add( 'media-views', "/wp-includes/js/media-views$suffix.js", array( 'utils', 'media-models', 'wp-plupload', 'jquery-ui-sortable', 'wp-mediaelement', 'wp-api-request', 'wp-a11y', 'clipboard' ), false, 1 );
 	$scripts->set_translations( 'media-views' );
+
 	$scripts->add( 'media-editor', "/wp-includes/js/media-editor$suffix.js", array( 'shortcode', 'media-views' ), false, 1 );
 	$scripts->set_translations( 'media-editor' );
 	$scripts->add( 'media-audiovideo', "/wp-includes/js/media-audiovideo$suffix.js", array( 'media-editor' ), false, 1 );
@@ -1249,20 +1232,7 @@ function wp_default_scripts( $scripts ) {
 		$scripts->add( 'admin-gallery', "/wp-admin/js/gallery$suffix.js", array( 'jquery-ui-sortable' ) );
 
 		$scripts->add( 'admin-widgets', "/wp-admin/js/widgets$suffix.js", array( 'jquery-ui-sortable', 'jquery-ui-draggable', 'jquery-ui-droppable', 'wp-a11y' ), false, 1 );
-		did_action( 'init' ) && $scripts->add_inline_script(
-			'admin-widgets',
-			sprintf(
-				'wpWidgets.l10n = %s;',
-				wp_json_encode(
-					array(
-						'save'        => __( 'Save' ),
-						'saved'       => __( 'Saved' ),
-						'saveAlert'   => __( 'The changes you made will be lost if you navigate away from this page.' ),
-						'widgetAdded' => __( 'Widget has been added to the selected sidebar' ),
-					)
-				)
-			)
-		);
+		$scripts->set_translations( 'admin-widgets' );
 
 		$scripts->add( 'media-widgets', "/wp-admin/js/widgets/media-widgets$suffix.js", array( 'jquery', 'media-models', 'media-views', 'wp-api-request' ) );
 		$scripts->add_inline_script( 'media-widgets', 'wp.mediaWidgets.init();', 'after' );
@@ -1298,88 +1268,6 @@ function wp_default_scripts( $scripts ) {
 			'_wpUpdatesSettings',
 			array(
 				'ajax_nonce' => wp_create_nonce( 'updates' ),
-				'l10n'       => array(
-					/* translators: %s: Search query. */
-					'searchResults'            => __( 'Search results for &#8220;%s&#8221;' ),
-					'searchResultsLabel'       => __( 'Search Results' ),
-					'noPlugins'                => __( 'You do not appear to have any plugins available at this time.' ),
-					'noItemsSelected'          => __( 'Please select at least one item to perform this action on.' ),
-					'updating'                 => __( 'Updating...' ), // No ellipsis.
-					'pluginUpdated'            => _x( 'Updated!', 'plugin' ),
-					'themeUpdated'             => _x( 'Updated!', 'theme' ),
-					'update'                   => __( 'Update' ),
-					'updateNow'                => __( 'Update Now' ),
-					/* translators: %s: Plugin name and version. */
-					'pluginUpdateNowLabel'     => _x( 'Update %s now', 'plugin' ),
-					'updateFailedShort'        => __( 'Update Failed!' ),
-					/* translators: %s: Error string for a failed update. */
-					'updateFailed'             => __( 'Update Failed: %s' ),
-					/* translators: %s: Plugin name and version. */
-					'pluginUpdatingLabel'      => _x( 'Updating %s...', 'plugin' ), // No ellipsis.
-					/* translators: %s: Plugin name and version. */
-					'pluginUpdatedLabel'       => _x( '%s updated!', 'plugin' ),
-					/* translators: %s: Plugin name and version. */
-					'pluginUpdateFailedLabel'  => _x( '%s update failed', 'plugin' ),
-					/* translators: Accessibility text. */
-					'updatingMsg'              => __( 'Updating... please wait.' ), // No ellipsis.
-					/* translators: Accessibility text. */
-					'updatedMsg'               => __( 'Update completed successfully.' ),
-					/* translators: Accessibility text. */
-					'updateCancel'             => __( 'Update canceled.' ),
-					'beforeunload'             => __( 'Updates may not complete if you navigate away from this page.' ),
-					'installNow'               => __( 'Install Now' ),
-					/* translators: %s: Plugin name. */
-					'pluginInstallNowLabel'    => _x( 'Install %s now', 'plugin' ),
-					'installing'               => __( 'Installing...' ),
-					'pluginInstalled'          => _x( 'Installed!', 'plugin' ),
-					'themeInstalled'           => _x( 'Installed!', 'theme' ),
-					'installFailedShort'       => __( 'Installation Failed!' ),
-					/* translators: %s: Error string for a failed installation. */
-					'installFailed'            => __( 'Installation failed: %s' ),
-					/* translators: %s: Plugin name and version. */
-					'pluginInstallingLabel'    => _x( 'Installing %s...', 'plugin' ), // No ellipsis.
-					/* translators: %s: Theme name and version. */
-					'themeInstallingLabel'     => _x( 'Installing %s...', 'theme' ), // No ellipsis.
-					/* translators: %s: Plugin name and version. */
-					'pluginInstalledLabel'     => _x( '%s installed!', 'plugin' ),
-					/* translators: %s: Theme name and version. */
-					'themeInstalledLabel'      => _x( '%s installed!', 'theme' ),
-					/* translators: %s: Plugin name and version. */
-					'pluginInstallFailedLabel' => _x( '%s installation failed', 'plugin' ),
-					/* translators: %s: Theme name and version. */
-					'themeInstallFailedLabel'  => _x( '%s installation failed', 'theme' ),
-					'installingMsg'            => __( 'Installing... please wait.' ),
-					'installedMsg'             => __( 'Installation completed successfully.' ),
-					/* translators: %s: Activation URL. */
-					'importerInstalledMsg'     => __( 'Importer installed successfully. <a href="%s">Run importer</a>' ),
-					/* translators: %s: Theme name. */
-					'aysDelete'                => __( 'Are you sure you want to delete %s?' ),
-					/* translators: %s: Plugin name. */
-					'aysDeleteUninstall'       => __( 'Are you sure you want to delete %s and its data?' ),
-					'aysBulkDelete'            => __( 'Are you sure you want to delete the selected plugins and their data?' ),
-					'aysBulkDeleteThemes'      => __( 'Caution: These themes may be active on other sites in the network. Are you sure you want to proceed?' ),
-					'deleting'                 => __( 'Deleting...' ),
-					/* translators: %s: Error string for a failed deletion. */
-					'deleteFailed'             => __( 'Deletion failed: %s' ),
-					'pluginDeleted'            => _x( 'Deleted!', 'plugin' ),
-					'themeDeleted'             => _x( 'Deleted!', 'theme' ),
-					'livePreview'              => __( 'Live Preview' ),
-					'activatePlugin'           => is_network_admin() ? __( 'Network Activate' ) : __( 'Activate' ),
-					'activateTheme'            => is_network_admin() ? __( 'Network Enable' ) : __( 'Activate' ),
-					/* translators: %s: Plugin name. */
-					'activatePluginLabel'      => is_network_admin() ? _x( 'Network Activate %s', 'plugin' ) : _x( 'Activate %s', 'plugin' ),
-					/* translators: %s: Theme name. */
-					'activateThemeLabel'       => is_network_admin() ? _x( 'Network Activate %s', 'theme' ) : _x( 'Activate %s', 'theme' ),
-					'activateImporter'         => __( 'Run Importer' ),
-					/* translators: %s: Importer name. */
-					'activateImporterLabel'    => __( 'Run %s' ),
-					'unknownError'             => __( 'Something went wrong.' ),
-					'connectionError'          => __( 'Connection lost or the server is busy. Please try again later.' ),
-					'nonceError'               => __( 'An error has occurred. Please reload the page and try again.' ),
-					/* translators: %s: Number of plugins. */
-					'pluginsFound'             => __( 'Number of plugins found: %d' ),
-					'noPluginsFound'           => __( 'No plugins found. Try a different search.' ),
-				),
 			)
 		);
 
@@ -1401,16 +1289,7 @@ function wp_default_scripts( $scripts ) {
 		$scripts->set_translations( 'image-edit' );
 
 		$scripts->add( 'set-post-thumbnail', "/wp-admin/js/set-post-thumbnail$suffix.js", array( 'jquery' ), false, 1 );
-		did_action( 'init' ) && $scripts->localize(
-			'set-post-thumbnail',
-			'setPostThumbnailL10n',
-			array(
-				'setThumbnail' => __( 'Use as featured image' ),
-				'saving'       => __( 'Saving...' ), // No ellipsis.
-				'error'        => __( 'Could not set that as the thumbnail image. Try a different attachment.' ),
-				'done'         => __( 'Done' ),
-			)
-		);
+		$scripts->set_translations( 'set-post-thumbnail' );
 
 		/*
 		 * Navigation Menus: Adding underscore as a dependency to utilize _.debounce
@@ -1521,9 +1400,6 @@ function wp_default_styles( $styles ) {
 	$styles->add( 'customize-controls', "/wp-admin/css/customize-controls$suffix.css", array( 'wp-admin', 'colors', 'imgareaselect' ) );
 	$styles->add( 'customize-widgets', "/wp-admin/css/customize-widgets$suffix.css", array( 'wp-admin', 'colors' ) );
 	$styles->add( 'customize-nav-menus', "/wp-admin/css/customize-nav-menus$suffix.css", array( 'wp-admin', 'colors' ) );
-
-	$styles->add( 'ie', "/wp-admin/css/ie$suffix.css" );
-	$styles->add_data( 'ie', 'conditional', 'lte IE 7' );
 
 	// Common dependencies.
 	$styles->add( 'buttons', "/wp-includes/css/buttons$suffix.css" );

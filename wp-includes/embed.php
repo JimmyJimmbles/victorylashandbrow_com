@@ -60,9 +60,6 @@ function wp_embed_unregister_handler( $id, $priority = 10 ) {
  * @return array {
  *     Indexed array of the embed width and height in pixels.
  *
- * @return array {
- *     Indexed array of the embed width and height in pixels.
- *
  *     @type int $0 The embed width.
  *     @type int $1 The embed height.
  * }

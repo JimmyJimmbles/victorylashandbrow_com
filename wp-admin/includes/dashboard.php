@@ -519,7 +519,7 @@ function wp_dashboard_quick_press( $error_msg = false ) {
 		$post    = get_default_post_to_edit( 'post', true );
 		$user_id = get_current_user_id();
 		// Don't create an option if this is a super admin who does not belong to this site.
-		if ( in_array( get_current_blog_id(), array_keys( get_blogs_of_user( $user_id ) ) ) ) {
+		if ( in_array( get_current_blog_id(), array_keys( get_blogs_of_user( $user_id ) ), true ) ) {
 			update_user_option( $user_id, 'dashboard_quick_press_last_post_id', (int) $post->ID ); // Save post_ID.
 		}
 	}
@@ -760,8 +760,16 @@ function _wp_dashboard_recent_comments_row( &$comment, $show_date = true ) {
 		foreach ( $actions as $action => $link ) {
 			++$i;
 
+			if ( ( ( 'approve' === $action || 'unapprove' === $action ) && 2 === $i )
+				|| 1 === $i
+			) {
+				$sep = '';
+			} else {
+				$sep = ' | ';
+			}
+
 			// Reply and quickedit need a hide-if-no-js span.
-			if ( 'reply' == $action || 'quickedit' == $action ) {
+			if ( 'reply' === $action || 'quickedit' === $action ) {
 				$action .= ' hide-if-no-js';
 			}
 
@@ -785,11 +793,7 @@ function _wp_dashboard_recent_comments_row( &$comment, $show_date = true ) {
 			}
 			?>
 
-			if ( get_option( 'show_avatars' ) ) {
-				echo get_avatar( $comment, 50, 'mystery' );
-				$comment_row_class .= ' has-avatar';
-			}
-			?>
+			<?php if ( ! $comment->comment_type || 'comment' === $comment->comment_type ) : ?>
 
 			<div class="dashboard-comment-wrap has-row-actions <?php echo $comment_row_class; ?>">
 			<p class="comment-meta">

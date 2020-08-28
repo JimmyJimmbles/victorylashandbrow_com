@@ -813,7 +813,7 @@ class WP_Query {
 			$this->is_single = true;
 		} elseif ( $qv['p'] ) {
 			$this->is_single = true;
-		} elseif ( '' != $qv['pagename'] || ! empty( $qv['page_id'] ) ) {
+		} elseif ( '' !== $qv['pagename'] || ! empty( $qv['page_id'] ) ) {
 			$this->is_page   = true;
 			$this->is_single = false;
 		} else {
@@ -967,16 +967,16 @@ class WP_Query {
 		}
 
 		if ( ! ( $this->is_singular || $this->is_archive || $this->is_search || $this->is_feed
-				|| ( defined( 'REST_REQUEST' ) && REST_REQUEST )
+				|| ( defined( 'REST_REQUEST' ) && REST_REQUEST && $this->is_main_query() )
 				|| $this->is_trackback || $this->is_404 || $this->is_admin || $this->is_robots || $this->is_favicon ) ) {
 			$this->is_home = true;
 		}
 
 		// Correct `is_*` for 'page_on_front' and 'page_for_posts'.
-		if ( $this->is_home && 'page' == get_option( 'show_on_front' ) && get_option( 'page_on_front' ) ) {
+		if ( $this->is_home && 'page' === get_option( 'show_on_front' ) && get_option( 'page_on_front' ) ) {
 			$_query = wp_parse_args( $this->query );
 			// 'pagename' can be set and empty depending on matched rewrite rules. Ignore an empty 'pagename'.
-			if ( isset( $_query['pagename'] ) && '' == $_query['pagename'] ) {
+			if ( isset( $_query['pagename'] ) && '' === $_query['pagename'] ) {
 				unset( $_query['pagename'] );
 			}
 
@@ -1105,7 +1105,7 @@ class WP_Query {
 		}
 
 		foreach ( get_taxonomies( array(), 'objects' ) as $taxonomy => $t ) {
-			if ( 'post_tag' == $taxonomy ) {
+			if ( 'post_tag' === $taxonomy ) {
 				continue; // Handled further down in the $q['tag'] block.
 			}
 
@@ -1237,7 +1237,7 @@ class WP_Query {
 
 		// Tag stuff.
 
-		if ( '' != $q['tag'] && ! $this->is_singular && $this->query_vars_changed ) {
+		if ( '' !== $q['tag'] && ! $this->is_singular && $this->query_vars_changed ) {
 			if ( strpos( $q['tag'], ',' ) !== false ) {
 				$tags = preg_split( '/[,\r\n\t ]+/', $q['tag'] );
 				foreach ( (array) $tags as $tag ) {
@@ -3081,7 +3081,7 @@ class WP_Query {
 			}
 
 			// If the post_status was specifically requested, let it pass through.
-			if ( ! in_array( $status, $q_status ) ) {
+			if ( ! in_array( $status, $q_status, true ) ) {
 				$post_status_obj = get_post_status_object( $status );
 
 				if ( $post_status_obj && ! $post_status_obj->public ) {
@@ -3095,7 +3095,7 @@ class WP_Query {
 								$this->posts = array();
 							} else {
 								$this->is_preview = true;
-								if ( 'future' != $status ) {
+								if ( 'future' !== $status ) {
 									$this->posts[0]->post_date = current_time( 'mysql' );
 								}
 							}
@@ -3144,7 +3144,7 @@ class WP_Query {
 					// Increment the sticky offset. The next sticky will be placed at this offset.
 					$sticky_offset++;
 					// Remove post from sticky posts array.
-					$offset = array_search( $sticky_post->ID, $sticky_posts );
+					$offset = array_search( $sticky_post->ID, $sticky_posts, true );
 					unset( $sticky_posts[ $offset ] );
 				}
 			}
@@ -3624,7 +3624,7 @@ class WP_Query {
 	 *
 	 * @param string|string[] $post_types Optional. Post type or array of posts types
 	 *                                    to check against. Default empty.
-	 * @return bool
+	 * @return bool Whether the query is for an existing post type archive page.
 	 */
 	public function is_post_type_archive( $post_types = '' ) {
 		if ( empty( $post_types ) || ! $this->is_post_type_archive ) {
@@ -3647,7 +3647,7 @@ class WP_Query {
 	 *
 	 * @param int|string|int[]|string[] $attachment Optional. Attachment ID, title, slug, or array of such
 	 *                                              to check against. Default empty.
-	 * @return bool
+	 * @return bool Whether the query is for an existing attachment page.
 	 */
 	public function is_attachment( $attachment = '' ) {
 		if ( ! $this->is_attachment ) {
@@ -3682,7 +3682,7 @@ class WP_Query {
 	 *
 	 * @param int|string|int[]|string[] $author Optional. User ID, nickname, nicename, or array of such
 	 *                                          to check against. Default empty.
-	 * @return bool
+	 * @return bool Whether the query is for an existing author archive page.
 	 */
 	public function is_author( $author = '' ) {
 		if ( ! $this->is_author ) {
@@ -3718,7 +3718,7 @@ class WP_Query {
 	 *
 	 * @param int|string|int[]|string[] $category Optional. Category ID, name, slug, or array of such
 	 *                                            to check against. Default empty.
-	 * @return bool
+	 * @return bool Whether the query is for an existing category archive page.
 	 */
 	public function is_category( $category = '' ) {
 		if ( ! $this->is_category ) {
@@ -3754,7 +3754,7 @@ class WP_Query {
 	 *
 	 * @param int|string|int[]|string[] $tag Optional. Tag ID, name, slug, or array of such
 	 *                                       to check against. Default empty.
-	 * @return bool
+	 * @return bool Whether the query is for an existing tag archive page.
 	 */
 	public function is_tag( $tag = '' ) {
 		if ( ! $this->is_tag ) {
@@ -3798,7 +3798,8 @@ class WP_Query {
 	 *                                            Default empty.
 	 * @param int|string|int[]|string[] $term     Optional. Term ID, name, slug, or array of such
 	 *                                            to check against. Default empty.
-	 * @return bool True for custom taxonomy archive pages, false for built-in taxonomies
+	 * @return bool Whether the query is for an existing custom taxonomy archive page.
+	 *              True for custom taxonomy archive pages, false for built-in taxonomies
 	 *              (category and tag archives).
 	 */
 	public function is_tax( $taxonomy = '', $term = '' ) {
@@ -3878,7 +3879,7 @@ class WP_Query {
 	 *
 	 * @param string|string[] $feeds Optional. Feed type or array of feed types
 	 *                                         to check against. Default empty.
-	 * @return bool
+	 * @return bool Whether the query is for a feed.
 	 */
 	public function is_feed( $feeds = '' ) {
 		if ( empty( $feeds ) || ! $this->is_feed ) {
@@ -3922,7 +3923,7 @@ class WP_Query {
 	 */
 	public function is_front_page() {
 		// Most likely case.
-		if ( 'posts' == get_option( 'show_on_front' ) && $this->is_home() ) {
+		if ( 'posts' === get_option( 'show_on_front' ) && $this->is_home() ) {
 			return true;
 		} elseif ( 'page' === get_option( 'show_on_front' ) && get_option( 'page_on_front' )
 			&& $this->is_page( get_option( 'page_on_front' ) )
@@ -4075,7 +4076,7 @@ class WP_Query {
 	 *
 	 * @since 5.4.0
 	 *
-	 * @return bool
+	 * @return bool Whether the query is for the favicon.ico file.
 	 */
 	public function is_favicon() {
 		return (bool) $this->is_favicon;

@@ -983,7 +983,7 @@ function upgrade_110() {
 	 * MAX(post_date_gmt) can't be '0000-00-00 00:00:00'.
 	 * <michel_v> I just slapped myself silly for not thinking about it earlier.
 	 */
-	$got_gmt_fields = ! ( $wpdb->get_var( "SELECT MAX(post_date_gmt) FROM $wpdb->posts" ) == '0000-00-00 00:00:00' );
+	$got_gmt_fields = ( '0000-00-00 00:00:00' !== $wpdb->get_var( "SELECT MAX(post_date_gmt) FROM $wpdb->posts" ) );
 
 	if ( ! $got_gmt_fields ) {
 
@@ -2216,7 +2216,7 @@ function upgrade_network() {
 	// Always clear expired transients.
 	delete_expired_transients( true );
 
-	// 2.8
+	// 2.8.0
 	if ( $wp_current_db_version < 11549 ) {
 		$wpmu_sitewide_plugins   = get_site_option( 'wpmu_sitewide_plugins' );
 		$active_sitewide_plugins = get_site_option( 'active_sitewide_plugins' );
@@ -2296,7 +2296,7 @@ function upgrade_network() {
 		}
 	}
 
-	// 4.2
+	// 4.2.0
 	if ( $wp_current_db_version < 31351 && 'utf8mb4' === $wpdb->charset ) {
 		if ( wp_should_upgrade_global_tables() ) {
 			$wpdb->query( "ALTER TABLE $wpdb->usermeta DROP INDEX meta_key, ADD INDEX meta_key(meta_key(191))" );
@@ -2410,6 +2410,7 @@ function drop_index( $table, $index ) {
 	$wpdb->hide_errors();
 
 	$wpdb->query( "ALTER TABLE `$table` DROP INDEX `$index`" );
+
 	// Now we need to take out all the extra ones we may have created.
 	for ( $i = 0; $i < 25; $i++ ) {
 		$wpdb->query( "ALTER TABLE `$table` DROP INDEX `{$index}_$i`" );
@@ -2566,11 +2567,11 @@ function __get_option( $setting ) { // phpcs:ignore WordPress.NamingConventions.
 
 	$option = $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = %s", $setting ) );
 
-	if ( 'home' === $setting && '' == $option ) {
+	if ( 'home' === $setting && '' === $option ) {
 		return __get_option( 'siteurl' );
 	}
 
-	if ( 'siteurl' === $setting || 'home' === $setting || 'category_base' === $setting || 'tag_base' === $setting ) {
+	if ( in_array( $setting, array( 'siteurl', 'home', 'category_base', 'tag_base' ), true ) ) {
 		$option = untrailingslashit( $option );
 	}
 
@@ -2946,7 +2947,7 @@ function dbDelta( $queries = '', $execute = true ) { // phpcs:ignore WordPress.N
 
 				// For each column in the index.
 				foreach ( $index_data['columns'] as $column_data ) {
-					if ( '' != $index_columns ) {
+					if ( '' !== $index_columns ) {
 						$index_columns .= ',';
 					}
 

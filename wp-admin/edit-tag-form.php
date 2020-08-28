@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Back compat hooks.
-if ( 'category' == $taxonomy ) {
+if ( 'category' === $taxonomy ) {
 	/**
 	 * Fires before the Edit Category form.
 	 *
@@ -22,7 +22,7 @@ if ( 'category' == $taxonomy ) {
 	 * @param WP_Term $tag Current category term object.
 	 */
 	do_action_deprecated( 'edit_category_form_pre', array( $tag ), '3.0.0', '{$taxonomy}_pre_edit_form' );
-} elseif ( 'link_category' == $taxonomy ) {
+} elseif ( 'link_category' === $taxonomy ) {
 	/**
 	 * Fires before the Edit Link Category form.
 	 *
@@ -132,10 +132,19 @@ if ( isset( $tag->name ) ) {
 			<th scope="row"><label for="name"><?php _ex( 'Name', 'term name' ); ?></label></th>
 			<td><input name="name" id="name" type="text" value="<?php echo $tag_name_value; ?>" size="40" aria-required="true" />
 			<p class="description"><?php _e( 'The name is how it appears on your site.' ); ?></p></td>
+		</tr>
 <?php if ( ! global_terms_enabled() ) { ?>
 		<tr class="form-field term-slug-wrap">
 			<th scope="row"><label for="slug"><?php _e( 'Slug' ); ?></label></th>
-			<?php.4.0 The `$tag` parameter was added.
+			<?php
+			/**
+			 * Filters the editable slug.
+			 *
+			 * Note: This is a multi-use hook in that it is leveraged both for editable
+			 * post URIs and term slugs.
+			 *
+			 * @since 2.6.0
+			 * @since 4.4.0 The `$tag` parameter was added.
 			 *
 			 * @param string          $slug The editable slug. Will be either a term slug or post URI depending
 			 *                              upon the context in which it is evaluated.
@@ -183,7 +192,7 @@ if ( isset( $tag->name ) ) {
 		</tr>
 		<?php
 		// Back compat hooks.
-		if ( 'category' == $taxonomy ) {
+		if ( 'category' === $taxonomy ) {
 			/**
 			 * Fires after the Edit Category form fields are displayed.
 			 *
@@ -193,7 +202,7 @@ if ( isset( $tag->name ) ) {
 			 * @param WP_Term $tag Current category term object.
 			 */
 			do_action_deprecated( 'edit_category_form_fields', array( $tag ), '3.0.0', '{$taxonomy}_edit_form_fields' );
-		} elseif ( 'link_category' == $taxonomy ) {
+		} elseif ( 'link_category' === $taxonomy ) {
 			/**
 			 * Fires after the Edit Link Category form fields are displayed.
 			 *
@@ -230,10 +239,10 @@ if ( isset( $tag->name ) ) {
 	</table>
 <?php
 // Back compat hooks.
-if ( 'category' == $taxonomy ) {
+if ( 'category' === $taxonomy ) {
 	/** This action is documented in wp-admin/edit-tags.php */
 	do_action_deprecated( 'edit_category_form', array( $tag ), '3.0.0', '{$taxonomy}_add_form' );
-} elseif ( 'link_category' == $taxonomy ) {
+} elseif ( 'link_category' === $taxonomy ) {
 	/** This action is documented in wp-admin/edit-tags.php */
 	do_action_deprecated( 'edit_link_category_form', array( $tag ), '3.0.0', '{$taxonomy}_add_form' );
 } else {

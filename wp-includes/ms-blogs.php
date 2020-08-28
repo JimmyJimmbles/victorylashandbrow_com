@@ -525,6 +525,7 @@ function switch_to_blog( $new_blog_id, $deprecated = null ) {
 		 *                             or 'restore' when called from restore_current_blog().
 		 */
 		do_action( 'switch_blog', $new_blog_id, $prev_blog_id, 'switch' );
+
 		$GLOBALS['switched'] = true;
 
 		return true;
@@ -560,6 +561,7 @@ function switch_to_blog( $new_blog_id, $deprecated = null ) {
 
 	/** This filter is documented in wp-includes/ms-blogs.php */
 	do_action( 'switch_blog', $new_blog_id, $prev_blog_id, 'switch' );
+
 	$GLOBALS['switched'] = true;
 
 	return true;
@@ -593,6 +595,7 @@ function restore_current_blog() {
 	if ( $new_blog_id == $prev_blog_id ) {
 		/** This filter is documented in wp-includes/ms-blogs.php */
 		do_action( 'switch_blog', $new_blog_id, $prev_blog_id, 'restore' );
+
 		// If we still have items in the switched stack, consider ourselves still 'switched'.
 		$GLOBALS['switched'] = ! empty( $GLOBALS['_wp_switched_stack'] );
 

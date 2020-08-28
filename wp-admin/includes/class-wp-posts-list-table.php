@@ -143,6 +143,13 @@ class WP_Posts_List_Table extends WP_List_Table {
 	public function prepare_items() {
 		global $mode, $avail_post_stati, $wp_query, $per_page;
 
+		if ( ! empty( $_REQUEST['mode'] ) ) {
+			$mode = 'excerpt' === $_REQUEST['mode'] ? 'excerpt' : 'list';
+			set_user_setting( 'posts_list_mode', $mode );
+		} else {
+			$mode = get_user_setting( 'posts_list_mode', 'list' );
+		}
+
 		// Is going to call wp().
 		$avail_post_stati = wp_edit_posts_query();
 
@@ -175,13 +182,6 @@ class WP_Posts_List_Table extends WP_List_Table {
 					$total_items -= $post_counts[ $state ];
 				}
 			}
-		}
-
-		if ( ! empty( $_REQUEST['mode'] ) ) {
-			$mode = 'excerpt' === $_REQUEST['mode'] ? 'excerpt' : 'list';
-			set_user_setting( 'posts_list_mode', $mode );
-		} else {
-			$mode = get_user_setting( 'posts_list_mode', 'list' );
 		}
 
 		$this->is_trash = isset( $_REQUEST['post_status'] ) && 'trash' === $_REQUEST['post_status'];
@@ -498,11 +498,8 @@ class WP_Posts_List_Table extends WP_List_Table {
 			)
 		);
 
-		/*
-		 * Return if the post type doesn't have post formats, or there are no posts using formats,
-		 * or if we're in the Trash.
-		 */
-		if ( ! is_object_in_taxonomy( $post_type, 'post_format' ) || ! $used_post_formats || $this->is_trash ) {
+		// Return if there are no posts using formats.
+		if ( ! $used_post_formats ) {
 			return;
 		}
 
@@ -1721,7 +1718,7 @@ class WP_Posts_List_Table extends WP_List_Table {
 							<?php endif; // $bulk ?>
 							<?php
 							/** This filter is documented in wp-admin/includes/meta-boxes.php */
-							$default_title = apply_filters( 'default_page_template_title', __( 'Default Template' ), 'quick-edit' );
+							$default_title = apply_filters( 'default_page_template_title', __( 'Default template' ), 'quick-edit' );
 							?>
 							<option value="default"><?php echo esc_html( $default_title ); ?></option>
 							<?php page_template_dropdown( '', $screen->post_type ); ?>

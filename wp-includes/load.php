@@ -21,32 +21,6 @@ function wp_get_server_protocol() {
 }
 
 /**
- * Turn register globals off.
- *
- * @since 2.1.0
- * @access private
- */
-function wp_unregister_GLOBALS() {  // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.FunctionNameInvalid
-	if ( ! ini_get( 'register_globals' ) ) {
-		return;
-	}
-
-	if ( isset( $_REQUEST['GLOBALS'] ) ) {
-		die( 'GLOBALS overwrite attempt detected' );
-	}
-
-	// Variables that shouldn't be unset.
-	$no_unset = array( 'GLOBALS', '_GET', '_POST', '_COOKIE', '_REQUEST', '_SERVER', '_ENV', '_FILES', 'table_prefix' );
-
-	$input = array_merge( $_GET, $_POST, $_COOKIE, $_SERVER, $_ENV, $_FILES, isset( $_SESSION ) && is_array( $_SESSION ) ? $_SESSION : array() );
-	foreach ( $input as $k => $v ) {
-		if ( ! in_array( $k, $no_unset ) && isset( $GLOBALS[ $k ] ) ) {
-			unset( $GLOBALS[ $k ] );
-		}
-	}
-}
-
-/**
  * Fix `$_SERVER` variables for various setups.
  *
  * @since 3.0.0
@@ -66,7 +40,7 @@ function wp_fix_server_vars() {
 	$_SERVER = array_merge( $default_server_values, $_SERVER );
 
 	// Fix for IIS when running with PHP ISAPI.
-	if ( empty( $_SERVER['REQUEST_URI'] ) || ( PHP_SAPI != 'cgi-fcgi' && preg_match( '/^Microsoft-IIS\//', $_SERVER['SERVER_SOFTWARE'] ) ) ) {
+	if ( empty( $_SERVER['REQUEST_URI'] ) || ( 'cgi-fcgi' !== PHP_SAPI && preg_match( '/^Microsoft-IIS\//', $_SERVER['SERVER_SOFTWARE'] ) ) ) {
 
 		if ( isset( $_SERVER['HTTP_X_ORIGINAL_URL'] ) ) {
 			// IIS Mod-Rewrite.
@@ -278,10 +252,14 @@ function wp_maintenance() {
 function wp_is_maintenance_mode() {
 	global $upgrading;
 
+	if ( ! file_exists( ABSPATH . '.maintenance' ) || wp_installing() ) {
+		return false;
+	}
+
 	require ABSPATH . '.maintenance';
-	// If the $upgrading timestamp is older than 10 minutes, don't die.
-	if ( ( time() - $upgrading ) >= 600 ) {
-		return;
+	// If the $upgrading timestamp is older than 10 minutes, consider maintenance over.
+	if ( ( time() - $upgrading ) >= 10 * MINUTE_IN_SECONDS ) {
+		return false;
 	}
 
 	/**
@@ -298,24 +276,10 @@ function wp_is_maintenance_mode() {
 	 * @param int  $upgrading     The timestamp set in the .maintenance file.
 	 */
 	if ( ! apply_filters( 'enable_maintenance_mode', true, $upgrading ) ) {
-		return;
+		return false;
 	}
 
-	if ( file_exists( WP_CONTENT_DIR . '/maintenance.php' ) ) {
-		require_once WP_CONTENT_DIR . '/maintenance.php';
-		die();
-	}
-
-	require_once ABSPATH . WPINC . '/functions.php';
-	wp_load_translations_early();
-
-	header( 'Retry-After: 600' );
-
-	wp_die(
-		__( 'Briefly unavailable for scheduled maintenance. Check back in a minute.' ),
-		__( 'Maintenance' ),
-		503
-	);
+	return true;
 }
 
 /**
@@ -768,10 +732,10 @@ function wp_get_active_and_valid_plugins() {
 
 	foreach ( $active_plugins as $plugin ) {
 		if ( ! validate_file( $plugin )                     // $plugin must validate as file.
-			&& '.php' == substr( $plugin, -4 )              // $plugin must end with '.php'.
+			&& '.php' === substr( $plugin, -4 )             // $plugin must end with '.php'.
 			&& file_exists( WP_PLUGIN_DIR . '/' . $plugin ) // $plugin must exist.
 			// Not already included as a network plugin.
-			&& ( ! $network_plugins || ! in_array( WP_PLUGIN_DIR . '/' . $plugin, $network_plugins ) )
+			&& ( ! $network_plugins || ! in_array( WP_PLUGIN_DIR . '/' . $plugin, $network_plugins, true ) )
 			) {
 			$plugins[] = WP_PLUGIN_DIR . '/' . $plugin;
 		}
@@ -972,7 +936,7 @@ function is_protected_ajax_action() {
 	 *
 	 * @since 5.2.0
 	 *
-	 * @param string[] $actions_to_protect Array of strings with AJAX actions to protect.
+	 * @param string[] $actions_to_protect Array of strings with Ajax actions to protect.
 	 */
 	$actions_to_protect = (array) apply_filters( 'wp_protected_ajax_actions', $actions_to_protect );
 
@@ -1017,18 +981,6 @@ function wp_magic_quotes() {
 	$_POST   = add_magic_quotes( $_POST );
 	$_COOKIE = add_magic_quotes( $_COOKIE );
 	$_SERVER = add_magic_quotes( $_SERVER );
-
-	/*
-	 * Revert the type change to string for two indexes which should retain their proper type.
-	 * Among other things, this preserves compatibility of WP with PHPUnit Code Coverage generation.
-	 */
-	if ( isset( $_SERVER['REQUEST_TIME'] ) ) {
-		$_SERVER['REQUEST_TIME'] = (int) $_SERVER['REQUEST_TIME'];
-	}
-
-	if ( isset( $_SERVER['REQUEST_TIME_FLOAT'] ) ) {
-		$_SERVER['REQUEST_TIME_FLOAT'] = (float) $_SERVER['REQUEST_TIME_FLOAT'];
-	}
 
 	// Force REQUEST to be GET + POST.
 	$_REQUEST = array_merge( $_GET, $_POST );
@@ -1403,8 +1355,6 @@ function wp_convert_hr_to_bytes( $value ) {
  * Determines whether a PHP ini value is changeable at runtime.
  *
  * @since 4.6.0
- *
- * @staticvar array $ini_all
  *
  * @link https://www.php.net/manual/en/function.ini-get-all.php
  *

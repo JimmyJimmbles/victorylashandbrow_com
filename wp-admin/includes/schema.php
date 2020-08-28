@@ -543,7 +543,7 @@ function populate_options( array $options = array() ) {
 			? $wp_current_db_version : $wp_db_version;
 	}
 
-	// 3.0 multisite.
+	// 3.0.0 multisite.
 	if ( is_multisite() ) {
 		/* translators: %s: Network title. */
 		$defaults['blogdescription']     = sprintf( __( 'Just another %s site' ), get_network()->site_name );
@@ -553,7 +553,13 @@ function populate_options( array $options = array() ) {
 	$options = wp_parse_args( $options, $defaults );
 
 	// Set autoload to no for these options.
-	$fat_options = array( 'moderation_keys', 'recently_edited', 'blacklist_keys', 'uninstall_plugins' );
+	$fat_options = array(
+		'moderation_keys',
+		'recently_edited',
+		'disallowed_keys',
+		'uninstall_plugins',
+		'auto_plugin_theme_update_emails',
+	);
 
 	$keys             = "'" . implode( "', '", array_keys( $options ) ) . "'";
 	$existing_options = $wpdb->get_col( "SELECT option_name FROM $wpdb->options WHERE option_name in ( $keys )" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared

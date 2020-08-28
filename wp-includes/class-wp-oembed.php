@@ -247,8 +247,8 @@ class WP_oEmbed {
 	 *
 	 * @see WP_oEmbed::discover()
 	 *
-	 * @param string        $url  The URL to the content.
-	 * @param string|array  $args Optional provider arguments.
+	 * @param string       $url  The URL to the content.
+	 * @param string|array $args Optional provider arguments.
 	 * @return string|false The oEmbed provider URL on success, false on failure.
 	 */
 	public function get_provider( $url, $args = '' ) {
@@ -486,7 +486,7 @@ class WP_oEmbed {
 						$providers[ $linktypes[ $atts['type'] ] ] = htmlspecialchars_decode( $atts['href'] );
 
 						// Stop here if it's JSON (that's all we need).
-						if ( 'json' == $linktypes[ $atts['type'] ] ) {
+						if ( 'json' === $linktypes[ $atts['type'] ] ) {
 							break;
 						}
 					}

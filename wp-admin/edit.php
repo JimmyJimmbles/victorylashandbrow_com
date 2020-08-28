@@ -266,7 +266,7 @@ if ( 'post' === $post_type ) {
 			'id'      => 'bulk-actions',
 			'title'   => __( 'Bulk actions' ),
 			'content' =>
-					'<p>' . __( 'You can also edit or move multiple posts to the Trash at once. Select the posts you want to act on using the checkboxes, then select the action you want to take from the Bulk Actions menu and click Apply.' ) . '</p>' .
+					'<p>' . __( 'You can also edit or move multiple posts to the Trash at once. Select the posts you want to act on using the checkboxes, then select the action you want to take from the Bulk actions menu and click Apply.' ) . '</p>' .
 							'<p>' . __( 'When using Bulk Edit, you can change the metadata (categories, author, etc.) for all selected posts at once. To remove a post from the grouping, just click the x next to its name in the Bulk Edit area that appears.' ) . '</p>',
 		)
 	);

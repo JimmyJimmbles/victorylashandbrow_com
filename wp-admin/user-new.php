@@ -574,7 +574,8 @@ if ( current_user_can( 'create_users' ) ) {
 			<label for="send_user_notification"><?php _e( 'Send the new user an email about their account.' ); ?></label>
 		</td>
 	</tr>
-<?php } // End if ! is_multisite(). ?>
+	<?php } // End if ! is_multisite(). ?>
+	<?php if ( current_user_can( 'promote_users' ) ) { ?>
 	<tr class="form-field">
 		<th scope="row"><label for="role"><?php _e( 'Role' ); ?></label></th>
 		<td><select name="role" id="role">

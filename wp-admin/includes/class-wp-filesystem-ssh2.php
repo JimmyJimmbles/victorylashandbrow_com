@@ -234,7 +234,7 @@ class WP_Filesystem_SSH2 extends WP_Filesystem_Base {
 			fclose( $stream );
 
 			if ( $returnbool ) {
-				return ( false === $data ) ? false : '' != trim( $data );
+				return ( false === $data ) ? false : '' !== trim( $data );
 			} else {
 				return $data;
 			}
@@ -771,7 +771,7 @@ class WP_Filesystem_SSH2 extends WP_Filesystem_Base {
 			$struc         = array();
 			$struc['name'] = $entry;
 
-			if ( '.' == $struc['name'] || '..' == $struc['name'] ) {
+			if ( '.' === $struc['name'] || '..' === $struc['name'] ) {
 				continue; // Do not care about these folders.
 			}
 
