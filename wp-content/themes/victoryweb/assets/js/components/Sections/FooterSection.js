@@ -8,6 +8,7 @@ import {
   faLinkedin,
   faYoutube,
 } from '@fortawesome/free-brands-svg-icons';
+import AnchorLink from 'react-anchor-link-smooth-scroll';
 import Decoration from '../Decoration/Decoration';
 
 const FooterSection = ({
@@ -42,13 +43,13 @@ const FooterSection = ({
             <ul className="footer-actions">
               {menu.map((menu_item, index) => (
                 <li key={index}>
-                  <a
-                    className="btn"
+                  <AnchorLink
                     href={menu_item.nav_url}
+                    className="btn"
                     title={`Scroll to: ${menu_item.nav_title}`}
                   >
                     {menu_item.nav_title}
-                  </a>
+                  </AnchorLink>
                 </li>
               ))}
             </ul>
