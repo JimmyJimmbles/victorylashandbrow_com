@@ -76,7 +76,7 @@
     border-color: color('white') color('primary') color('primary')
       color('white');
     border-style: solid;
-    border-width: rem(8);
+    border-width: 8px;
     position: absolute;
     width: 0;
     height: 0;
@@ -91,30 +91,32 @@
   opacity: 0;
   transform: scale(0.9);
 }
+
 .service-details-enter-active {
   opacity: 1;
   transform: translateX(0);
-  transition: opacity 300ms, transform 300ms;
+  transition: opacity 0.3s, transform 0.3s;
 }
+
 .service-details-exit {
   opacity: 1;
 }
+
 .service-details-exit-active {
   opacity: 0;
   transform: scale(0.9);
-  transition: opacity 300ms, transform 300ms;
+  transition: opacity 0.3s, transform 0.3s;
 }
 
 .service-details-container {
   position: relative;
   margin: $row-gutter-width 0;
   background-color: color('white');
-  height: 0;
   visibility: hidden;
   padding: 0 !important;
 
   &--active {
-    min-height: 300px;
     visibility: visible;
+    @extend .column-md-10;
   }
 }
