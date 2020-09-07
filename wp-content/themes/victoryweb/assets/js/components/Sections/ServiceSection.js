@@ -70,7 +70,7 @@ const ServiceSection = ({
                   </div>
                   <div
                     className={classnames('service-details-container', {
-                      'column-xs-12 column-md-10 service-details-container--active':
+                      'service-details-container--active':
                         serviceActive === true &&
                         service.ID === Number(lastItemInRow.id),
                     })}
@@ -103,7 +103,7 @@ const ServiceSection = ({
 const ServiceDetails = ({ title, content }) => {
   return (
     <div className="u--margin-left-15 u--margin-right-15">
-      <h1>{title}</h1>
+      <h1 className="u--margin-top-0">{title}</h1>
       <p>{content}</p>
     </div>
   );

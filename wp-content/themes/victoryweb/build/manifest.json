@@ -1,9 +1,10 @@
 {
-  "app.js": "/build/app.b2a50d55.js",
-  "app.js.map": "/build/app.b2a50d55.js.map",
-  "global.css": "/build/global.b715d945.css",
-  "global.js": "/build/global.52e56256.js",
-  "global.css.map": "/build/global.b715d945.css.map",
-  "global.js.map": "/build/global.52e56256.js.map",
+  "app.js": "/build/app.298dd2f7.js",
+  "app.js.map": "/build/app.298dd2f7.js.map",
+  "global.css": "/build/global.413e94e1.css",
+  "global.js": "/build/global.cfe9c388.js",
+  "global.js.map": "/build/global.cfe9c388.js.map",
+  "app.298dd2f7.js.LICENSE": "/build/app.298dd2f7.js.LICENSE",
+  "global.413e94e1.css.map": "/build/global.413e94e1.css.map",
   "media/index.scss": "/build/media/fa-solid-900.c2801fb4.svg"
 }
