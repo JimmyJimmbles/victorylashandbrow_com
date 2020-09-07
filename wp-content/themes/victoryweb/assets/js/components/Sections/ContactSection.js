@@ -42,16 +42,23 @@ const ContactSection = ({ sectionData: { id, heading, tagline } }) => {
       data: convertJSONToUrlEncoded(state),
     })
       .then(res => {
-        setFormSubmitted(true);
-
         if (res.data.status && 'mail_sent' === res.data.status) {
+          setFormSubmitted(true);
           setFormMessage(res.data.message);
+
+          return true;
+        } else if (res.data.status && 'validation_failed' === res.data.status) {
+          setFormSubmitted(true);
+          setFormMessage(res.data.message);
+
+          return true;
         }
+
+        return false;
       })
       .catch(err => {
         setFormSubmitted(true);
         setFormMessage(err.message);
-        console.error(err);
       });
   };
 
@@ -85,14 +92,12 @@ const ContactSection = ({ sectionData: { id, heading, tagline } }) => {
                     Get In Touch
                   </h3>
                   <form className="form">
-                    <div className="row">
-                      <div className="column-xs-12">
-                        <label htmlFor="fname" className="form__label">
-                          Personal Information
-                        </label>
-                      </div>
+                    <div className="row row--bottom">
                       <div className="column-xs-12 column-md-6">
-                        <div className="form__field">
+                        <div className="form__field form__field--required">
+                          <label htmlFor="fname" className="form__label">
+                            Personal Information
+                          </label>
                           <input
                             type="text"
                             id="fname"
@@ -133,12 +138,10 @@ const ContactSection = ({ sectionData: { id, heading, tagline } }) => {
                     </div>
                     <div className="row">
                       <div className="column-xs-12">
-                        <label htmlFor="message" className="form__label">
-                          Message
-                        </label>
-                      </div>
-                      <div className="column-xs-12">
-                        <div className="form__field">
+                        <div className="form__field form__field--required">
+                          <label htmlFor="message" className="form__label">
+                            Message
+                          </label>
                           <textarea
                             rows="7"
                             className="form__input"
