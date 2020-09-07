@@ -13,10 +13,8 @@ const FrontPage = () => {
   // base constants
   const { href } = window.location;
   const urlRegex = /([#].*[^\/])/g;
-  const anchor = href.match(urlRegex);
   const site = href.replace(urlRegex, '');
   const wpRestAPI = `${site}wp-json/pages/v2/frontpage`;
-  console.log('anchor', anchor);
 
   // default states
   const defaultData = {
@@ -52,8 +50,6 @@ const FrontPage = () => {
       setAppIsReady(true); // set the app as ready since we have the data now
     });
   }, []);
-
-  console.log(frontPageDataSections);
 
   const {
     primary_menu,
