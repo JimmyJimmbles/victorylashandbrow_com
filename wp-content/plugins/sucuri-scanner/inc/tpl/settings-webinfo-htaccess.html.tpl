@@ -1,5 +1,5 @@
 
-<div class="sucuriscan-panel">
+<div class="sucuriscan-panel" data-cy="sucuriscan_access_file_integrity">
     <h3 class="sucuriscan-title">{{Access File Integrity}}</h3>
 
     <div class="inside">
@@ -11,6 +11,10 @@
 
         <div class="sucuriscan-inline-alert-error sucuriscan-%%SUCURI.HTAccess.NotFoundVisible%%">
             <p>{{Your website has no <code>.htaccess</code> file or it was not found in the default location.}}</p>
+        </div>
+
+        <div class="sucuriscan-inline-alert-info sucuriscan-%%SUCURI.HTAccess.NotApache%%">
+            <p>{{Your web server does not support .htaccess files.}}</p>
         </div>
 
         <div class="sucuriscan-inline-alert-info sucuriscan-%%SUCURI.HTAccess.StandardVisible%%">

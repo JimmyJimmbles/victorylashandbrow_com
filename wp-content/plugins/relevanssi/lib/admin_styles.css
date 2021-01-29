@@ -1,5 +1,5 @@
 p.important {
-    color: #dd3300;
+    color: #992000;
 }
 
 table.form-table table.widefat th {
@@ -107,4 +107,11 @@ table.form-table table.widefat th {
 
 #redirect_table td {
 	vertical-align: top;
+}
+
+#relevanssi_sees_container {
+    width: 80%;
+    background: white;
+    padding: 5px 20px;
+    border: thin solid black;
 }

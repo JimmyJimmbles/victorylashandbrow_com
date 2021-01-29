@@ -9,7 +9,7 @@
  */
 
 // Setup.
-add_action( 'init', 'relevanssi_init' );
+add_action( 'init', 'relevanssi_init', 1 );
 add_filter( 'query_vars', 'relevanssi_query_vars' );
 add_filter( 'rest_api_init', 'relevanssi_rest_api_disable' );
 add_action( 'switch_blog', 'relevanssi_switch_blog', 1, 2 );
@@ -17,8 +17,11 @@ add_action( 'admin_init', 'relevanssi_admin_init' );
 add_action( 'admin_menu', 'relevanssi_menu' );
 
 // Taking over the search.
-add_filter( 'the_posts', 'relevanssi_query', 99, 2 );
+add_filter( 'posts_pre_query', 'relevanssi_query', 99, 2 );
 add_filter( 'posts_request', 'relevanssi_prevent_default_request', 10, 2 );
+add_filter( 'relevanssi_search_ok', 'relevanssi_block_on_admin_searches', 10, 2 );
+add_filter( 'relevanssi_admin_search_ok', 'relevanssi_block_on_admin_searches', 10, 2 );
+add_filter( 'relevanssi_prevent_default_request', 'relevanssi_block_on_admin_searches', 10, 2 );
 
 // Post indexing.
 add_action( 'wp_insert_post', 'relevanssi_insert_edit', 99, 1 );
@@ -32,7 +35,7 @@ add_action( 'deleted_comment', 'relevanssi_index_comment' );
 
 // Attachment indexing.
 add_action( 'delete_attachment', 'relevanssi_remove_doc' );
-add_action( 'add_attachment', 'relevanssi_publish', 12 );
+add_action( 'add_attachment', 'relevanssi_insert_edit', 12 );
 add_action( 'edit_attachment', 'relevanssi_insert_edit' );
 
 // When a post status changes, check child posts that inherit their status from parent.
@@ -43,10 +46,12 @@ add_filter( 'relevanssi_remove_punctuation', 'relevanssi_remove_punct' );
 add_filter( 'relevanssi_post_ok', 'relevanssi_default_post_ok', 9, 2 );
 add_filter( 'relevanssi_query_filter', 'relevanssi_limit_filter' );
 add_action( 'relevanssi_trim_logs', 'relevanssi_trim_logs' );
+add_action( 'relevanssi_update_counts', 'relevanssi_update_counts' );
 add_action( 'relevanssi_custom_field_value', 'relevanssi_filter_custom_fields', 10, 2 );
 
-// Plugin and theme compatibility.
+// Page builder shortcodes.
 add_filter( 'relevanssi_pre_excerpt_content', 'relevanssi_remove_page_builder_shortcodes', 9 );
+add_filter( 'relevanssi_post_content', 'relevanssi_remove_page_builder_shortcodes', 9 );
 
 // Permalink handling.
 add_filter( 'the_permalink', 'relevanssi_permalink', 10, 2 );
@@ -65,18 +70,32 @@ register_activation_hook( $relevanssi_variables['file'], 'relevanssi_install' );
  *
  * @global string $pagenow              Current admin page.
  * @global array  $relevanssi_variables The global Relevanssi variables array.
- * @global object $wpdb                 The WP database interface.
  */
 function relevanssi_init() {
-	global $pagenow, $relevanssi_variables, $wpdb;
+	global $pagenow, $relevanssi_variables;
 
 	$plugin_dir = dirname( plugin_basename( $relevanssi_variables['file'] ) );
 	load_plugin_textdomain( 'relevanssi', false, $plugin_dir . '/languages' );
 	$on_relevanssi_page = false;
 	if ( isset( $_GET['page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 		$page = sanitize_file_name( wp_unslash( $_GET['page'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
-		if ( plugin_basename( $relevanssi_variables['file'] ) === $page ) {
+		$base = sanitize_file_name( wp_unslash( plugin_basename( $relevanssi_variables['file'] ) ) );
+		if ( $base === $page ) {
 			$on_relevanssi_page = true;
+		}
+	}
+
+	$restriction_notice = relevanssi_check_indexing_restriction();
+	if ( $restriction_notice ) {
+		if ( 'options-general.php' === $pagenow && $on_relevanssi_page ) {
+			if ( 'indexing' === $_GET['tab'] ) { // phpcs:ignore WordPress.Security.NonceVerification
+				add_action(
+					'admin_notices',
+					function() use ( $restriction_notice ) {
+						echo $restriction_notice; // phpcs:ignore WordPress.Security.EscapeOutput
+					}
+				);
+			}
 		}
 	}
 
@@ -123,6 +142,10 @@ function relevanssi_init() {
 		}
 	}
 
+	if ( ! wp_next_scheduled( 'relevanssi_update_counts' ) ) {
+		wp_schedule_event( time(), 'weekly', 'relevanssi_update_counts' );
+	}
+
 	if ( function_exists( 'icl_object_id' ) && ! function_exists( 'pll_is_translated_post_type' ) ) {
 		require_once 'compatibility/wpml.php';
 	}
@@ -157,6 +180,14 @@ function relevanssi_init() {
 
 	if ( function_exists( 'seopress_get_toggle_titles_option' ) && '1' === seopress_get_toggle_titles_option() ) {
 		require_once 'compatibility/seopress.php';
+	}
+
+	if ( defined( 'THE_SEO_FRAMEWORK_VERSION' ) ) {
+		require_once 'compatibility/seoframework.php';
+	}
+
+	if ( class_exists( 'RankMath', false ) ) {
+		require_once 'compatibility/rankmath.php';
 	}
 
 	if ( function_exists( 'members_content_permissions_enabled' ) ) {
@@ -200,6 +231,28 @@ function relevanssi_init() {
 	if ( defined( 'NINJA_TABLES_VERSION' ) ) {
 		require_once 'compatibility/ninjatables.php';
 	}
+
+	if ( defined( 'PRLI_PLUGIN_NAME' ) ) {
+		require_once 'compatibility/pretty-links.php';
+	}
+
+	if ( defined( 'CT_VERSION' ) ) {
+		require_once 'compatibility/oxygen.php';
+	}
+
+	if ( ! is_array( get_option( 'relevanssi_stopwords' ) ) ) {
+		// Version 2.12 / 4.10 changes stopwords option from a string to an
+		// array to support multilingual stopwords. This function converts old
+		// style to new style. Remove eventually.
+		relevanssi_update_stopwords_setting();
+	}
+
+	if ( ! is_array( get_option( 'relevanssi_synonyms' ) ) ) {
+		// Version 2.12 / 4.10 changes synonyms option from a string to an
+		// array to support multilingual synonyms. This function converts old
+		// style to new style. Remove eventually.
+		relevanssi_update_synonyms_setting();
+	}
 }
 
 /**
@@ -209,8 +262,6 @@ function relevanssi_init() {
  */
 function relevanssi_admin_init() {
 	global $relevanssi_variables;
-
-	require_once $relevanssi_variables['plugin_dir'] . 'lib/admin-ajax.php';
 
 	add_action( 'admin_enqueue_scripts', 'relevanssi_add_admin_scripts' );
 	add_filter( 'plugin_action_links_' . $relevanssi_variables['plugin_basename'], 'relevanssi_action_links' );
@@ -288,6 +339,8 @@ function relevanssi_query_vars( $qv ) {
 	$qv[] = 'by_date';
 	$qv[] = 'highlight';
 	$qv[] = 'posts_per_page';
+	$qv[] = 'post_parent';
+	$qv[] = 'post_status';
 
 	return $qv;
 }
@@ -345,7 +398,7 @@ function relevanssi_create_database_tables( $relevanssi_db_version ) {
 		mysqlcolumn_detail longtext NOT NULL,
 		type varchar(210) NOT NULL DEFAULT 'post',
 		item bigint(20) NOT NULL DEFAULT '0',
-	    UNIQUE KEY doctermitem (doc, term, item)) $charset_collate";
+	    PRIMARY KEY doctermitem (doc, term, item)) $charset_collate";
 
 		dbDelta( $sql );
 
@@ -356,6 +409,7 @@ function relevanssi_create_database_tables( $relevanssi_db_version ) {
 		$relevanssi_term_reverse_idx_exists = false;
 		$docs_exists                        = false;
 		$typeitem_exists                    = false;
+		$doctermitem_exists                 = false;
 		foreach ( $indices as $index ) {
 			if ( 'terms' === $index->Key_name ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName
 				$terms_exists = true;
@@ -369,6 +423,9 @@ function relevanssi_create_database_tables( $relevanssi_db_version ) {
 			if ( 'typeitem' === $index->Key_name ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName
 				$typeitem_exists = true;
 			}
+			if ( 'doctermitem' === $index->Key_name ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName
+				$doctermitem_exists = true;
+			}
 		}
 
 		if ( ! $terms_exists ) {
@@ -381,18 +438,23 @@ function relevanssi_create_database_tables( $relevanssi_db_version ) {
 			$wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery
 		}
 
-		if ( ! $docs_exists ) {
-			$sql = "CREATE INDEX docs ON $relevanssi_table (doc)";
-			$wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery
-		}
-
 		if ( ! $typeitem_exists ) {
 			$sql = "CREATE INDEX typeitem ON $relevanssi_table (type(190), item)";
 			$wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery
 		}
 
+		if ( $doctermitem_exists ) {
+			$sql = "DROP INDEX doctermitem ON $relevanssi_table";
+			$wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery
+		}
+
+		if ( $docs_exists ) { // This index was removed in 4.9.2 / 2.11.2.
+			$sql = "DROP INDEX docs ON $relevanssi_table (doc)";
+			$wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery
+		}
+
 		$sql = 'CREATE TABLE ' . $relevanssi_stopword_table . " (stopword varchar(50) $charset_collate_bin_column NOT NULL,
-	    UNIQUE KEY stopword (stopword)) $charset_collate;";
+	    PRIMARY KEY stopword (stopword)) $charset_collate;";
 
 		dbDelta( $sql );
 
@@ -402,7 +464,7 @@ function relevanssi_create_database_tables( $relevanssi_db_version ) {
 		time timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 		user_id bigint(20) NOT NULL DEFAULT '0',
 		ip varchar(40) NOT NULL DEFAULT '',
-	    UNIQUE KEY id (id)) $charset_collate;";
+	    PRIMARY KEY id (id)) $charset_collate;";
 
 		dbDelta( $sql );
 
@@ -410,9 +472,13 @@ function relevanssi_create_database_tables( $relevanssi_db_version ) {
 		$indices = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		$query_exists = false;
+		$id_exists    = false;
 		foreach ( $indices as $index ) {
 			if ( 'query' === $index->Key_name ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName
 				$query_exists = true;
+			}
+			if ( 'id' === $index->Key_name ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName
+				$id_exists = true;
 			}
 		}
 
@@ -421,10 +487,16 @@ function relevanssi_create_database_tables( $relevanssi_db_version ) {
 			$wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching
 		}
 
+		if ( $id_exists ) {
+			$sql = "DROP INDEX id ON $relevanssi_log_table";
+			$wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching
+		}
+
 		update_option( 'relevanssi_db_version', $relevanssi_db_version );
 	}
 
-	if ( $wpdb->get_var( "SELECT COUNT(*) FROM $relevanssi_stopword_table WHERE 1" ) < 1 ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$stopwords = relevanssi_fetch_stopwords();
+	if ( empty( $stopwords ) ) {
 		relevanssi_populate_stopwords();
 	}
 }

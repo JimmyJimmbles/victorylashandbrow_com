@@ -23,8 +23,6 @@ function relevanssi_drop_database_tables() {
 		return;
 	}
 
-	wp_clear_scheduled_hook( 'relevanssi_truncate_cache' );
-
 	$relevanssi_table = $wpdb->prefix . 'relevanssi';
 	$stopword_table   = $wpdb->prefix . 'relevanssi_stopwords';
 	$log_table        = $wpdb->prefix . 'relevanssi_log';
@@ -72,6 +70,7 @@ function relevanssi_uninstall_free() {
 	delete_option( 'relevanssi_excerpt_type' );
 	delete_option( 'relevanssi_excerpts' );
 	delete_option( 'relevanssi_exclude_posts' );
+	delete_option( 'relevanssi_expand_highlights' );
 	delete_option( 'relevanssi_expand_shortcodes' );
 	delete_option( 'relevanssi_extag' );
 	delete_option( 'relevanssi_fuzzy' );
@@ -86,6 +85,7 @@ function relevanssi_uninstall_free() {
 	delete_option( 'relevanssi_index_comments' );
 	delete_option( 'relevanssi_index_excerpt' );
 	delete_option( 'relevanssi_index_fields' );
+	delete_option( 'relevanssi_index_image_files' );
 	delete_option( 'relevanssi_index_post_types' );
 	delete_option( 'relevanssi_index_taxonomies' );
 	delete_option( 'relevanssi_index_taxonomies_list' );
@@ -103,14 +103,15 @@ function relevanssi_uninstall_free() {
 	delete_option( 'relevanssi_show_matches' );
 	delete_option( 'relevanssi_show_matches_text' );
 	delete_option( 'relevanssi_show_post_controls' );
+	delete_option( 'relevanssi_stopwords' );
 	delete_option( 'relevanssi_synonyms' );
+	delete_option( 'relevanssi_terms_count' );
 	delete_option( 'relevanssi_thousand_separator' );
 	delete_option( 'relevanssi_throttle' );
 	delete_option( 'relevanssi_throttle_limit' );
 	delete_option( 'relevanssi_title_boost' );
 	delete_option( 'relevanssi_trim_logs' );
 	delete_option( 'relevanssi_txt_col' );
-	delete_option( 'relevanssi_word_boundaries' );
 	delete_option( 'relevanssi_wpml_only_current' );
 
 	// Unused options, removed in case they are still left.
@@ -129,6 +130,13 @@ function relevanssi_uninstall_free() {
 	delete_option( 'relevanssi_custom_taxonomies' );
 	delete_option( 'relevanssi_taxonomies_to_index' );
 	delete_option( 'relevanssi_highlight_docs_external' );
+	delete_option( 'relevanssi_word_boundaries' );
+	delete_option( 'relevanssi_expst' );
+
+	global $wpdb;
+	$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE meta_key = '_relevanssi_noindex_reason'" );
+
+	wp_clear_scheduled_hook( 'relevanssi_update_counts' );
 
 	relevanssi_drop_database_tables();
 }

@@ -50,11 +50,18 @@ function relevanssi_query( $posts, $query = false ) {
 		$search_ok = false; // No search term.
 	}
 
-	// Disable Relevanssi in the media library search.
-	if ( $search_ok ) {
+	$indexed_post_types = array_flip(
+		get_option( 'relevanssi_index_post_types', array() )
+	);
+	$images_indexed     = get_option( 'relevanssi_index_image_files', 'off' );
+	if ( $search_ok && ( false === isset( $indexed_post_types['attachment'] ) || 'off' === $images_indexed ) ) {
 		if ( 'attachment' === $query->query_vars['post_type'] && 'inherit,private' === $query->query_vars['post_status'] ) {
 			$search_ok = false;
 		}
+	}
+
+	if ( $query->get( 'relevanssi' ) ) {
+		$search_ok = true; // Manual override, always search.
 	}
 
 	/**
@@ -130,6 +137,9 @@ function relevanssi_search( $args ) {
 	$query_join         = $query_data['query_join'];
 	$q                  = $query_data['query_query'];
 	$q_no_synonyms      = $query_data['query_no_synonyms'];
+	$phrase_queries     = $query_data['phrase_queries'];
+
+	$min_length = get_option( 'relevanssi_min_word_length' );
 
 	/**
 	 * Filters whether stopwords are removed from titles.
@@ -138,7 +148,7 @@ function relevanssi_search( $args ) {
 	 */
 	$remove_stopwords = apply_filters( 'relevanssi_remove_stopwords_in_titles', true );
 
-	$terms = relevanssi_tokenize( $q, $remove_stopwords );
+	$terms = relevanssi_tokenize( $q, $remove_stopwords, $min_length );
 	$terms = array_keys( $terms ); // Don't care about tf in query.
 
 	if ( function_exists( 'relevanssi_process_terms' ) ) {
@@ -173,10 +183,14 @@ function relevanssi_search( $args ) {
 	 */
 	$query_join = apply_filters( 'relevanssi_join', $query_join );
 
-	// Go get the count from the options, but run the full query if it's not available.
-	$doc_count = get_option( 'relevanssi_doc_count' );
+	// Get the count from the options.
+	$doc_count = get_option( 'relevanssi_doc_count', 0 );
 	if ( ! $doc_count || $doc_count < 1 ) {
 		$doc_count = relevanssi_update_doc_count();
+		if ( ! $doc_count || $doc_count < 1 ) {
+			// No value available for some reason, use a random value.
+			$doc_count = 100;
+		}
 	}
 
 	$total_hits = 0;
@@ -192,7 +206,6 @@ function relevanssi_search( $args ) {
 	$mysqlcolumn_matches = array();
 	$author_matches      = array();
 	$excerpt_matches     = array();
-	$scores              = array();
 	$term_hits           = array();
 
 	$fuzzy = get_option( 'relevanssi_fuzzy' );
@@ -227,8 +240,6 @@ function relevanssi_search( $args ) {
 		);
 
 	}
-
-	$min_length = get_option( 'relevanssi_min_word_length' );
 
 	$search_again = false;
 
@@ -270,9 +281,17 @@ function relevanssi_search( $args ) {
 			if ( null === $term_cond ) {
 				continue;
 			}
+
+			$this_query_restrictions = relevanssi_add_phrase_restrictions(
+				$query_restrictions,
+				$phrase_queries,
+				$term,
+				$operator
+			);
+
 			$query = "SELECT COUNT(DISTINCT(relevanssi.doc)) FROM $relevanssi_table AS relevanssi
-				$query_join WHERE $term_cond $query_restrictions";
-			// Clean: $query_restrictions is escaped, $term_cond is escaped.
+				$query_join WHERE $term_cond $this_query_restrictions";
+			// Clean: $this_query_restrictions is escaped, $term_cond is escaped.
 			/**
 			 * Filters the DF query.
 			 *
@@ -307,13 +326,20 @@ function relevanssi_search( $args ) {
 		foreach ( $df_counts as $term => $df ) {
 			$term_cond = relevanssi_generate_term_where( $term, $search_again, $no_terms );
 
+			$this_query_restrictions = relevanssi_add_phrase_restrictions(
+				$query_restrictions,
+				$phrase_queries,
+				$term,
+				$operator
+			);
+
 			$query = "SELECT DISTINCT(relevanssi.doc), relevanssi.*, relevanssi.title * $title_boost +
 				relevanssi.content * $content_boost + relevanssi.comment * $comment_boost +
 				relevanssi.tag * $tag + relevanssi.link * $link_boost +
 				relevanssi.author + relevanssi.category * $cat + relevanssi.excerpt +
 				relevanssi.taxonomy + relevanssi.customfield + relevanssi.mysqlcolumn AS tf
-				FROM $relevanssi_table AS relevanssi $query_join WHERE $term_cond $query_restrictions";
-			/** Clean: $query_restrictions is escaped, $term_cond is escaped. */
+				FROM $relevanssi_table AS relevanssi $query_join WHERE $term_cond $this_query_restrictions";
+			/** Clean: $this_query_restrictions is escaped, $term_cond is escaped. */
 
 			/**
 			 * Filters the Relevanssi MySQL query.
@@ -475,7 +501,7 @@ function relevanssi_search( $args ) {
 
 				if ( $exact_match_bonus ) {
 					$post    = relevanssi_get_post( $match->doc );
-					$clean_q = str_replace( array( '"', '”', '“' ), '', $q_no_synonyms );
+					$clean_q = relevanssi_remove_quotes( $q_no_synonyms );
 					if ( $post && $clean_q ) {
 						if ( stristr( $post->post_title, $clean_q ) !== false ) {
 							$match->weight *= $exact_match_boost['title'];
@@ -581,10 +607,6 @@ function relevanssi_search( $args ) {
 						$doc_weight[ $match->doc ] = 0;
 					}
 					$doc_weight[ $match->doc ] += $match->weight;
-					if ( ! isset( $scores[ $match->doc ] ) ) {
-						$scores[ $match->doc ] = 0;
-					}
-					$scores[ $match->doc ] += $match->weight;
 					// For AND searches, add the posts to the $include_these lists, so that
 					// nothing is missed.
 					if ( is_numeric( $match->doc ) && 'AND' === $operator ) {
@@ -706,6 +728,7 @@ function relevanssi_search( $args ) {
 			$mysqlcolumn_matches = $return['mysqlcolumn_matches'];
 			$excerpt_matches     = $return['excerpt_matches'];
 			$term_hits           = $return['term_hits'];
+			$doc_weight          = $return['doc_weights'];
 			$q                   = $return['query'];
 		}
 		$params = array( 'args' => $args );
@@ -735,6 +758,7 @@ function relevanssi_search( $args ) {
 			$mysqlcolumn_matches = $return['mysqlcolumn_matches'];
 			$excerpt_matches     = $return['excerpt_matches'];
 			$term_hits           = $return['term_hits'];
+			$doc_weight          = $return['doc_weights'];
 			$q                   = $return['query'];
 		}
 	}
@@ -747,10 +771,10 @@ function relevanssi_search( $args ) {
 		/**
 		 * Filters the 'orderby' value just before sorting.
 		 *
-		 * Relevanssi can use both array orderby ie. array( orderby => order ) with
-		 * multiple orderby parameters, or a single pair of orderby and order
-		 * parameters. To avoid problems, try sticking to one and don't use this
-		 * filter to make surprising changes between different formats.
+		 * Relevanssi can use both array orderby ie. array( orderby => order )
+		 * with multiple orderby parameters, or a single pair of orderby and
+		 * order parameters. To avoid problems, try sticking to one and don't
+		 * use this filter to make surprising changes between different formats.
 		 *
 		 * @param string The 'orderby' parameter.
 		 */
@@ -794,9 +818,9 @@ function relevanssi_search( $args ) {
 		'mysqlcolumn_matches' => $mysqlcolumn_matches,
 		'author_matches'      => $author_matches,
 		'excerpt_matches'     => $excerpt_matches,
-		'scores'              => $scores,
 		'term_hits'           => $term_hits,
 		'query'               => $q,
+		'doc_weights'         => $doc_weight,
 	);
 
 	return $return;
@@ -865,11 +889,12 @@ function relevanssi_do_query( &$query ) {
 	 * One of the key filters for Relevanssi. If you want to modify the results
 	 * Relevanssi finds, use this filter.
 	 *
-	 * @param array $filter_data The index 0 has an array of post objects found in
-	 * the search, index 1 has the search query string.
+	 * @param array $filter_data The index 0 has an array of post objects (or
+	 * post IDs, or parent=>ID pairs, depending on the `fields` parameter) found
+	 * in the search, index 1 has the search query string.
 	 *
-	 * @return array The return array composition is the same as the parameter array,
-	 * but Relevanssi only uses the index 0.
+	 * @return array The return array composition is the same as the parameter
+	 * array, but Relevanssi only uses the index 0.
 	 */
 	$hits_filters_applied = apply_filters( 'relevanssi_hits_filter', $filter_data );
 	// array_values() to make sure the $hits array is indexed in numerical order
@@ -883,7 +908,7 @@ function relevanssi_do_query( &$query ) {
 		$query->query_vars['posts_per_page'] = -1;
 	}
 	if ( -1 === $query->query_vars['posts_per_page'] ) {
-		$query->max_num_pages = $hits_count;
+		$query->max_num_pages = 1;
 	} else {
 		$query->max_num_pages = ceil( $hits_count / $query->query_vars['posts_per_page'] );
 	}
@@ -938,17 +963,34 @@ function relevanssi_do_query( &$query ) {
 			$highlight                    = get_option( 'relevanssi_highlight' );
 			if ( 'none' !== $highlight ) {
 				if ( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
-					$post->post_highlighted_title = relevanssi_highlight_terms( $post->post_highlighted_title, $q );
+					$post->post_highlighted_title = relevanssi_highlight_terms(
+						$post->post_highlighted_title,
+						$q
+					);
 				}
 			}
 		}
+
+		/*
+		 * If you need to modify these on the go, use
+		 * 'pre_option_relevanssi_excerpt_length' and
+		 * pre_option_relevanssi_excerpt_type' filters.
+		 */
+		$excerpt_length = get_option( 'relevanssi_excerpt_length' );
+		$excerpt_type   = get_option( 'relevanssi_excerpt_type' );
 
 		if ( 'on' === $make_excerpts && empty( $search_params['fields'] ) ) {
 			if ( isset( $post->blog_id ) ) {
 				switch_to_blog( $post->blog_id );
 			}
 			$post->original_excerpt = $post->post_excerpt;
-			$post->post_excerpt     = relevanssi_do_excerpt( $post, $q );
+			$post->post_excerpt     = relevanssi_do_excerpt(
+				$post,
+				$q,
+				$excerpt_length,
+				$excerpt_type
+			);
+
 			if ( isset( $post->blog_id ) ) {
 				restore_current_blog();
 			}
@@ -957,28 +999,7 @@ function relevanssi_do_query( &$query ) {
 			relevanssi_add_matches( $post, $return );
 		}
 		if ( 'on' === get_option( 'relevanssi_show_matches' ) && empty( $search_params['fields'] ) ) {
-			$post_id = $post->ID;
-			if ( 'user' === $post->post_type ) {
-				$post_id = 'u_' . $post->user_id;
-			} elseif ( 'post_type' === $post->post_type ) {
-				$post_id = 'p_' . $post->ID;
-			} elseif ( isset( $post->term_id ) ) {
-				$post_id = '**' . $post->post_type . '**' . $post->term_id;
-			}
-			if ( isset( $post->blog_id ) ) {
-				$post_id = $post->blog_id . '|' . $post->ID;
-			}
 			$post->post_excerpt .= relevanssi_show_matches( $post );
-		}
-
-		if ( empty( $search_params['fields'] ) ) {
-			$post_id = $post->ID;
-			if ( isset( $post->blog_id ) ) {
-				$post_id = $post->blog_id . '|' . $post->ID;
-			}
-			if ( isset( $return['scores'][ $post_id ] ) ) {
-				$post->relevance_score = round( $return['scores'][ $post_id ], 2 );
-			}
 		}
 
 		$posts[] = $post;
@@ -986,6 +1007,8 @@ function relevanssi_do_query( &$query ) {
 
 	$query->posts      = $posts;
 	$query->post_count = count( $posts );
+
+	$relevanssi_active = false;
 
 	return $posts;
 }
@@ -1000,7 +1023,9 @@ function relevanssi_do_query( &$query ) {
  * @return string The query with the LIMIT parameter added, if necessary.
  */
 function relevanssi_limit_filter( $query ) {
-	if ( 'on' === get_option( 'relevanssi_throttle', 'on' ) ) {
+	$termless_search = strstr( $query, 'relevanssi.term = relevanssi.term' );
+
+	if ( $termless_search || 'on' === get_option( 'relevanssi_throttle', 'on' ) ) {
 		$limit = get_option( 'relevanssi_throttle_limit', 500 );
 		if ( ! is_numeric( $limit ) ) {
 			$limit = 500;
@@ -1091,10 +1116,12 @@ function relevanssi_generate_term_where( $term, $force_fuzzy = false, $no_terms 
 	 * hook that returns '(relevanssi.term LIKE '%#term#%')'.
 	 *
 	 * @param string The partial matching query.
+	 * @param string $term The search term.
 	 */
 	$fuzzy_query = apply_filters(
 		'relevanssi_fuzzy_query',
-		"(relevanssi.term LIKE '#term#%' OR relevanssi.term_reverse LIKE CONCAT(REVERSE('#term#'), '%')) "
+		"(relevanssi.term LIKE '#term#%' OR relevanssi.term_reverse LIKE CONCAT(REVERSE('#term#'), '%')) ",
+		$term
 	);
 	$basic_query = " relevanssi.term = '#term#' ";
 
@@ -1132,7 +1159,13 @@ function relevanssi_generate_term_where( $term, $force_fuzzy = false, $no_terms 
 
 	$term_where = str_replace( '#term#', $term, $term_where_template );
 
-	return $term_where;
+	/**
+	 * Filters the term WHERE condition for the Relevanssi MySQL query.
+	 *
+	 * @param string $term_where The WHERE condition for the terms.
+	 * @param string $term       The search term.
+	 */
+	return apply_filters( 'relevanssi_term_where', $term_where, $term );
 }
 
 /**
@@ -1307,8 +1340,8 @@ function relevanssi_compile_search_args( $query, $q ) {
 	}
 
 	$parent_query = array();
-	if ( isset( $query->query_vars['post_parent'] ) ) {
-		$parent_query = array( 'parent in' => array( $query->query_vars['post_parent'] ) );
+	if ( isset( $query->query_vars['post_parent'] ) && '' !== $query->query_vars['post_parent'] ) {
+		$parent_query = array( 'parent in' => array( (int) $query->query_vars['post_parent'] ) );
 	}
 	if ( isset( $query->query_vars['post_parent__in'] ) && is_array( $query->query_vars['post_parent__in'] ) && ! empty( $query->query_vars['post_parent__in'] ) ) {
 		$parent_query = array( 'parent in' => $query->query_vars['post_parent__in'] );
@@ -1317,108 +1350,8 @@ function relevanssi_compile_search_args( $query, $q ) {
 		$parent_query = array( 'parent not in' => $query->query_vars['post_parent__not_in'] );
 	}
 
-	$meta_query = array();
-	if ( ! empty( $query->query_vars['meta_query'] ) ) {
-		$meta_query = $query->query_vars['meta_query'];
-	}
-
-	if ( isset( $query->query_vars['customfield_key'] ) ) {
-		$build_meta_query = array();
-
-		// Use meta key.
-		$build_meta_query['key'] = $query->query_vars['customfield_key'];
-
-		/**
-		 * Check the value is not empty for ordering purpose,
-		 * set it or not for the current meta query.
-		 */
-		if ( ! empty( $query->query_vars['customfield_value'] ) ) {
-			$build_meta_query['value'] = $query->query_vars['customfield_value'];
-		}
-
-		// Set the compare.
-		$build_meta_query['compare'] = '=';
-		$meta_query[]                = $build_meta_query;
-	}
-
-	if ( ! empty( $query->query_vars['meta_key'] ) || ! empty( $query->query_vars['meta_value'] ) || ! empty( $query->query_vars['meta_value_num'] ) ) {
-		$build_meta_query = array();
-
-		// Use meta key.
-		$build_meta_query['key'] = $query->query_vars['meta_key'];
-
-		$value = null;
-		if ( ! empty( $query->query_vars['meta_value'] ) ) {
-			$value = $query->query_vars['meta_value'];
-		} elseif ( ! empty( $query->query_vars['meta_value_num'] ) ) {
-			$value = $query->query_vars['meta_value_num'];
-		}
-
-		/**
-		 * Check the meta value, as it could be not set for ordering purpose.
-		 * Set it or not for the current meta query.
-		 */
-		if ( ! empty( $value ) ) {
-			$build_meta_query['value'] = $value;
-		}
-
-		// Set meta compare.
-		$build_meta_query['compare'] = '=';
-		if ( ! empty( $query->query_vars['meta_compare'] ) ) {
-			$build_meta_query['compare'] = $query->query_vars['meta_compare'];
-		}
-
-		$meta_query[] = $build_meta_query;
-	}
-
-	$date_query = false;
-	if ( ! empty( $query->date_query ) ) {
-		if ( is_object( $query->date_query ) && 'WP_Date_Query' === get_class( $query->date_query ) ) {
-			$date_query = $query->date_query;
-		} else {
-			$date_query = new WP_Date_Query( $query->date_query );
-		}
-	} elseif ( ! empty( $query->query_vars['date_query'] ) ) {
-		// The official date query is in $query->date_query, but this allows
-		// users to set the date query from query variables.
-		$date_query = new WP_Date_Query( $query->query_vars['date_query'] );
-	}
-
-	if ( ! $date_query ) {
-		$date_query = array();
-		if ( ! empty( $query->query_vars['year'] ) ) {
-			$date_query['year'] = intval( $query->query_vars['year'] );
-		}
-		if ( ! empty( $query->query_vars['monthnum'] ) ) {
-			$date_query['month'] = intval( $query->query_vars['monthnum'] );
-		}
-		if ( ! empty( $query->query_vars['w'] ) ) {
-			$date_query['week'] = intval( $query->query_vars['w'] );
-		}
-		if ( ! empty( $query->query_vars['day'] ) ) {
-			$date_query['day'] = intval( $query->query_vars['day'] );
-		}
-		if ( ! empty( $query->query_vars['hour'] ) ) {
-			$date_query['hour'] = intval( $query->query_vars['hour'] );
-		}
-		if ( ! empty( $query->query_vars['minute'] ) ) {
-			$date_query['minute'] = intval( $query->query_vars['minute'] );
-		}
-		if ( ! empty( $query->query_vars['second'] ) ) {
-			$date_query['second'] = intval( $query->query_vars['second'] );
-		}
-		if ( ! empty( $query->query_vars['m'] ) ) {
-			if ( 6 === strlen( $query->query_vars['m'] ) ) {
-				$date_query['year']  = intval( substr( $query->query_vars['m'], 0, 4 ) );
-				$date_query['month'] = intval( substr( $query->query_vars['m'], -2, 2 ) );
-			}
-		}
-		if ( ! empty( $date_query ) ) {
-			$date_query = new WP_Date_Query( $date_query );
-		} else {
-			$date_query = false;
-		}
-	}
+	$meta_query = relevanssi_meta_query_from_query_vars( $query );
+	$date_query = relevanssi_wp_date_query_from_query_vars( $query );
 
 	$post_type = false;
 	if ( isset( $query->query_vars['post_type'] ) && 'any' !== $query->query_vars['post_type'] ) {
@@ -1527,4 +1460,135 @@ function relevanssi_compile_search_args( $query, $q ) {
 	);
 
 	return $search_params;
+}
+
+/**
+ * Generates a WP_Date_Query from the query date variables.
+ *
+ * First checks $query->date_query, if that doesn't exist then looks at the
+ * other date parameters to construct a date query.
+ *
+ * @param WP_Query $query The query object.
+ *
+ * @return WP_Date_Query|boolean The date query object or false, if no date
+ * parameters can be parsed.
+ */
+function relevanssi_wp_date_query_from_query_vars( $query ) {
+	$date_query = false;
+	if ( ! empty( $query->date_query ) ) {
+		if ( is_object( $query->date_query ) && 'WP_Date_Query' === get_class( $query->date_query ) ) {
+			$date_query = $query->date_query;
+		} else {
+			$date_query = new WP_Date_Query( $query->date_query );
+		}
+	} elseif ( ! empty( $query->query_vars['date_query'] ) ) {
+		// The official date query is in $query->date_query, but this allows
+		// users to set the date query from query variables.
+		$date_query = new WP_Date_Query( $query->query_vars['date_query'] );
+	}
+
+	if ( ! $date_query ) {
+		$date_query = array();
+		if ( ! empty( $query->query_vars['year'] ) ) {
+			$date_query['year'] = intval( $query->query_vars['year'] );
+		}
+		if ( ! empty( $query->query_vars['monthnum'] ) ) {
+			$date_query['month'] = intval( $query->query_vars['monthnum'] );
+		}
+		if ( ! empty( $query->query_vars['w'] ) ) {
+			$date_query['week'] = intval( $query->query_vars['w'] );
+		}
+		if ( ! empty( $query->query_vars['day'] ) ) {
+			$date_query['day'] = intval( $query->query_vars['day'] );
+		}
+		if ( ! empty( $query->query_vars['hour'] ) ) {
+			$date_query['hour'] = intval( $query->query_vars['hour'] );
+		}
+		if ( ! empty( $query->query_vars['minute'] ) ) {
+			$date_query['minute'] = intval( $query->query_vars['minute'] );
+		}
+		if ( ! empty( $query->query_vars['second'] ) ) {
+			$date_query['second'] = intval( $query->query_vars['second'] );
+		}
+		if ( ! empty( $query->query_vars['m'] ) ) {
+			if ( 6 === strlen( $query->query_vars['m'] ) ) {
+				$date_query['year']  = intval( substr( $query->query_vars['m'], 0, 4 ) );
+				$date_query['month'] = intval( substr( $query->query_vars['m'], -2, 2 ) );
+			}
+		}
+		if ( ! empty( $date_query ) ) {
+			$date_query = new WP_Date_Query( $date_query );
+		} else {
+			$date_query = false;
+		}
+	}
+	return $date_query;
+}
+
+/**
+ * Generates a meta_query array from the query meta variables.
+ *
+ * First checks $query->meta_query, if that doesn't exist then looks at the
+ * other meta query and custom field parameters to construct a meta query.
+ *
+ * @param WP_Query $query The query object.
+ *
+ * @return array|boolean The meta query object or false, if no meta query
+ * parameters can be parsed.
+ */
+function relevanssi_meta_query_from_query_vars( $query ) {
+	$meta_query = false;
+	if ( ! empty( $query->query_vars['meta_query'] ) ) {
+		$meta_query = $query->query_vars['meta_query'];
+	}
+
+	if ( isset( $query->query_vars['customfield_key'] ) ) {
+		$build_meta_query = array();
+
+		// Use meta key.
+		$build_meta_query['key'] = $query->query_vars['customfield_key'];
+
+		/**
+		 * Check the value is not empty for ordering purpose,
+		 * set it or not for the current meta query.
+		 */
+		if ( ! empty( $query->query_vars['customfield_value'] ) ) {
+			$build_meta_query['value'] = $query->query_vars['customfield_value'];
+		}
+
+		// Set the compare.
+		$build_meta_query['compare'] = '=';
+		$meta_query[]                = $build_meta_query;
+	}
+
+	if ( ! empty( $query->query_vars['meta_key'] ) || ! empty( $query->query_vars['meta_value'] ) || ! empty( $query->query_vars['meta_value_num'] ) ) {
+		$build_meta_query = array();
+
+		// Use meta key.
+		$build_meta_query['key'] = $query->query_vars['meta_key'];
+
+		$value = null;
+		if ( ! empty( $query->query_vars['meta_value'] ) ) {
+			$value = $query->query_vars['meta_value'];
+		} elseif ( ! empty( $query->query_vars['meta_value_num'] ) ) {
+			$value = $query->query_vars['meta_value_num'];
+		}
+
+		/**
+		 * Check the meta value, as it could be not set for ordering purpose.
+		 * Set it or not for the current meta query.
+		 */
+		if ( ! empty( $value ) ) {
+			$build_meta_query['value'] = $value;
+		}
+
+		// Set meta compare.
+		$build_meta_query['compare'] = '=';
+		if ( ! empty( $query->query_vars['meta_compare'] ) ) {
+			$build_meta_query['compare'] = $query->query_vars['meta_compare'];
+		}
+
+		$meta_query[] = $build_meta_query;
+	}
+	return $meta_query;
 }

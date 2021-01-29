@@ -1,0 +1,188 @@
+{
+    "key": "group_60137f90b9160",
+    "title": "Theme Settings - Font\/Colors",
+    "fields": [
+        {
+            "key": "field_60137facf20cd",
+            "label": "Fonts",
+            "name": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0
+        },
+        {
+            "key": "field_60137fb4f20ce",
+            "label": "Primary Font",
+            "name": "primary_font",
+            "type": "text",
+            "instructions": "Enter the font family.\r\nExample: 'Libre Baskerville', serif",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Lato', sans-serif",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+        },
+        {
+            "key": "field_60138252f20cf",
+            "label": "Secondary Font",
+            "name": "secondary_font",
+            "type": "text",
+            "instructions": "Enter the font family.\r\nExample:'Lato', sans-serif",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "'Libre Baskerville', serif",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+        },
+        {
+            "key": "field_6014216123c81",
+            "label": "Tertiary Font",
+            "name": "tertiary_font",
+            "type": "text",
+            "instructions": "Enter the font family.\r\nExample:'Lato', sans-serif",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "'Pinyon Script', cursive",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+        },
+        {
+            "key": "field_60138282f20d1",
+            "label": "Colors",
+            "name": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0
+        },
+        {
+            "key": "field_60138273f20d0",
+            "label": "Primary Color",
+            "name": "primary_color",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#c9727a"
+        },
+        {
+            "key": "field_6013828ff20d2",
+            "label": "Secondary Color",
+            "name": "secondary_color",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#efcec8"
+        },
+        {
+            "key": "field_601382a2f20d4",
+            "label": "Font Color",
+            "name": "font_color",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#717171"
+        },
+        {
+            "key": "field_601382aef20d5",
+            "label": "Black Color",
+            "name": "black_color",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#2D2D2D"
+        },
+        {
+            "key": "field_601382baf20d6",
+            "label": "Pink Color",
+            "name": "pink_color",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#faeeed"
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "acf-options-general"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": 1,
+    "description": "",
+    "modified": 1611934150
+}

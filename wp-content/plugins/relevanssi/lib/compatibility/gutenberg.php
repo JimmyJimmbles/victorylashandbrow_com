@@ -10,10 +10,31 @@
  * @see     https://www.relevanssi.com/
  */
 
-if ( RELEVANSSI_PREMIUM ) {
-	// Gutenberg causes duplicate postmeta to appear in posts. This will remove the
-	// extras when a post is saved.
-	add_action( 'save_post', 'relevanssi_remove_duplicate_postmeta', 100 );
+/**
+ * Registers rest_after_insert_{post_type} actions for all indexed post types.
+ *
+ * Runs on `admin_init` action hook and registers the function
+ * `relevanssi_save_gutenberg_postdata` for all indexed post types.
+ *
+ * @see relevanssi_save_gutenberg_postdata
+ */
+function relevanssi_register_gutenberg_actions() {
+	if ( ! RELEVANSSI_PREMIUM ) {
+		return;
+	}
+	$index_post_types = get_option( 'relevanssi_index_post_types', array() );
+	array_walk(
+		$index_post_types,
+		function ( $post_type ) {
+			if ( 'bogus' !== $post_type ) {
+				add_action(
+					'rest_after_insert_' . $post_type,
+					'relevanssi_save_gutenberg_postdata'
+				);
+			}
+
+		}
+	);
 }
 
 add_filter( 'relevanssi_post_content', 'relevanssi_gutenberg_block_rendering', 10 );
@@ -37,7 +58,27 @@ function relevanssi_gutenberg_block_rendering( $content ) {
 	$output = '';
 
 	foreach ( $blocks as $block ) {
-		if ( ! isset( $block['attrs']['className'] ) || strstr( $block['attrs']['className'], 'relevanssi_noindex' ) === false ) {
+		/**
+		 * Filters the Gutenberg block before it is rendered.
+		 *
+		 * If the block is non-empty after the filter and it's className
+		 * parameter is not 'relevanssi_noindex', it will be passed on to the
+		 * render_block() function for rendering.
+		 *
+		 * @see render_block
+		 *
+		 * @param array $block The Gutenberg block element.
+		 */
+		$block = apply_filters( 'relevanssi_block_to_render', $block );
+
+		if ( ! $block ) {
+			continue;
+		}
+
+		if (
+			! isset( $block['attrs']['className'] )
+			|| false === strstr( $block['attrs']['className'], 'relevanssi_noindex' )
+			) {
 			$output .= render_block( $block );
 		}
 	}

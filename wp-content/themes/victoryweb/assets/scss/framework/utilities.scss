@@ -22,9 +22,9 @@ $utilities-font-weights: (
   'black': $font-weight-black,
 );
 $utilities-font-families: (
-  'baskerville': $font-family-baskerville,
-  'lato': $font-family-lato,
-  'pinyon': $font-family-pinyon,
+  'primary': $font-family-primary,
+  'secondary': $font-family-secondary,
+  'tertiary': $font-family-tertiary,
 );
 $utilities-font-styles: (italic, normal);
 $utilities-text-transform: (uppercase, lowercase, capitalize);
