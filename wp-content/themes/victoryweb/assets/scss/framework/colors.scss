@@ -10,22 +10,22 @@ $colors: (
   ),
   'black': (
     'name': 'black',
-    'base': #2d2d2d,
+    'base': var(--color-black),
     'hover': darken(#2d2d2d, 10%),
   ),
   'primary': (
     'name': 'Primary',
-    'base': #c9727a,
+    'base': var(--color-primary),
     'hover': darken(#c9727a, 10%),
   ),
   'secondary': (
     'name': 'Secondary',
-    'base': #efcec8,
+    'base': var(--color-secondary),
     'hover': darken(#efcec8, 10%),
   ),
   'pink': (
     'name': 'Pink',
-    'base': #faeeed,
+    'base': var(--color-pink),
     'hover': darken(#faeeed, 10%),
   ),
   'gray-light': (
@@ -50,7 +50,7 @@ $colors: (
   ),
   'gray-darkest': (
     'name': 'Gray Darkest',
-    'base': #717171,
+    'base': var(--color-font),
     'hover': lighten(#717171, 10%),
   ),
   'red': (

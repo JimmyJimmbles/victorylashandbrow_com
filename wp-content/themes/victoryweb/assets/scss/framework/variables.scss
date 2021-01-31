@@ -69,10 +69,10 @@ $heading-color-base: color('black');
 // font families
 // --------------------------------------------------
 
-$font-family-baskerville: 'Libre Baskerville', serif;
-$font-family-lato: 'Lato', sans-serif;
-$font-family-pinyon: 'Pinyon Script', cursive;
-$font-family-base: $font-family-lato;
+$font-family-primary: var(--font-family-primary);
+$font-family-secondary: var(--font-family-secondary);
+$font-family-tertiary: var(--font-family-tertiary);
+$font-family-base: $font-family-primary;
 
 // --------------------------------------------------
 // font weight

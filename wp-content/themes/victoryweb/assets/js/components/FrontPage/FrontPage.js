@@ -55,13 +55,19 @@ const FrontPage = () => {
     primary_menu,
     secondary_menu,
     section_data: { hero, about, services, appointments, contact, after_care },
-    theme_settings: { primary_heading, secondary_heading, social_media },
+    theme_settings: {
+      primary_heading,
+      secondary_heading,
+      social_media,
+      primary_logo,
+    },
   } = frontPageDataSections;
 
   return appIsReady ? (
     <>
       <HeroSection
         hero={hero}
+        logo={primary_logo}
         headings={{
           primaryHeading: primary_heading,
           secondaryHeading: secondary_heading,

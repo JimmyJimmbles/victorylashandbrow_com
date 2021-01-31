@@ -88,6 +88,7 @@ function _relevanssi_install() {
 	add_option( 'relevanssi_excerpt_type', 'words' );
 	add_option( 'relevanssi_excerpts', 'on' );
 	add_option( 'relevanssi_exclude_posts', '' );
+	add_option( 'relevanssi_expand_highlights', 'off' );
 	add_option( 'relevanssi_expand_shortcodes', 'on' );
 	add_option( 'relevanssi_extag', '0' );
 	add_option( 'relevanssi_fuzzy', 'sometimes' );
@@ -100,6 +101,7 @@ function _relevanssi_install() {
 	add_option( 'relevanssi_index_comments', 'none' );
 	add_option( 'relevanssi_index_excerpt', 'off' );
 	add_option( 'relevanssi_index_fields', '' );
+	add_option( 'relevanssi_index_image_files', 'on' );
 	add_option( 'relevanssi_index_post_types', array( 'post', 'page' ) );
 	add_option( 'relevanssi_index_taxonomies_list', array() );
 	add_option( 'relevanssi_indexed', '' );
@@ -119,12 +121,12 @@ function _relevanssi_install() {
 	add_option( 'relevanssi_respect_exclude', 'on' );
 	add_option( 'relevanssi_show_matches', '' );
 	add_option( 'relevanssi_show_matches_text', '(Search hits: %body% in body, %title% in title, %categories% in categories, %tags% in tags, %taxonomies% in other taxonomies, %comments% in comments. Score: %score%)' );
-	add_option( 'relevanssi_synonyms', '' );
+	add_option( 'relevanssi_stopwords', array() );
+	add_option( 'relevanssi_synonyms', array() );
 	add_option( 'relevanssi_throttle', 'on' );
 	add_option( 'relevanssi_throttle_limit', '500' );
 	add_option( 'relevanssi_title_boost', $relevanssi_variables['title_boost_default'] );
 	add_option( 'relevanssi_txt_col', '#ff0000' );
-	add_option( 'relevanssi_word_boundaries', 'on' );
 	add_option( 'relevanssi_wpml_only_current', 'on' );
 
 	if ( function_exists( 'relevanssi_premium_install' ) ) {

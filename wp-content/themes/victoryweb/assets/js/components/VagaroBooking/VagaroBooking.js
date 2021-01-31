@@ -1,11 +1,11 @@
 import React, { useRef } from 'react';
-import useScript from '../hooks/useScript';
+import { useVagaro } from '../hooks';
 
 const VagaroBooking = () => {
   const vagaroRef = useRef(null);
 
-  useScript(
-    'https://www.vagaro.com//resources/WidgetEmbeddedLoader/OZqnCpavDZ8cT3qmV35y79oz34mC2PeFJ4mC30m9dSycPCu7gCmjZcoapOUc8?v=2gutV0c0xxCcMuTayloepZeypgsPichkLakHZgovK97#',
+  useVagaro(
+    'https://www.vagaro.com//resources/WidgetEmbeddedLoader/OZqnCpavDZ8cT3qmV35y6JuSdBuOc1WJD1wOc1WO61CxdfeJE1wZCBOvifCs7fY?v=xh00FfsFRCnQZ4n92zocGj4OgoiwKVy9tSFyUlNelr30#',
     vagaroRef
   );
 

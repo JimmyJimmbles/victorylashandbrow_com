@@ -4,7 +4,7 @@
 
 #frameTitle {
   font-size: 23px;
-  color: #333;
+  color: color('black');
   font-family: Arial, Helvetica, sans-serif;
   line-height: 24px;
   padding: 18px 10px 8px;
@@ -23,7 +23,7 @@
 
   a {
     font-size: rem(14);
-    color: #aaa;
+    color: color('black');
     text-decoration: none;
   }
 }
@@ -31,6 +31,7 @@
 // --------------------------------------------------
 // Vagaro overrides
 // --------------------------------------------------
+
 .vagaro-container.vagaro-embedded-widget .vagaro-iframe {
   max-width: 100% !important;
   width: 100% !important;
@@ -40,6 +41,7 @@
   }
 }
 
-.vagaro-footer {
+.vagaro-footer,
+#menuBar {
   display: none !important;
 }

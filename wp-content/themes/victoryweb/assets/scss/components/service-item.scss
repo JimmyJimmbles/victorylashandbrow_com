@@ -27,8 +27,9 @@
 // --------------------------------------------------
 
 .service-item__content {
+  background-color: color('white');
   background-position: center;
-  background-size: cover;
+  background-size: contain;
   background-repeat: no-repeat;
   border-radius: $global-border-radius;
   display: flex;
@@ -87,36 +88,30 @@
 // details
 // --------------------------------------------------
 
-.service-details-enter {
-  opacity: 0;
-  transform: scale(0.9);
-}
-
-.service-details-enter-active {
-  opacity: 1;
-  transform: translateX(0);
-  transition: opacity 0.3s, transform 0.3s;
-}
-
-.service-details-exit {
-  opacity: 1;
-}
-
-.service-details-exit-active {
-  opacity: 0;
-  transform: scale(0.9);
-  transition: opacity 0.3s, transform 0.3s;
-}
-
 .service-details-container {
+  @extend .column-md-10;
   position: relative;
   margin: $row-gutter-width 0;
   background-color: color('white');
-  visibility: hidden;
   padding: 0 !important;
+  transition: all 0.3s ease;
+}
 
-  &--active {
-    visibility: visible;
-    @extend .column-md-10;
-  }
+.service-details-container-enter {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.service-details-container-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.service-details-container-exit {
+  opacity: 1;
+}
+
+.service-details-container-exit-active {
+  opacity: 0;
+  transform: scale(0.9);
 }

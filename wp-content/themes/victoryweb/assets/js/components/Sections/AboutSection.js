@@ -39,7 +39,7 @@ const AboutSection = ({
                 />
               </div>
               <div className="paper__footer u--text-align-center">
-                <h2 className="u--margin-0 u--font-family-baskerville u--color-secondary">
+                <h2 className="u--margin-0 u--font-family-secondary u--color-secondary">
                   {call_to_action.title}
                 </h2>
                 <p
