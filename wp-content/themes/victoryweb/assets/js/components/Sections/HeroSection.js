@@ -11,6 +11,12 @@ import {
 import Decoration from '../Decoration/Decoration';
 import AnchorLink from 'react-anchor-link-smooth-scroll';
 
+const HeadingLogo = ({ url }) => (
+  <span className="hero__content__logo">
+    <img src={url} />
+  </span>
+);
+
 const HeroSection = ({
   hero: {
     id,
@@ -18,7 +24,9 @@ const HeroSection = ({
   },
   headings: { primaryHeading, secondaryHeading, socialMedia },
   menu,
+  logo,
 }) => {
+  let logoURL = null;
   const socialIcons = {
     facebook_f: faFacebookF,
     instagram: faInstagram,
@@ -27,23 +35,33 @@ const HeroSection = ({
     youtube: faYoutube,
   };
 
+  if (logo && logo.url) {
+    logoURL = logo.url;
+  }
+
   return (
     <Section id={id} classNames="hero">
       <div className="hero__content">
         <div className="hero__content__first">
-          <h1 className="hero__content__heading">
-            <Decoration
-              w={100}
-              h={100}
-              color="primary"
-              top={-10}
-              left={-50}
-              zIndex={-1}
-              animationDuration={46}
-            />
-            {primaryHeading}
-          </h1>
-          <h2 className="hero__content__sub-heading">{secondaryHeading}</h2>
+          {!logoURL ? (
+            <>
+              <h1 className="hero__content__heading">
+                <Decoration
+                  w={100}
+                  h={100}
+                  color="primary"
+                  top={-10}
+                  left={-50}
+                  zIndex={-1}
+                  animationDuration={46}
+                />
+                {primaryHeading}
+              </h1>
+              <h2 className="hero__content__sub-heading">{secondaryHeading}</h2>
+            </>
+          ) : (
+            <HeadingLogo url={logoURL} />
+          )}
           <ul className="hero__content__actions">
             {menu.map((menu_item, index) => (
               <li key={index}>

@@ -14,7 +14,6 @@ $hero-spacing: rem(45);
   color: color('white');
 
   @media #{$mq-min-md} {
-    // min-height: rem(550);
     padding: $padding-md;
   }
 
@@ -142,6 +141,38 @@ $hero-spacing: rem(45);
   @media #{$mq-min-xxl} {
     font-size: rem(72);
     line-height: rem(72);
+  }
+}
+
+// --------------------------------------------------
+// logo
+// --------------------------------------------------
+
+.hero__content__logo {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: rem(340);
+  margin: 0 auto;
+  padding: 0 0 rem(30);
+  overflow: hidden;
+
+  @media #{$mq-min-md} {
+    width: rem(450);
+    height: rem(340);
+  }
+
+  & > img {
+    position: absolute;
+    width: 100%;
+    max-width: none;
+    top: calc(50% + 35px);
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    @media #{$mq-min-md} {
+      width: rem(465);
+    }
   }
 }
 

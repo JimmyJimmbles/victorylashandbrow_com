@@ -2,8 +2,9 @@ import React, { Fragment, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import Section from '../Sections/Section';
 import Decoration from '../Decoration/Decoration';
-import classnames from 'classnames';
 import ReactPlayer from 'react-player';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCaretRight } from '@fortawesome/free-solid-svg-icons';
 
 const ServiceSection = ({
   sectionData: { id, heading, tagline, services },
@@ -65,31 +66,25 @@ const ServiceSection = ({
                         <h3 className="service-item__title h5">
                           {service.post_title}
                         </h3>
-                        <div className="service-item__trigger"></div>
+                        <div className="service-item__trigger">
+                          <FontAwesomeIcon icon={faCaretRight} />
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div
-                    className={classnames('service-details-container', {
-                      'service-details-container--active':
-                        serviceActive === true &&
-                        service.ID === Number(lastItemInRow.id),
-                    })}
+                  <CSSTransition
+                    in={
+                      serviceActive && service.ID === Number(lastItemInRow.id)
+                    }
+                    timeout={300}
+                    classNames="service-details-container"
+                    unmountOnExit
                   >
-                    <CSSTransition
-                      in={
-                        serviceActive && service.ID === Number(lastItemInRow.id)
-                      }
-                      timeout={300}
-                      classNames="service-details"
-                      unmountOnExit
-                    >
-                      <ServiceDetails
-                        title={serviceData.post_title}
-                        content={serviceData.post_content}
-                      />
-                    </CSSTransition>
-                  </div>
+                    <ServiceDetails
+                      title={serviceData.post_title}
+                      content={serviceData.post_content}
+                    />
+                  </CSSTransition>
                 </Fragment>
               ))}
             </div>
@@ -106,7 +101,6 @@ const ServiceDetails = ({ title, content }) => {
   const videoURL = Array.isArray(content.match(regexYT))
     ? content.match(regexYT)[1]
     : null;
-  const videoEmbed = <ReactPlayer url={videoURL} />;
   const regexContent = content.replace(regexYT, '');
 
   const createMarkup = () => {
@@ -114,7 +108,7 @@ const ServiceDetails = ({ title, content }) => {
   };
 
   return (
-    <div className="u--margin-left-15 u--margin-right-15">
+    <div className="service-details-container u--margin-left-15 u--margin-right-15">
       <h1 className="u--margin-top-0">{title}</h1>
       {videoURL && (
         <div className="video-wrapper">

@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 
-const useScript = (url, element) => {
+const useVagaro = (url, element) => {
   useEffect(() => {
     const { current } = element;
     const script = document.createElement('script');
 
-    script.type = 'text/javascript';
+    script.type = 'application/javascript';
     script.src = url;
     script.async = true;
 
@@ -25,4 +25,4 @@ const useScript = (url, element) => {
   }, [url]);
 };
 
-export default useScript;
+export default useVagaro;
