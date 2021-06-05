@@ -37,7 +37,9 @@
   width: 100% !important;
 
   iframe {
-    height: rem(550) !important;
+    @media #{$mq-min-md} {
+      height: rem(550) !important;
+    }
   }
 }
 
