@@ -30057,8 +30057,6 @@ var dragHandle = Object(external_this_wp_element_["createElement"])(external_thi
 function BlockDraggableChip(_ref) {
   var clientIds = _ref.clientIds;
   var icon = Object(external_this_wp_data_["useSelect"])(function (select) {
-    var _getBlockType;
-
     if (clientIds.length !== 1) {
       return;
     }
@@ -30070,7 +30068,7 @@ function BlockDraggableChip(_ref) {
         firstId = _clientIds[0];
 
     var blockName = getBlockName(firstId);
-    return (_getBlockType = Object(external_this_wp_blocks_["getBlockType"])(blockName)) === null || _getBlockType === void 0 ? void 0 : _getBlockType.icon;
+    return Object(external_this_wp_blocks_["getBlockType"])(blockName).icon;
   }, [clientIds]);
   return Object(external_this_wp_element_["createElement"])("div", {
     className: "block-editor-block-draggable-chip-wrapper"
@@ -30199,8 +30197,7 @@ var block_draggable_BlockDraggable = function BlockDraggable(_ref) {
       clientIds = _ref.clientIds,
       cloneClassname = _ref.cloneClassname,
       _onDragStart = _ref.onDragStart,
-      _onDragEnd = _ref.onDragEnd,
-      elementId = _ref.elementId;
+      _onDragEnd = _ref.onDragEnd;
 
   var _useSelect = Object(external_this_wp_data_["useSelect"])(function (select) {
     var _select = select('core/block-editor'),
@@ -30251,10 +30248,10 @@ var block_draggable_BlockDraggable = function BlockDraggable(_ref) {
   };
   return Object(external_this_wp_element_["createElement"])(external_this_wp_components_["Draggable"], {
     cloneClassname: cloneClassname,
-    elementId: elementId || "block-".concat(clientIds[0]),
+    elementId: "block-".concat(clientIds[0]),
     transferData: transferData,
     onDragStart: function onDragStart(event) {
-      startDraggingBlocks(clientIds);
+      startDraggingBlocks();
       isDragging.current = true;
       startScrolling(event);
 
@@ -30373,14 +30370,14 @@ function BlockMover(_ref) {
     });
   }), Object(external_this_wp_element_["createElement"])(external_this_wp_components_["ToolbarGroup"], {
     className: "block-editor-block-mover__move-button-container"
-  }, Object(external_this_wp_element_["createElement"])(external_this_wp_components_["ToolbarItem"], {
+  }, Object(external_this_wp_element_["createElement"])(external_this_wp_components_["__experimentalToolbarItem"], {
     onFocus: onFocus,
     onBlur: onBlur
   }, function (itemProps) {
     return Object(external_this_wp_element_["createElement"])(BlockMoverUpButton, Object(esm_extends["a" /* default */])({
       clientIds: clientIds
     }, itemProps));
-  }), Object(external_this_wp_element_["createElement"])(external_this_wp_components_["ToolbarItem"], {
+  }), Object(external_this_wp_element_["createElement"])(external_this_wp_components_["__experimentalToolbarItem"], {
     onFocus: onFocus,
     onBlur: onBlur
   }, function (itemProps) {
@@ -30455,29 +30452,17 @@ function BlockParentSelector() {
         getBlockParents = _select.getBlockParents,
         getSelectedBlockClientId = _select.getSelectedBlockClientId;
 
-    var _select2 = select('core/blocks'),
-        hasBlockSupport = _select2.hasBlockSupport;
-
     var selectedBlockClientId = getSelectedBlockClientId();
     var parents = getBlockParents(selectedBlockClientId);
     var _firstParentClientId = parents[parents.length - 1];
     var parentBlockName = getBlockName(_firstParentClientId);
-
-    var _parentBlockType = Object(external_this_wp_blocks_["getBlockType"])(parentBlockName);
-
     return {
-      parentBlockType: _parentBlockType,
-      firstParentClientId: _firstParentClientId,
-      shouldHide: !hasBlockSupport(parentBlockType, '__experimentalParentSelector', true)
+      parentBlockType: Object(external_this_wp_blocks_["getBlockType"])(parentBlockName),
+      firstParentClientId: _firstParentClientId
     };
   }, []),
       parentBlockType = _useSelect.parentBlockType,
-      firstParentClientId = _useSelect.firstParentClientId,
-      shouldHide = _useSelect.shouldHide;
-
-  if (shouldHide) {
-    return null;
-  }
+      firstParentClientId = _useSelect.firstParentClientId;
 
   if (firstParentClientId !== undefined) {
     return Object(external_this_wp_element_["createElement"])("div", {
@@ -31662,6 +31647,8 @@ function BlockSettingsDropdown(_ref) {
         fillProps: {
           onClose: onClose
         }
+      }), count === 1 && Object(external_this_wp_element_["createElement"])(block_unknown_convert_button, {
+        clientId: firstBlockClientId
       }), count === 1 && Object(external_this_wp_element_["createElement"])(block_html_convert_button, {
         clientId: firstBlockClientId
       }), Object(external_this_wp_element_["createElement"])(external_this_wp_components_["ClipboardButton"], {
@@ -31723,7 +31710,7 @@ function BlockSettingsMenu(_ref) {
   var clientIds = _ref.clientIds,
       props = Object(objectWithoutProperties["a" /* default */])(_ref, ["clientIds"]);
 
-  return Object(external_this_wp_element_["createElement"])(external_this_wp_components_["ToolbarGroup"], null, Object(external_this_wp_element_["createElement"])(external_this_wp_components_["ToolbarItem"], null, function (toggleProps) {
+  return Object(external_this_wp_element_["createElement"])(external_this_wp_components_["ToolbarGroup"], null, Object(external_this_wp_element_["createElement"])(external_this_wp_components_["__experimentalToolbarItem"], null, function (toggleProps) {
     return Object(external_this_wp_element_["createElement"])(block_settings_dropdown, Object(esm_extends["a" /* default */])({
       clientIds: clientIds,
       toggleProps: toggleProps
@@ -31947,7 +31934,6 @@ var expanded_block_controls_container = __webpack_require__(278);
 
 
 
-
 function BlockToolbar(_ref) {
   var hideDragHandle = _ref.hideDragHandle,
       _ref$__experimentalEx = _ref.__experimentalExpandedControl,
@@ -32039,8 +32025,8 @@ function BlockToolbar(_ref) {
     clientIds: blockClientIds
   }), Object(external_this_wp_element_["createElement"])(block_mover, {
     clientIds: blockClientIds,
-    hideDragHandle: hideDragHandle || hasReducedUI
-  }))), shouldShowVisualToolbar && Object(external_this_wp_element_["createElement"])(external_this_wp_element_["Fragment"], null, Object(external_this_wp_element_["createElement"])(block_controls["a" /* default */].Slot, {
+    hideDragHandle: hideDragHandle
+  }))), shouldShowVisualToolbar && Object(external_this_wp_element_["createElement"])(external_this_wp_element_["Fragment"], null, Object(external_this_wp_element_["createElement"])(block_controls.Slot, {
     bubblesVirtually: true,
     className: "block-editor-block-toolbar__slot"
   }), Object(external_this_wp_element_["createElement"])(block_format_controls.Slot, {

@@ -266,7 +266,7 @@ jQuery(document).ready( function($) {
 jQuery( function( $ ) {
 	'use strict';
 
-	var communityEventsData = window.communityEventsData,
+	var communityEventsData = window.communityEventsData || {},
 		dateI18n = wp.date.dateI18n,
 		format = wp.date.format,
 		sprintf = wp.i18n.sprintf,

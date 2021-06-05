@@ -3891,6 +3891,10 @@ class wp_xmlrpc_server extends IXR_Server {
 			return new IXR_Error( 403, __( 'Sorry, you are not allowed to comment on this post.' ) );
 		}
 
+		if ( empty( $content_struct['content'] ) ) {
+			return new IXR_Error( 403, __( 'Comment is required.' ) );
+		}
+
 		$comment = array(
 			'comment_post_ID' => $post_id,
 			'comment_content' => trim( $content_struct['content'] ),
